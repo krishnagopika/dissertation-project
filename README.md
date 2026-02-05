@@ -1,4 +1,4 @@
-# Emotion and Sentiment Analysis from Speech and Text Models
+# Emotion and Sentiment Analysis from Speech
 
 ## Overview (placeholder)
 
@@ -26,7 +26,6 @@ This dissertation project focuses on capturing emotion and sentiment from multim
 2. [nvidia ctc/tdt](https://github.com/NVIDIA-NeMo/NeMo)
 3. [nvidia NeMo](https://huggingface.co/models?library=nemo&sort=downloads&search=nvidia )
 4. [NbAiLab](https://huggingface.co/NbAiLab/nb-whisper-base)
-
 
 
 ### MSc Project Components & Timeline
