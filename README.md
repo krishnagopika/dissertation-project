@@ -1,4 +1,4 @@
-# Emotion and Sentiment Analysis from Speech and Text Models
+# Emotion and Sentiment Analysis from Speech
 
 ## Overview (placeholder)
 
