@@ -163,3 +163,4 @@ All experiments run on the `wmlg-ada` partition:
 | XLM-RoBERTa | https://huggingface.co/FacebookAI/xlm-roberta-base |
 | CardiffNLP XLM-T | https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment |
 | NVIDIA NeMo | https://github.com/NVIDIA-NeMo/NeMo |
+| Kimi | https://arxiv.org/pdf/2504.18425v1 |
