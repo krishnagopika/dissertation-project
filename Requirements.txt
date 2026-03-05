@@ -1,0 +1,48 @@
+# ============================================================
+# Multimodal Fusion for Sentiment and Emotion Extraction
+# MSc Dissertation — University of Warwick
+# Hardware: wmlg-ada partition, 4x Nvidia L40S (48GB each)
+# ============================================================
+
+# --- Core ML ---
+torch>=2.4.0
+torchaudio>=2.4.0
+torchvision>=0.19.0  # for tensor utilities
+
+# --- HuggingFace Ecosystem ---
+transformers>=4.47.0
+accelerate>=0.35.0        # multi-GPU training + DeepSpeed integration
+datasets>=3.0.0           # MELD, CMU-MOSI, Common Voice, GoEmotions
+huggingface-hub>=0.26.0
+tokenizers>=0.20.0
+sentencepiece>=0.2.0      # XLM-RoBERTa tokenizer
+
+# --- Voxtral / Mistral ---
+mistral-common>=1.5.0     # Mistral audio tokenisation utilities
+vllm>=0.6.5               # efficient Voxtral Mini/Small inference
+
+# --- Audio Processing ---
+librosa>=0.10.2           # feature extraction, resampling
+soundfile>=0.12.1         # wav/flac I/O
+audioread>=3.0.1          # backend for librosa
+ffmpeg-python>=0.2.0      # mp4/mp3 decoding (MELD video clips)
+
+# --- Scientific Stack ---
+numpy>=1.26.4
+pandas>=2.2.3
+scipy>=1.14.0
+scikit-learn>=1.5.2       # metrics, train/val splits
+
+# --- Experiment Tracking ---
+wandb>=0.18.0
+pyyaml>=6.0.2
+
+# --- Utilities ---
+tqdm>=4.66.5
+einops>=0.8.0             # tensor rearrangement in fusion layer
+protobuf>=5.28.0
+matplotlib>=3.9.0         # result plots
+seaborn>=0.13.2           # confusion matrices
+
+# --- SLURM / cluster helpers (optional, install if needed) ---
+# submitit>=1.5.1          # Python SLURM job submission
