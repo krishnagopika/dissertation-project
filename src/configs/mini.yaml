@@ -1,0 +1,40 @@
+# mini.yaml — Voxtral-Mini-3B + XLM-RoBERTa-base
+# Fits on 1x L40S (48 GB). Submit with gpu:1.
+
+model:
+  voxtral_id: "mistralai/Voxtral-Mini-3B-2507"
+  xlmr_id: "FacebookAI/xlm-roberta-base"
+  acoustic_dim: 1024        # Voxtral-Mini LLM hidden dim (adapter output)
+  text_dim: 768             # XLM-RoBERTa-base hidden dim
+  fusion_hidden: 512
+  num_classes: 7
+  num_sentiment_classes: 3
+  dropout: 0.3
+
+training:
+  phase1_lr: 2e-5
+  phase2_lr: 1e-4
+  phase3_lr: 1e-5           # optional light unfreezing of XLM-R last 2 layers
+  batch_size: 16
+  epochs_phase1: 3
+  epochs_phase2: 10
+  epochs_phase3: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  checkpoint_dir: "checkpoints/mini"
+  log_dir: "logs/mini"
+  unfreeze_last_n_layers: 2  # for phase 3
+
+data:
+  meld_root: "data/meld_raw"
+  transcripts_path: "data/meld_transcripts"
+  embeddings_path: "data/meld_embeddings"
+  max_audio_duration: 40
+  max_text_length: 128
+  num_workers: 4
+  seed: 42
+
+evaluation:
+  primary_metric: "weighted_f1"
+  output_dir: "results/mini"
