@@ -6,26 +6,41 @@ Wrapper around Mistral's Voxtral models for two tasks:
 1. **ASR / transcription** — :meth:`VoxtralWrapper.transcribe` returns the
    text transcript for one or more audio waveforms.
 2. **Acoustic embedding extraction** — :meth:`VoxtralWrapper.extract_acoustic_embeddings`
-   hooks into the Whisper Large-v3 encoder that backs Voxtral's audio front-end
-   and returns mean-pooled hidden states from the final encoder layer.
-   Output shape: ``(batch_size, hidden_dim)``.
+   hooks into the **MLP adapter** that sits between the Whisper encoder and the
+   Mistral LLM decoder. The adapter down-samples from 50 Hz to 12.5 Hz and
+   projects into the LLM's embedding space, giving semantically-enriched but
+   still acoustic (not text-decoded) features.
+   Output shape: ``(batch_size, lm_hidden_dim)``.
+
+   Why the adapter, not the raw encoder?
+   - Whisper encoder output is 1280-dim at 50 Hz — very long sequences.
+   - Adapter output is 4× shorter (12.5 Hz) and already in the LLM's embedding
+     space, carrying the same information the LM itself uses for generation.
+   - This is the right granularity for a fixed-size mean-pooled representation.
 
 Supported models
 ----------------
 * ``mistralai/Voxtral-Mini-3B-2507``  (3B parameters, fits on 1× L40S)
+  LLM hidden dim ≈ 1024 — use ``acoustic_dim: 1024`` in config.
 * ``mistralai/Voxtral-Small-24B-2507`` (24B parameters, requires 2× L40S via
   ``device_map="auto"``)
+  LLM hidden dim ≈ 4096 — use ``acoustic_dim: 4096`` in config.
 
 Architecture notes
 ------------------
-Voxtral is composed of a **Whisper Large-v3 encoder** (audio front-end) and a
-**Mistral LLM decoder** (language model). The encoder processes mel-spectrogram
-features and produces contextualised acoustic representations; the decoder
-attends to these via cross-attention to generate text tokens.
+Voxtral pipeline::
 
-The path to the encoder attribute differs between the Mini and Small variants
-because they are implemented under slightly different model class names. This
-module uses ``try/except`` fallback chains to handle the differences gracefully.
+    Raw Audio
+        ↓
+    [Whisper Large-v3 Encoder]   50 Hz, 1280-dim
+        ↓
+    [MLP Adapter / Projector]    12.5 Hz, lm_hidden_dim  -> hook here?
+        ↓
+    [Mistral LLM Decoder]        text tokens
+
+The adapter is typically named ``multi_modal_projector``, ``audio_projector``,
+or similar. This module tries a priority list of known attribute paths and falls
+back to a keyword BFS if needed.
 
 Cluster notes (Warwick WMLG, wmlg-ada, L40S)
 ---------------------------------------------
@@ -39,7 +54,7 @@ Usage example
 >>> # audio_tensor: (batch, samples) or (samples,) at 16 kHz
 >>> transcript = wrapper.transcribe(audio_tensor, sample_rate=16000)
 >>> embeddings = wrapper.extract_acoustic_embeddings(audio_tensor, sample_rate=16000)
->>> # embeddings shape: (batch, 1280)
+>>> # embeddings shape: (batch, lm_hidden_dim)  e.g. (batch, 1024) for Mini
 """
 
 from __future__ import annotations
@@ -54,8 +69,12 @@ from torch import Tensor
 
 logger = logging.getLogger(__name__)
 
-# Hidden dimension of the Whisper Large-v3 encoder
-WHISPER_LARGE_V3_HIDDEN_DIM: int = 1280
+# Fallback hidden dimensions if we cannot infer from model config.
+# These are the LLM embedding dimensions (adapter output), not the Whisper
+# encoder output (which is always 1280 for Whisper Large-v3).
+_MINI_FALLBACK_DIM: int = 1024   # Voxtral-Mini-3B LLM hidden size
+_SMALL_FALLBACK_DIM: int = 4096  # Voxtral-Small-24B LLM hidden size
+_WHISPER_ENCODER_DIM: int = 1280  # kept for reference / fallback only
 
 # Supported model identifiers
 VOXTRAL_MINI = "mistralai/Voxtral-Mini-3B-2507"
@@ -153,33 +172,82 @@ class VoxtralWrapper(nn.Module):
             cache_dir=cache_dir,
         )
 
-        # Resolve and cache a reference to the Whisper encoder sub-module
-        self._encoder: nn.Module = self._resolve_encoder()
+        # Resolve the MLP adapter (preferred hook point — post-adapter features
+        # are in the LLM embedding space and 4x shorter than encoder output).
+        # Falls back to the raw Whisper encoder if the adapter cannot be found.
+        self._hook_module: nn.Module
+        self._hook_module, self._hook_label = self._resolve_hook_module()
         logger.info(
-            "Resolved Whisper encoder: %s", type(self._encoder).__name__
+            "Acoustic hook target: %s (%s)",
+            self._hook_label,
+            type(self._hook_module).__name__,
         )
 
     # ------------------------------------------------------------------
-    # Encoder resolution
+    # Module resolution — adapter-first, encoder fallback
     # ------------------------------------------------------------------
 
-    def _resolve_encoder(self) -> nn.Module:
-        """Attempt to find the Whisper encoder in the model graph.
+    def _resolve_hook_module(self) -> Tuple[nn.Module, str]:
+        """Find the best module to hook for acoustic embeddings.
 
-        Different Voxtral variants (Mini / Small) may organise sub-modules
-        under slightly different attribute paths. We try a priority list of
-        known paths, falling back to a breadth-first search if needed.
+        Priority:
+        1. MLP adapter / projector (post-adapter = LLM embedding space, 12.5 Hz)
+        2. Raw Whisper encoder (fallback, 1280-dim at 50 Hz)
+
+        Returns
+        -------
+        (module, label) where label is a short description string for logging.
         """
-        # Priority attribute paths — Mini and Small variants
+        # ---- 1. Try known adapter/projector attribute paths ----
+        adapter_paths: List[List[str]] = [
+            ["model", "multi_modal_projector"],
+            ["model", "audio_projector"],
+            ["model", "mm_projector"],
+            ["multi_modal_projector"],
+            ["audio_projector"],
+            ["model", "model", "multi_modal_projector"],
+            ["model", "connector"],
+            ["model", "audio_connector"],
+        ]
+        for path in adapter_paths:
+            obj = self.model
+            try:
+                for attr in path:
+                    obj = getattr(obj, attr)
+                if isinstance(obj, nn.Module):
+                    logger.debug("Found adapter via path: %s", ".".join(path))
+                    return obj, "adapter"
+            except AttributeError:
+                continue
+
+        # ---- 2. BFS: any module whose name suggests a projector ----
+        projector_keywords = ("projector", "connector", "adapter", "bridge")
+        for name, module in self.model.named_modules():
+            if name and any(kw in name.lower() for kw in projector_keywords):
+                if isinstance(module, nn.Module):
+                    logger.debug(
+                        "Found adapter via BFS keyword at: %s", name
+                    )
+                    return module, f"adapter({name})"
+
+        # ---- 3. Fallback: raw Whisper encoder ----
+        logger.warning(
+            "MLP adapter not found — falling back to raw Whisper encoder. "
+            "Embedding dim will be %d. Update acoustic_dim in your config.",
+            _WHISPER_ENCODER_DIM,
+        )
+        return self._resolve_encoder_fallback(), "encoder(fallback)"
+
+    def _resolve_encoder_fallback(self) -> nn.Module:
+        """Locate the raw Whisper encoder as a last resort."""
         candidate_paths: List[List[str]] = [
-            ["model", "encoder"],            # most common for Seq2Seq models
+            ["model", "encoder"],
             ["model", "audio_encoder"],
             ["encoder"],
             ["model", "model", "encoder"],
             ["audio_tower"],
             ["model", "audio_tower"],
         ]
-
         for path in candidate_paths:
             obj = self.model
             try:
@@ -190,57 +258,58 @@ class VoxtralWrapper(nn.Module):
             except AttributeError:
                 continue
 
-        # Fallback: breadth-first search for any module whose class name
-        # contains "WhisperEncoder"
         for name, module in self.model.named_modules():
             if "WhisperEncoder" in type(module).__name__:
-                logger.debug("Found encoder via BFS at: %s", name)
                 return module
 
         raise RuntimeError(
-            "Could not locate the Whisper encoder sub-module inside the Voxtral "
-            "model. Please check the model architecture and update the candidate "
-            "paths in VoxtralWrapper._resolve_encoder()."
+            "Could not locate the Whisper encoder or MLP adapter inside the "
+            "Voxtral model. Inspect model.named_modules() and update the "
+            "candidate paths in VoxtralWrapper._resolve_hook_module()."
         )
 
     # ------------------------------------------------------------------
     # Hook management
     # ------------------------------------------------------------------
 
-    def _encoder_forward_hook(
+    def _forward_hook(
         self,
         module: nn.Module,
         input: Tuple,
         output,
     ) -> None:
-        """Forward hook that captures the encoder's last hidden state."""
-        # The encoder output can be a tensor, a tuple, or a
-        # BaseModelOutput-like object with a ``last_hidden_state`` attribute.
+        """Forward hook that captures the hooked module's output tensor."""
         if isinstance(output, Tensor):
-            self._captured_encoder_output = output.detach()
+            self._captured_output = output.detach()
         elif hasattr(output, "last_hidden_state"):
-            self._captured_encoder_output = output.last_hidden_state.detach()
+            self._captured_output = output.last_hidden_state.detach()
         elif isinstance(output, (tuple, list)) and len(output) > 0:
-            # The first element of Whisper encoder output is the hidden states
-            self._captured_encoder_output = output[0].detach()
+            first = output[0]
+            if isinstance(first, Tensor):
+                self._captured_output = first.detach()
+            else:
+                logger.warning(
+                    "Hook output[0] is not a Tensor (got %s); "
+                    "acoustic embeddings may be unavailable.",
+                    type(first).__name__,
+                )
         else:
             logger.warning(
-                "Unrecognised encoder output type: %s. "
+                "Unrecognised hook output type: %s. "
                 "Acoustic embeddings may be unavailable.",
                 type(output).__name__,
             )
 
     @contextmanager
-    def _hook_encoder(self):
-        """Context manager that registers/removes the encoder forward hook."""
-        self._captured_encoder_output = None
-        handle = self._encoder.register_forward_hook(self._encoder_forward_hook)
+    def _hook_active(self):
+        """Context manager: register the forward hook, yield, then remove it."""
+        self._captured_output: Optional[Tensor] = None
+        handle = self._hook_module.register_forward_hook(self._forward_hook)
         try:
             yield
         finally:
             handle.remove()
-            # Do NOT clear _captured_encoder_output here so callers can
-            # retrieve it after the context exits.
+            # Do NOT clear _captured_output — callers read it after exit.
 
     # ------------------------------------------------------------------
     # Audio preprocessing
@@ -348,11 +417,13 @@ class VoxtralWrapper(nn.Module):
         audio_tensor: Tensor,
         sample_rate: int = 16_000,
     ) -> Tensor:
-        """Extract mean-pooled acoustic embeddings from the Whisper encoder.
+        """Extract mean-pooled acoustic embeddings from the MLP adapter.
 
-        The hook captures the encoder's last hidden state tensor of shape
-        ``(batch, seq_len, hidden_dim)`` and applies mean-pooling over the
-        sequence dimension to produce ``(batch, hidden_dim)``.
+        The hook fires on the adapter module (not the raw Whisper encoder),
+        capturing features already projected into the LLM's embedding space
+        at 12.5 Hz (4x downsampled from 50 Hz). The captured tensor of shape
+        ``(batch, seq_len, lm_hidden_dim)`` is mean-pooled over the time
+        dimension to give a fixed-size ``(batch, lm_hidden_dim)`` vector.
 
         Parameters
         ----------
@@ -364,60 +435,60 @@ class VoxtralWrapper(nn.Module):
 
         Returns
         -------
-        Tensor of shape ``(batch, hidden_dim)`` on CPU, float32.
-        The hidden dimension is 1280 for Whisper Large-v3.
+        Tensor of shape ``(batch, lm_hidden_dim)`` on CPU, float32.
+        lm_hidden_dim is 1024 for Voxtral-Mini and 4096 for Voxtral-Small.
         """
         inputs = self._preprocess_audio(audio_tensor, sample_rate)
 
-        with self._hook_encoder():
-            # A single forward pass through the encoder is sufficient.
-            # We call generate with max_new_tokens=1 to minimise compute; the
-            # hook fires during the encoder forward pass regardless.
+        with self._hook_active():
+            # model.generate drives the full encoder + adapter forward pass.
+            # max_new_tokens=1 minimises LLM compute; the hook fires during
+            # the encoder/adapter pass regardless of how many tokens are decoded.
             try:
                 self.model.generate(**inputs, max_new_tokens=1)
             except Exception as exc:
-                # If generate fails for any reason, attempt a direct encoder
-                # forward pass to still capture embeddings.
                 logger.warning(
-                    "model.generate() failed (%s); attempting encoder forward pass.",
+                    "model.generate() failed (%s); "
+                    "hook may not have fired — embeddings could be None.",
                     exc,
                 )
-                # Determine the correct input key for the encoder
-                input_features = inputs.get(
-                    "input_features",
-                    inputs.get("input_values", None),
-                )
-                if input_features is not None:
-                    self._encoder(input_features)
 
-        if self._captured_encoder_output is None:
+        if self._captured_output is None:
             raise RuntimeError(
-                "Encoder hook did not capture any output. "
-                "Check that the encoder was actually called during the forward pass."
+                f"Hook on '{self._hook_label}' did not capture any output. "
+                "The hooked module may not have been called during generate(). "
+                "Inspect model.named_modules() and update _resolve_hook_module()."
             )
 
-        hidden_states: Tensor = self._captured_encoder_output  # (B, S, D)
+        hidden_states: Tensor = self._captured_output  # (B, S, D) or (S, D)
 
         if hidden_states.dim() == 2:
-            # Some encoder variants return (S, D) for a single sample
+            # Some variants return (S, D) for a single sample
             hidden_states = hidden_states.unsqueeze(0)
 
-        # Mean-pool over the sequence dimension
-        pooled: Tensor = hidden_states.mean(dim=1)  # (B, D)
+        # Mean-pool over the sequence dimension → (B, D)
+        pooled: Tensor = hidden_states.mean(dim=1)
         return pooled.float().cpu()
 
-    def get_encoder_hidden_dim(self) -> int:
-        """Return the encoder hidden dimension.
+    def get_acoustic_hidden_dim(self) -> int:
+        """Return the acoustic embedding dimension (adapter output dim).
 
-        Tries to infer this from model config; falls back to the Whisper
-        Large-v3 default of 1280.
+        Attempts to infer from model config. Falls back to per-model defaults.
         """
-        for attr in ("d_model", "hidden_size", "encoder_hidden_size"):
+        # LLM hidden size is the adapter output dimension
+        for attr in ("hidden_size", "d_model", "text_config.hidden_size"):
             try:
-                return getattr(self.model.config, attr)
+                obj = self.model.config
+                for part in attr.split("."):
+                    obj = getattr(obj, part)
+                return int(obj)
             except AttributeError:
                 continue
-        return WHISPER_LARGE_V3_HIDDEN_DIM
+
+        # Model-specific fallbacks
+        if VOXTRAL_SMALL in self.model_name_or_path:
+            return _SMALL_FALLBACK_DIM
+        return _MINI_FALLBACK_DIM
 
     # ------------------------------------------------------------------
     # Convenience classmethod
