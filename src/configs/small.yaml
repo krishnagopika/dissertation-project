@@ -1,20 +1,30 @@
 # small.yaml — Voxtral-Small-24B + XLM-RoBERTa-base
 # Requires 2x L40S (96 GB total). Submit with gpu:2.
+#
+# Architecture notes (from config.json):
+#   audio_tower (Whisper encoder): hidden_size=1280, intermediate=5120, layers=32
+#   MLP projector: 1280 → 5120 (linear + GELU + linear)
+#   LLM: hidden_size=5120 (larger than Mini's 3072)
+#
+# acoustic_dim = 1280: extracted from Whisper encoder BEFORE projector,
+# same as Mini — the projector only aligns to the LLM space, not useful for emotion.
+# Embeddings are identical to Mini's (same Whisper weights), so shared path is fine.
 
 model:
   voxtral_id: "mistralai/Voxtral-Small-24B-2507"
   xlmr_id: "FacebookAI/xlm-roberta-base"
-  acoustic_dim: 4096        # Voxtral-Small LLM hidden dim (adapter output)
+  acoustic_dim: 1280        # Whisper encoder hidden dim — same as Mini, before MLP projector
   text_dim: 768             # XLM-RoBERTa-base hidden dim
+  tensor_parallel_size: 2   # 24B model needs 2x L40S (48GB bfloat16)
   fusion_hidden: 512
   num_classes: 7
   num_sentiment_classes: 3
   dropout: 0.3
 
 training:
-  phase1_lr: 2e-5
-  phase2_lr: 1e-4
-  phase3_lr: 1e-5           # optional light unfreezing of XLM-R last 2 layers
+  phase1_lr: 0.00002
+  phase2_lr: 0.0001
+  phase3_lr: 0.00001        # optional light unfreezing of XLM-R last 2 layers
   batch_size: 4             # reduced vs mini due to 24B model VRAM
   epochs_phase1: 3
   epochs_phase2: 10
@@ -27,9 +37,9 @@ training:
   unfreeze_last_n_layers: 2  # for phase 3
 
 data:
-  meld_root: "data/meld_raw"
-  transcripts_path: "data/meld_transcripts"
-  embeddings_path: "data/meld_embeddings"
+  meld_root: "/dcs/large/u5734759/data/meld_raw"
+  transcripts_path: "/dcs/large/u5734759/data/meld_transcripts_small"
+  embeddings_path: "/dcs/large/u5734759/data/meld_embeddings"
   max_audio_duration: 40
   max_text_length: 128
   num_workers: 4

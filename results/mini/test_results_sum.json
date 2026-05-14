@@ -1,0 +1,36 @@
+{
+  "config": "src/configs/mini.yaml",
+  "fusion_type": "sum",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/fusion/sum/best_model.pt",
+  "test_samples": 2610,
+  "emotion": {
+    "accuracy": 0.48237547892720306,
+    "weighted_precision": 0.4677514641887925,
+    "weighted_recall": 0.48237547892720306,
+    "weighted_f1": 0.47256694720147674,
+    "macro_f1": 0.3251120436631054,
+    "auc": 0.6576676844743675,
+    "per_class_f1": {
+      "neutral": 0.6290688872066617,
+      "surprise": 0.44625407166123776,
+      "fear": 0.14,
+      "sadness": 0.2815533980582524,
+      "joy": 0.33655172413793105,
+      "disgust": 0.12844036697247707,
+      "anger": 0.313915857605178
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.5421455938697318,
+    "weighted_precision": 0.5357808291444639,
+    "weighted_recall": 0.5421455938697318,
+    "weighted_f1": 0.5360682020559336,
+    "macro_f1": 0.501379050103692,
+    "auc": 0.6729179869126751,
+    "per_class_f1": {
+      "negative": 0.486592544146501,
+      "neutral": 0.6308376575240919,
+      "positive": 0.3867069486404834
+    }
+  }
+}

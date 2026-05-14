@@ -164,3 +164,18 @@ All experiments run on the `wmlg-ada` partition:
 | CardiffNLP XLM-T | https://huggingface.co/cardiffnlp/twitter-xlm-roberta-base-sentiment |
 | NVIDIA NeMo | https://github.com/NVIDIA-NeMo/NeMo |
 | Kimi | https://arxiv.org/pdf/2504.18425v1 |
+
+Next Steps:
+
+1. classification : ML models
+2. transcriptions from wisper 
+3. MELD dataset evaluation
+4. Overleaf doc 
+5. abalation for text and acoustic embeddings
+6. Feature Ranking
+
+
+
+- visualisation of embeddings (audio association with emotions)
+- class imbalance - (data auggumenttaion, weighted F1, diagonal - for kernel based methods)
+
