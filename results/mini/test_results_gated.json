@@ -1,0 +1,36 @@
+{
+  "config": "src/configs/mini.yaml",
+  "fusion_type": "gated",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/fusion/gated/best_model.pt",
+  "test_samples": 2610,
+  "emotion": {
+    "accuracy": 0.4777777777777778,
+    "weighted_precision": 0.46081203182738734,
+    "weighted_recall": 0.4777777777777778,
+    "weighted_f1": 0.4660207056396254,
+    "macro_f1": 0.3187849253547785,
+    "auc": 0.6493899224143197,
+    "per_class_f1": {
+      "neutral": 0.6270229582235604,
+      "surprise": 0.431924882629108,
+      "fear": 0.1348314606741573,
+      "sadness": 0.27411167512690354,
+      "joy": 0.33472803347280333,
+      "disgust": 0.14035087719298245,
+      "anger": 0.28852459016393445
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.5475095785440613,
+    "weighted_precision": 0.5369446696682092,
+    "weighted_recall": 0.5475095785440613,
+    "weighted_f1": 0.5371290164489256,
+    "macro_f1": 0.4975535061997267,
+    "auc": 0.6679069476679582,
+    "per_class_f1": {
+      "negative": 0.4961139896373057,
+      "neutral": 0.6386980108499096,
+      "positive": 0.3578485181119649
+    }
+  }
+}

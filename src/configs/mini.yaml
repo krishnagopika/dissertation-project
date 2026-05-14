@@ -4,32 +4,34 @@
 model:
   voxtral_id: "mistralai/Voxtral-Mini-3B-2507"
   xlmr_id: "FacebookAI/xlm-roberta-base"
-  acoustic_dim: 1024        # Voxtral-Mini LLM hidden dim (adapter output)
+  acoustic_dim: 1280        # Whisper encoder hidden dim — extracted before MLP projector
   text_dim: 768             # XLM-RoBERTa-base hidden dim
+  tensor_parallel_size: 1   # 1 GPU sufficient for Mini-3B
   fusion_hidden: 512
   num_classes: 7
   num_sentiment_classes: 3
   dropout: 0.3
 
 training:
-  phase1_lr: 2e-5
-  phase2_lr: 1e-4
-  phase3_lr: 1e-5           # optional light unfreezing of XLM-R last 2 layers
+  phase1_lr: 0.00002
+  phase2_lr: 0.0001
+  phase3_lr: 0.00001        # optional light unfreezing of XLM-R last 2 layers
   batch_size: 16
-  epochs_phase1: 3
+  epochs_phase1: 10
   epochs_phase2: 10
   epochs_phase3: 3
   warmup_steps: 100
   weight_decay: 0.01
   max_grad_norm: 1.0
-  checkpoint_dir: "checkpoints/mini"
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/mini"
   log_dir: "logs/mini"
   unfreeze_last_n_layers: 2  # for phase 3
 
 data:
-  meld_root: "data/meld_raw"
-  transcripts_path: "data/meld_transcripts"
-  embeddings_path: "data/meld_embeddings"
+  meld_root: "/dcs/large/u5734759/data/meld_raw"
+  transcripts_path: "/dcs/large/u5734759/data/meld_transcripts"
+  embeddings_path: "/dcs/large/u5734759/data/meld_embeddings"
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings"
   max_audio_duration: 40
   max_text_length: 128
   num_workers: 4

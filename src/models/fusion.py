@@ -1,24 +1,33 @@
 """
 Multimodal Fusion Layer
 ========================
-Implements the fusion strategy that combines acoustic embeddings (from
-Voxtral's Whisper encoder) with text embeddings (from XLM-RoBERTa's [CLS]
-token) into joint sentiment and emotion predictions.
+Implements fusion strategies that combine acoustic embeddings (from Voxtral's
+audio encoder, mean-pooled to shape ``(B, acoustic_dim)``) with text embeddings
+(from XLM-RoBERTa's ``[CLS]`` token, shape ``(B, text_dim)``) for joint
+emotion and sentiment classification.
 
-Two fusion variants are provided:
+Four fusion variants are provided:
 
-1. :class:`FusionModel` — **Concatenation fusion** (default, ablation A1–A4).
-   Concatenates the text and acoustic representations, then projects through a
-   two-layer MLP with LayerNorm, GELU activation, and dropout.
+1. :class:`FusionModel` — **Concatenation fusion** (baseline).
+   Concatenates the two representations then passes through a 2-layer MLP.
 
-2. :class:`SumFusion` — **Sum fusion** (ablation A5).
-   Projects each modality to a common dimension separately, then adds them
-   element-wise before the classification heads.
+2. :class:`SumFusion` — **Sum fusion** (ablation).
+   Projects each modality to a common dim, adds element-wise.
 
-3. :class:`FusionPipeline` — End-to-end wrapper that chains
-   :class:`~src.models.voxtral.VoxtralWrapper` →
-   :class:`~src.models.xlmr.XLMRobertaClassifier` →
-   :class:`FusionModel` into a single callable.
+3. :class:`GatedFusion` — **Symmetric gated fusion**.
+   Learns a per-sample gate vector ``g ∈ (0,1)^H`` from the concatenation of
+   both projected modalities.  Output = ``g ⊙ text_proj + (1−g) ⊙ acoustic_proj``.
+   Inductive bias: the network decides per utterance how much to trust each
+   modality (Arevalo et al., 2017).
+
+4. :class:`CrossModalGating` — **Asymmetric cross-modal gating**.
+   Acoustic features modulate text and vice versa: each modality provides a
+   sigmoid gate that re-weights the *other* modality's projection.  The two
+   gated representations are summed, giving each modality a chance to suppress
+   irrelevant dimensions of its counterpart.
+
+5. :class:`FusionPipeline` — End-to-end wrapper chaining
+   VoxtralWrapper → XLMRobertaClassifier → any of the above fusion modules.
 
 Architecture diagram (FusionModel)
 -----------------------------------
@@ -346,7 +355,255 @@ class SumFusion(nn.Module):
 
 
 # ---------------------------------------------------------------------------
-# 3. End-to-end pipeline
+# 3. Gated Fusion  (Arevalo et al., 2017 — "Gated Multimodal Units")
+# ---------------------------------------------------------------------------
+
+
+class GatedFusion(nn.Module):
+    """Symmetric gated multimodal fusion.
+
+    A gate vector ``g ∈ (0,1)^hidden_dim`` is computed from the concatenation
+    of both projected modalities and applied as a soft selector:
+
+    .. code-block:: text
+
+        t = GELU(Linear(text_repr))         # (B, H)
+        a = GELU(Linear(acoustic_repr))     # (B, H)
+        g = sigmoid(Linear([t; a]))         # (B, H)  — shared gate
+        fused = g ⊙ t + (1−g) ⊙ a         # (B, H)
+
+    Inductive bias: for an angry vocal burst the gate leans acoustic; for a
+    subtle sarcastic phrase it leans textual.  Unlike concatenation, the gate
+    explicitly learns to suppress one modality when the other is more
+    diagnostic.
+
+    Args:
+        acoustic_dim: Dimension of acoustic embeddings.
+        text_dim: Dimension of text embeddings.
+        hidden_dim: Common projection dimension.
+        num_sentiment_classes: Number of sentiment classes.
+        num_emotion_classes: Number of emotion classes.
+        dropout_prob: Dropout probability.
+    """
+
+    def __init__(
+        self,
+        acoustic_dim: int = _ACOUSTIC_DIM,
+        text_dim: int = _TEXT_DIM,
+        hidden_dim: int = _HIDDEN_DIM,
+        num_sentiment_classes: int = _NUM_SENTIMENT,
+        num_emotion_classes: int = _NUM_EMOTION,
+        dropout_prob: float = 0.1,
+    ) -> None:
+        super().__init__()
+
+        self.acoustic_dim = acoustic_dim
+        self.text_dim = text_dim
+        self.hidden_dim = hidden_dim
+
+        # Per-modality projections to common space
+        self.text_proj = nn.Sequential(
+            nn.Linear(text_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+        self.acoustic_proj = nn.Sequential(
+            nn.Linear(acoustic_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+
+        # Gate: takes concat of both projected modalities → (B, H) gate
+        self.gate = nn.Linear(hidden_dim * 2, hidden_dim)
+
+        # Post-fusion MLP
+        self.post_fusion = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+
+        self.sentiment_head = _ClassificationHead(
+            hidden_dim, num_sentiment_classes, dropout_prob
+        )
+        self.emotion_head = _ClassificationHead(
+            hidden_dim, num_emotion_classes, dropout_prob
+        )
+        self._init_weights()
+
+    def _init_weights(self) -> None:
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                if module.bias is not None:
+                    nn.init.zeros_(module.bias)
+
+    def forward(
+        self,
+        text_repr: Tensor,
+        acoustic_repr: Tensor,
+    ) -> Tuple[Tensor, Tensor]:
+        """Fuse via learned symmetric gate.
+
+        Args:
+            text_repr: ``[CLS]`` embedding, shape ``(B, text_dim)``.
+            acoustic_repr: Mean-pooled acoustic embedding, shape ``(B, acoustic_dim)``.
+
+        Returns:
+            Tuple of ``(sentiment_logits, emotion_logits)``.
+        """
+        acoustic_repr = acoustic_repr.to(text_repr.device)
+
+        t: Tensor = self.text_proj(text_repr)        # (B, H)
+        a: Tensor = self.acoustic_proj(acoustic_repr) # (B, H)
+
+        g: Tensor = torch.sigmoid(
+            self.gate(torch.cat([t, a], dim=-1))
+        )                                             # (B, H)
+        fused: Tensor = g * t + (1.0 - g) * a        # (B, H)
+        out: Tensor = self.post_fusion(fused)         # (B, H)
+
+        return self.sentiment_head(out), self.emotion_head(out)
+
+    def trainable_parameters(self) -> int:
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
+
+
+# ---------------------------------------------------------------------------
+# 4. Cross-Modal Gating  (asymmetric — each modality gates the other)
+# ---------------------------------------------------------------------------
+
+
+class CrossModalGating(nn.Module):
+    """Asymmetric cross-modal gating fusion.
+
+    Each modality acts as a contextual signal that re-weights the *other*
+    modality's projection via a sigmoid gate:
+
+    .. code-block:: text
+
+        t = GELU(Linear(text_repr))           # (B, H)
+        a = GELU(Linear(acoustic_repr))       # (B, H)
+        g_ta = sigmoid(Linear(a))            # acoustic gates text
+        g_at = sigmoid(Linear(t))            # text gates acoustic
+        t_mod = g_ta ⊙ t                     # modulated text
+        a_mod = g_at ⊙ a                     # modulated acoustic
+        fused = t_mod + a_mod                # (B, H)
+
+    Inductive bias: if the acoustic signal is flat/uninformative, the text gate
+    will suppress irrelevant acoustic dimensions and vice versa.  Unlike
+    symmetric gating, each modality has separate, directional control —
+    more expressive at the cost of two extra linear layers.
+
+    Args:
+        acoustic_dim: Dimension of acoustic embeddings.
+        text_dim: Dimension of text embeddings.
+        hidden_dim: Common projection dimension.
+        num_sentiment_classes: Number of sentiment classes.
+        num_emotion_classes: Number of emotion classes.
+        dropout_prob: Dropout probability.
+    """
+
+    def __init__(
+        self,
+        acoustic_dim: int = _ACOUSTIC_DIM,
+        text_dim: int = _TEXT_DIM,
+        hidden_dim: int = _HIDDEN_DIM,
+        num_sentiment_classes: int = _NUM_SENTIMENT,
+        num_emotion_classes: int = _NUM_EMOTION,
+        dropout_prob: float = 0.1,
+    ) -> None:
+        super().__init__()
+
+        self.acoustic_dim = acoustic_dim
+        self.text_dim = text_dim
+        self.hidden_dim = hidden_dim
+
+        # Per-modality projections
+        self.text_proj = nn.Sequential(
+            nn.Linear(text_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+        self.acoustic_proj = nn.Sequential(
+            nn.Linear(acoustic_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+
+        # Asymmetric gates — each computed from the OTHER modality
+        self.gate_text_from_acoustic = nn.Linear(hidden_dim, hidden_dim)   # acoustic → gate for text
+        self.gate_acoustic_from_text = nn.Linear(hidden_dim, hidden_dim)   # text → gate for acoustic
+
+        # Post-fusion MLP
+        self.post_fusion = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.LayerNorm(hidden_dim),
+            nn.GELU(),
+            nn.Dropout(p=dropout_prob),
+        )
+
+        self.sentiment_head = _ClassificationHead(
+            hidden_dim, num_sentiment_classes, dropout_prob
+        )
+        self.emotion_head = _ClassificationHead(
+            hidden_dim, num_emotion_classes, dropout_prob
+        )
+        self._init_weights()
+
+    def _init_weights(self) -> None:
+        for module in self.modules():
+            if isinstance(module, nn.Linear):
+                nn.init.xavier_uniform_(module.weight)
+                if module.bias is not None:
+                    nn.init.zeros_(module.bias)
+
+    def forward(
+        self,
+        text_repr: Tensor,
+        acoustic_repr: Tensor,
+    ) -> Tuple[Tensor, Tensor]:
+        """Fuse via asymmetric cross-modal gates.
+
+        Args:
+            text_repr: ``[CLS]`` embedding, shape ``(B, text_dim)``.
+            acoustic_repr: Mean-pooled acoustic embedding, shape ``(B, acoustic_dim)``.
+
+        Returns:
+            Tuple of ``(sentiment_logits, emotion_logits)``.
+        """
+        acoustic_repr = acoustic_repr.to(text_repr.device)
+
+        t: Tensor = self.text_proj(text_repr)         # (B, H)
+        a: Tensor = self.acoustic_proj(acoustic_repr)  # (B, H)
+
+        # Acoustic modulates text; text modulates acoustic
+        g_ta: Tensor = torch.sigmoid(
+            self.gate_text_from_acoustic(a)
+        )                                              # (B, H)
+        g_at: Tensor = torch.sigmoid(
+            self.gate_acoustic_from_text(t)
+        )                                              # (B, H)
+
+        t_mod: Tensor = g_ta * t                       # (B, H)
+        a_mod: Tensor = g_at * a                       # (B, H)
+
+        fused: Tensor = t_mod + a_mod                  # (B, H)
+        out: Tensor = self.post_fusion(fused)           # (B, H)
+
+        return self.sentiment_head(out), self.emotion_head(out)
+
+    def trainable_parameters(self) -> int:
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
+
+
+# ---------------------------------------------------------------------------
+# 5. End-to-end pipeline
 # ---------------------------------------------------------------------------
 
 
@@ -432,29 +689,26 @@ class FusionPipeline(nn.Module):
         )
 
         # --- Fusion module ---
+        _fusion_classes = {
+            "concat":        FusionModel,
+            "sum":           SumFusion,
+            "gated":         GatedFusion,
+            "crossmodal":    CrossModalGating,
+        }
         fusion_type_lower = fusion_type.lower()
-        if fusion_type_lower == "concat":
-            self.fusion = FusionModel(
-                acoustic_dim=acoustic_dim,
-                text_dim=text_dim,
-                hidden_dim=hidden_dim,
-                num_sentiment_classes=num_sentiment_classes,
-                num_emotion_classes=num_emotion_classes,
-                dropout_prob=dropout_prob,
-            )
-        elif fusion_type_lower == "sum":
-            self.fusion = SumFusion(
-                acoustic_dim=acoustic_dim,
-                text_dim=text_dim,
-                hidden_dim=hidden_dim,
-                num_sentiment_classes=num_sentiment_classes,
-                num_emotion_classes=num_emotion_classes,
-                dropout_prob=dropout_prob,
-            )
-        else:
+        if fusion_type_lower not in _fusion_classes:
             raise ValueError(
-                f"fusion_type must be 'concat' or 'sum', got '{fusion_type}'"
+                f"fusion_type must be one of {list(_fusion_classes)}, "
+                f"got '{fusion_type}'"
             )
+        self.fusion = _fusion_classes[fusion_type_lower](
+            acoustic_dim=acoustic_dim,
+            text_dim=text_dim,
+            hidden_dim=hidden_dim,
+            num_sentiment_classes=num_sentiment_classes,
+            num_emotion_classes=num_emotion_classes,
+            dropout_prob=dropout_prob,
+        )
 
         logger.info("FusionPipeline ready. Fusion strategy: %s", fusion_type)
 

@@ -31,10 +31,10 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Optional, Tuple
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import torch
 import torch.nn as nn
-import yaml
 from torch import Tensor
 from torch.utils.data import DataLoader, Dataset
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
@@ -49,55 +49,7 @@ from src.evaluation.metrics import (
     log_metrics,
 )
 from src.models.xlmr import XLMRobertaClassifier
-
-
-# ---------------------------------------------------------------------------
-# Utilities
-# ---------------------------------------------------------------------------
-
-def get_device() -> torch.device:
-    """Return the best available device: CUDA > MPS > CPU."""
-    if torch.cuda.is_available():
-        return torch.device("cuda")
-    elif torch.backends.mps.is_available():
-        return torch.device("mps")
-    return torch.device("cpu")
-
-
-def set_seed(seed: int) -> None:
-    """Set all random seeds for full reproducibility."""
-    import random
-    import numpy as np
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-    torch.cuda.manual_seed_all(seed)
-    torch.backends.cudnn.deterministic = True
-    torch.backends.cudnn.benchmark = False
-
-
-def load_config(config_path: str) -> dict:
-    """Load YAML config and return as dictionary."""
-    with open(config_path, "r") as f:
-        return yaml.safe_load(f)
-
-
-def setup_logging(log_dir: str, script_name: str) -> logging.Logger:
-    """Set up logging to both file and console."""
-    Path(log_dir).mkdir(parents=True, exist_ok=True)
-    logger = logging.getLogger(script_name)
-    logger.setLevel(logging.INFO)
-    formatter = logging.Formatter(
-        "%(asctime)s | %(levelname)s | %(message)s",
-        datefmt="%Y-%m-%d %H:%M:%S",
-    )
-    console = logging.StreamHandler()
-    console.setFormatter(formatter)
-    logger.addHandler(console)
-    fh = logging.FileHandler(Path(log_dir) / f"{script_name}.log")
-    fh.setFormatter(formatter)
-    logger.addHandler(fh)
-    return logger
+from src.utils import get_device, load_config, set_seed, setup_logging
 
 
 # ---------------------------------------------------------------------------
@@ -156,21 +108,9 @@ class TranscriptDataset(Dataset):
         df["emotion"] = df["emotion"].str.strip().str.lower()
         df["sentiment"] = df["sentiment"].str.strip().str.lower()
 
-        transcript_file = (
-            Path(transcripts_path) / f"{split}_transcripts.json"
-        )
-        if not transcript_file.exists():
-            raise FileNotFoundError(
-                f"Transcripts not found: {transcript_file}. "
-                "Run preprocessing/transcribe_all.py first."
-            )
-        with open(transcript_file, "r", encoding="utf-8") as f:
-            transcripts: Dict[str, str] = json.load(f)
-
         self.samples: List[Tuple[str, int, int]] = []
         for _, row in df.iterrows():
-            key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
-            text = transcripts.get(key, "")
+            text = str(row.get("utterance", "")).strip()
             emotion_idx = EMOTION2IDX.get(row["emotion"], 0)
             sentiment_idx = SENTIMENT2IDX.get(row["sentiment"], 1)
             self.samples.append((text, emotion_idx, sentiment_idx))
@@ -208,7 +148,17 @@ def save_checkpoint(
     checkpoint_dir: str,
     is_best: bool = False,
 ) -> None:
-    """Save model checkpoint."""
+    """Save model checkpoint.
+
+    Args:
+        model: Model to save.
+        optimizer: Optimizer state to save (for resuming).
+        epoch: Current epoch number.
+        metric: Validation weighted F1 at this epoch.
+        config: Full config dictionary.
+        checkpoint_dir: Directory to save checkpoints.
+        is_best: If True, also save as best_model.pt.
+    """
     Path(checkpoint_dir).mkdir(parents=True, exist_ok=True)
     state = {
         "epoch": epoch,
@@ -223,13 +173,26 @@ def save_checkpoint(
     if is_best:
         torch.save(state, Path(checkpoint_dir) / "best_model.pt")
 
+    # Keep only the latest epoch checkpoint to avoid filling disk
+    for old_ckpt in sorted(Path(checkpoint_dir).glob("checkpoint_epoch*.pt"))[:-1]:
+        old_ckpt.unlink()
+
 
 def load_checkpoint(
     checkpoint_path: str,
     model: nn.Module,
     optimizer: torch.optim.Optimizer,
 ) -> Tuple[int, float]:
-    """Load checkpoint; return (start_epoch, best_metric)."""
+    """Load checkpoint; return (start_epoch, best_metric).
+
+    Args:
+        checkpoint_path: Path to checkpoint file.
+        model: Model to restore weights into.
+        optimizer: Optimizer to restore state into.
+
+    Returns:
+        Tuple of (start_epoch, best_metric).
+    """
     state = torch.load(checkpoint_path, map_location="cpu")
     model.load_state_dict(state["model_state_dict"])
     optimizer.load_state_dict(state["optimizer_state_dict"])
@@ -251,7 +214,22 @@ def train_one_epoch(
     logger: logging.Logger,
     epoch: int,
 ) -> float:
-    """Run one training epoch; return mean loss."""
+    """Run one training epoch; return mean loss.
+
+    Args:
+        model: XLMRobertaClassifier to train.
+        loader: Training DataLoader.
+        optimizer: AdamW optimizer.
+        scheduler: Linear warmup scheduler.
+        device: Target device.
+        emotion_criterion: Weighted CrossEntropyLoss for emotion.
+        sentiment_criterion: Weighted CrossEntropyLoss for sentiment.
+        logger: Logger instance.
+        epoch: Current epoch index (0-based).
+
+    Returns:
+        Mean training loss for this epoch.
+    """
     model.train()
     total_loss = 0.0
 
@@ -290,7 +268,18 @@ def evaluate(
     emotion_criterion: nn.Module,
     sentiment_criterion: nn.Module,
 ) -> Tuple[float, Dict, Dict]:
-    """Evaluate model; return (mean_loss, emotion_metrics, sentiment_metrics)."""
+    """Evaluate model; return (mean_loss, emotion_metrics, sentiment_metrics).
+
+    Args:
+        model: XLMRobertaClassifier.
+        loader: Validation DataLoader.
+        device: Target device.
+        emotion_criterion: Loss function for emotion.
+        sentiment_criterion: Loss function for sentiment.
+
+    Returns:
+        Tuple of (mean_loss, emotion_metrics_dict, sentiment_metrics_dict).
+    """
     model.eval()
     total_loss = 0.0
     all_emotion_preds: List[int] = []
@@ -357,7 +346,6 @@ def main() -> None:
 
     # ---- Tokenizer & datasets ----
     xlmr_id = config["model"]["xlmr_id"]
-    from transformers import AutoTokenizer
     tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
 
     max_length = config["data"]["max_text_length"]
@@ -423,8 +411,31 @@ def main() -> None:
         num_training_steps=total_steps,
     )
 
-    emotion_criterion = nn.CrossEntropyLoss()
-    sentiment_criterion = nn.CrossEntropyLoss()
+    # ---- Class weights to handle MELD imbalance ----
+    emotion_labels_all = [s[1] for s in train_ds.samples]
+    sentiment_labels_all = [s[2] for s in train_ds.samples]
+
+    def compute_class_weights(labels: list, num_classes: int) -> Tensor:
+        counts = torch.zeros(num_classes)
+        for lbl in labels:
+            counts[lbl] += 1
+        counts = counts.clamp(min=1)
+        weights = len(labels) / (num_classes * counts)
+        return weights.to(device)
+
+    emotion_weights = compute_class_weights(
+        emotion_labels_all, config["model"]["num_classes"]
+    )
+    sentiment_weights = compute_class_weights(
+        sentiment_labels_all, config["model"]["num_sentiment_classes"]
+    )
+    logger.info(
+        "Emotion class weights: %s",
+        [f"{w:.3f}" for w in emotion_weights.cpu().tolist()],
+    )
+
+    emotion_criterion = nn.CrossEntropyLoss(weight=emotion_weights)
+    sentiment_criterion = nn.CrossEntropyLoss(weight=sentiment_weights)
 
     # ---- Resume from checkpoint if available ----
     start_epoch = 0
@@ -435,7 +446,6 @@ def main() -> None:
         if checkpoints:
             latest = checkpoints[-1]
             logger.info("Resuming from checkpoint: %s", latest)
-            # Unwrap DataParallel for loading
             m = model.module if hasattr(model, "module") else model
             start_epoch, best_metric = load_checkpoint(
                 str(latest), m, optimizer
@@ -443,6 +453,9 @@ def main() -> None:
 
     # ---- Training loop ----
     total_epochs = config["training"]["epochs_phase1"]
+    train_losses: List[float] = []
+    val_losses: List[float] = []
+
     for epoch in range(start_epoch, total_epochs):
         train_loss = train_one_epoch(
             model, train_loader, optimizer, scheduler,
@@ -451,6 +464,9 @@ def main() -> None:
         val_loss, emotion_metrics, sentiment_metrics = evaluate(
             model, dev_loader, device, emotion_criterion, sentiment_criterion
         )
+
+        train_losses.append(train_loss)
+        val_losses.append(val_loss)
 
         wf1 = emotion_metrics["weighted_f1"]
         logger.info(
@@ -472,6 +488,24 @@ def main() -> None:
         )
 
     logger.info("Phase 1 complete. Best emotion WF1: %.4f", best_metric)
+
+    # ---- Loss curve plot ----
+    if train_losses:
+        plot_dir = Path(config["evaluation"]["output_dir"])
+        plot_dir.mkdir(parents=True, exist_ok=True)
+        epochs_range = range(start_epoch + 1, start_epoch + len(train_losses) + 1)
+        fig, ax = plt.subplots(figsize=(8, 5))
+        ax.plot(epochs_range, train_losses, marker="o", label="Train Loss")
+        ax.plot(epochs_range, val_losses, marker="o", label="Val Loss")
+        ax.set_xlabel("Epoch")
+        ax.set_ylabel("Loss")
+        ax.set_title("Phase 1 — XLM-RoBERTa Fine-tuning Loss")
+        ax.legend()
+        ax.grid(True)
+        plot_path = plot_dir / "phase1_loss_curve.png"
+        fig.savefig(plot_path, dpi=150, bbox_inches="tight")
+        plt.close(fig)
+        logger.info("Loss curve saved to %s", plot_path)
 
 
 if __name__ == "__main__":
