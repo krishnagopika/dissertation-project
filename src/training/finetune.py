@@ -35,8 +35,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 from torch import Tensor
-from torch.utils.data import DataLoader, Dataset
+from torch.utils.data import DataLoader, Dataset, WeightedRandomSampler
 from transformers import AutoTokenizer, get_linear_schedule_with_warmup
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
@@ -86,6 +87,7 @@ class TranscriptDataset(Dataset):
         split: str,
         tokenizer,
         max_length: int = 128,
+        paraphrases_path: Optional[str] = None,
     ) -> None:
         assert split in ("train", "dev", "test"), (
             f"split must be train/dev/test, got {split}"
@@ -115,6 +117,27 @@ class TranscriptDataset(Dataset):
             sentiment_idx = SENTIMENT2IDX.get(row["sentiment"], 1)
             self.samples.append((text, emotion_idx, sentiment_idx))
 
+        self.num_original = len(self.samples)
+        self.num_paraphrases = 0
+
+        if paraphrases_path is not None and split == "train":
+            p = Path(paraphrases_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"Paraphrases enabled but file not found at {p}. "
+                    f"Run preprocessing/augment_transcripts.py first."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                aug = json.load(f).get("paraphrases", [])
+            for item in aug:
+                text = str(item.get("text", "")).strip()
+                if not text:
+                    continue
+                emotion_idx = EMOTION2IDX.get(item["emotion"], 0)
+                sentiment_idx = SENTIMENT2IDX.get(item["sentiment"], 1)
+                self.samples.append((text, emotion_idx, sentiment_idx))
+            self.num_paraphrases = len(self.samples) - self.num_original
+
     def __len__(self) -> int:
         return len(self.samples)
 
@@ -133,6 +156,92 @@ class TranscriptDataset(Dataset):
             "emotion_label": torch.tensor(emotion_label, dtype=torch.long),
             "sentiment_label": torch.tensor(sentiment_label, dtype=torch.long),
         }
+
+
+# ---------------------------------------------------------------------------
+# Imbalance handling
+# ---------------------------------------------------------------------------
+
+class FocalLoss(nn.Module):
+    """Multi-class focal loss with optional per-class alpha weights.
+
+    Computes ``- alpha_t * (1 - p_t) ** gamma * log(p_t)`` where ``p_t`` is the
+    softmax probability of the ground-truth class. Reduces to weighted
+    cross-entropy when ``gamma == 0``.
+
+    Args:
+        weight: Optional per-class alpha tensor of shape ``(num_classes,)``.
+            If None, no alpha weighting is applied.
+        gamma: Focusing parameter. Higher values down-weight easy examples
+            more aggressively. Standard choice is 2.0 (Lin et al., 2017).
+        reduction: One of ``'mean'``, ``'sum'``, ``'none'``.
+    """
+
+    def __init__(
+        self,
+        weight: Optional[Tensor] = None,
+        gamma: float = 2.0,
+        reduction: str = "mean",
+    ) -> None:
+        super().__init__()
+        assert reduction in ("mean", "sum", "none"), (
+            f"reduction must be mean/sum/none, got {reduction}"
+        )
+        self.register_buffer(
+            "weight", weight if weight is not None else torch.empty(0)
+        )
+        self.gamma = float(gamma)
+        self.reduction = reduction
+
+    def forward(self, logits: Tensor, target: Tensor) -> Tensor:
+        log_probs = F.log_softmax(logits, dim=-1)
+        log_pt = log_probs.gather(1, target.unsqueeze(1)).squeeze(1)
+        pt = log_pt.exp()
+        focal_factor = (1.0 - pt).pow(self.gamma)
+
+        if self.weight.numel() > 0:
+            alpha_t = self.weight.gather(0, target)
+            loss = -alpha_t * focal_factor * log_pt
+        else:
+            loss = -focal_factor * log_pt
+
+        if self.reduction == "mean":
+            return loss.mean()
+        if self.reduction == "sum":
+            return loss.sum()
+        return loss
+
+
+def build_class_weighted_sampler(
+    samples: List[Tuple[str, int, int]],
+    num_classes: int,
+) -> WeightedRandomSampler:
+    """Build a WeightedRandomSampler that oversamples minority emotion classes.
+
+    Per-sample weight is ``1 / count[emotion_label]``, so each class is drawn
+    with equal expected frequency regardless of its raw count.
+
+    Args:
+        samples: Dataset samples as (text, emotion_idx, sentiment_idx) tuples.
+        num_classes: Number of emotion classes.
+
+    Returns:
+        WeightedRandomSampler over the same number of samples as the dataset,
+        with replacement.
+    """
+    counts = torch.zeros(num_classes)
+    for _, emo, _ in samples:
+        counts[emo] += 1
+    counts = counts.clamp(min=1)
+    sample_weights = torch.tensor(
+        [1.0 / counts[emo].item() for _, emo, _ in samples],
+        dtype=torch.double,
+    )
+    return WeightedRandomSampler(
+        weights=sample_weights,
+        num_samples=len(samples),
+        replacement=True,
+    )
 
 
 # ---------------------------------------------------------------------------
@@ -352,12 +461,27 @@ def main() -> None:
     num_workers = config["data"]["num_workers"]
     batch_size = config["training"]["batch_size"]
 
+    use_paraphrases = bool(
+        config["training"].get("use_paraphrases", False)
+    )
+    paraphrases_path: Optional[str] = None
+    if use_paraphrases:
+        paraphrases_path = config.get("augmentation", {}).get(
+            "paraphrases_path"
+        )
+        if paraphrases_path is None:
+            raise KeyError(
+                "training.use_paraphrases=true but "
+                "augmentation.paraphrases_path is not set."
+            )
+
     train_ds = TranscriptDataset(
         meld_root=config["data"]["meld_root"],
         transcripts_path=config["data"]["transcripts_path"],
         split="train",
         tokenizer=tokenizer,
         max_length=max_length,
+        paraphrases_path=paraphrases_path,
     )
     dev_ds = TranscriptDataset(
         meld_root=config["data"]["meld_root"],
@@ -366,14 +490,34 @@ def main() -> None:
         tokenizer=tokenizer,
         max_length=max_length,
     )
-
-    train_loader = DataLoader(
-        train_ds,
-        batch_size=batch_size,
-        shuffle=True,
-        num_workers=num_workers,
-        pin_memory=True,
+    logger.info(
+        "Train dataset: %d originals + %d paraphrases = %d total",
+        train_ds.num_original, train_ds.num_paraphrases, len(train_ds),
     )
+
+    use_sampler = bool(
+        config["training"].get("use_weighted_sampler", False)
+    )
+    if use_sampler:
+        sampler = build_class_weighted_sampler(
+            train_ds.samples, config["model"]["num_classes"]
+        )
+        train_loader = DataLoader(
+            train_ds,
+            batch_size=batch_size,
+            sampler=sampler,
+            num_workers=num_workers,
+            pin_memory=True,
+        )
+        logger.info("Using WeightedRandomSampler on emotion classes")
+    else:
+        train_loader = DataLoader(
+            train_ds,
+            batch_size=batch_size,
+            shuffle=True,
+            num_workers=num_workers,
+            pin_memory=True,
+        )
     dev_loader = DataLoader(
         dev_ds,
         batch_size=batch_size,
@@ -411,7 +555,10 @@ def main() -> None:
         num_training_steps=total_steps,
     )
 
-    # ---- Class weights to handle MELD imbalance ----
+    # ---- Loss: class weights + optional focal loss ----
+    # When the sampler is active each class is drawn uniformly already, so
+    # adding inverse-frequency weights to the loss double-corrects and hurts
+    # the majority classes. Skip alpha weighting in that case.
     emotion_labels_all = [s[1] for s in train_ds.samples]
     sentiment_labels_all = [s[2] for s in train_ds.samples]
 
@@ -423,19 +570,37 @@ def main() -> None:
         weights = len(labels) / (num_classes * counts)
         return weights.to(device)
 
-    emotion_weights = compute_class_weights(
-        emotion_labels_all, config["model"]["num_classes"]
-    )
-    sentiment_weights = compute_class_weights(
-        sentiment_labels_all, config["model"]["num_sentiment_classes"]
-    )
-    logger.info(
-        "Emotion class weights: %s",
-        [f"{w:.3f}" for w in emotion_weights.cpu().tolist()],
-    )
+    if use_sampler:
+        emotion_weights = None
+        sentiment_weights = None
+        logger.info(
+            "Sampler active — using uniform alpha in loss (no class weights)"
+        )
+    else:
+        emotion_weights = compute_class_weights(
+            emotion_labels_all, config["model"]["num_classes"]
+        )
+        sentiment_weights = compute_class_weights(
+            sentiment_labels_all,
+            config["model"]["num_sentiment_classes"],
+        )
+        logger.info(
+            "Emotion class weights: %s",
+            [f"{w:.3f}" for w in emotion_weights.cpu().tolist()],
+        )
 
-    emotion_criterion = nn.CrossEntropyLoss(weight=emotion_weights)
-    sentiment_criterion = nn.CrossEntropyLoss(weight=sentiment_weights)
+    use_focal = bool(config["training"].get("use_focal_loss", False))
+    if use_focal:
+        gamma = float(config["training"].get("focal_gamma", 2.0))
+        emotion_criterion = FocalLoss(weight=emotion_weights, gamma=gamma)
+        sentiment_criterion = FocalLoss(weight=sentiment_weights, gamma=gamma)
+        emotion_criterion = emotion_criterion.to(device)
+        sentiment_criterion = sentiment_criterion.to(device)
+        logger.info("Using FocalLoss(gamma=%.2f) on both heads", gamma)
+    else:
+        emotion_criterion = nn.CrossEntropyLoss(weight=emotion_weights)
+        sentiment_criterion = nn.CrossEntropyLoss(weight=sentiment_weights)
+        logger.info("Using CrossEntropyLoss on both heads")
 
     # ---- Resume from checkpoint if available ----
     start_epoch = 0

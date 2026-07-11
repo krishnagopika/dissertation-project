@@ -1,0 +1,230 @@
+{
+  "train": {
+    "corpus_wer": 0.337891,
+    "corpus_mer": 0.294529,
+    "corpus_wil": 0.388334,
+    "corpus_wip": 0.611666,
+    "corpus_cer": 0.258205,
+    "mean_utt_wer": 0.526912,
+    "std_utt_wer": 1.153533,
+    "n_total": 9989,
+    "n_matched": 9988,
+    "n_missing": 1,
+    "worst_examples": [
+      {
+        "key": "dia307_utt10",
+        "wer": 31.5,
+        "gold": "Ohhh, I",
+        "asr": "I knew you loved her! Man, you need to go to the airport and tell her. You're probably gonna catch her just as she's about to go to the gate. You're gonna call out her name and yell, I love you. She's gonna say, I love you too. And you guys are gonna have the most amazing kiss. Everyone at the gate will applaud."
+      },
+      {
+        "key": "dia900_utt11",
+        "wer": 22.0,
+        "gold": "No-no-no-no!!",
+        "asr": "You know, you don't have to do that now. Oh, oh, yeah, I did. No, no, no, not him. No, you don't."
+      },
+      {
+        "key": "dia464_utt15",
+        "wer": 20.0,
+        "gold": "No-no-no-no! That was the joke!",
+        "asr": "No, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no,"
+      },
+      {
+        "key": "dia808_utt4",
+        "wer": 17.090909,
+        "gold": "We will take a moonlit walk on the Rue de la .",
+        "asr": "We will take a moonlit walk on the rue de la ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble ble"
+      },
+      {
+        "key": "dia156_utt1",
+        "wer": 17.0,
+        "gold": "Go!",
+        "asr": "So I called the father and asked him to meet you here so you could tell him. Go!"
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia164_utt2",
+        "wer": 0.0,
+        "gold": "You did! Oh.... I always figured you just thought I was Monica's geeky older brother.",
+        "asr": "You did? Oh. I always figured you just thought I was Monica's geeky older brother."
+      },
+      {
+        "key": "dia383_utt3",
+        "wer": 0.0,
+        "gold": "Stupid closet full of bugs!",
+        "asr": "Stupid closet full of bugs."
+      },
+      {
+        "key": "dia278_utt1",
+        "wer": 0.0,
+        "gold": "So you like the drums!",
+        "asr": "So you like the drums."
+      },
+      {
+        "key": "dia875_utt6",
+        "wer": 0.0,
+        "gold": "This is a garden view room, and we paid for an ocean view room.",
+        "asr": "This is a garden view room and we paid for an ocean view room."
+      },
+      {
+        "key": "dia875_utt2",
+        "wer": 0.0,
+        "gold": "They say he's only got half a tank left.",
+        "asr": "They say he's only got half a tank left."
+      }
+    ]
+  },
+  "dev": {
+    "corpus_wer": 0.288775,
+    "corpus_mer": 0.259153,
+    "corpus_wil": 0.354269,
+    "corpus_wip": 0.645731,
+    "corpus_cer": 0.207776,
+    "mean_utt_wer": 0.428364,
+    "std_utt_wer": 0.660161,
+    "n_total": 1109,
+    "n_matched": 1108,
+    "n_missing": 1,
+    "worst_examples": [
+      {
+        "key": "dia32_utt9",
+        "wer": 6.0,
+        "gold": "Do them!!",
+        "asr": "If you're anxious, there are a few ways to help things along. Do them."
+      },
+      {
+        "key": "dia1_utt9",
+        "wer": 5.0,
+        "gold": "And",
+        "asr": "And that's not against your oath?"
+      },
+      {
+        "key": "dia15_utt3",
+        "wer": 5.0,
+        "gold": "Yeah.",
+        "asr": "It's in such good condition. Yeah."
+      },
+      {
+        "key": "dia57_utt7",
+        "wer": 5.0,
+        "gold": "Nope.",
+        "asr": "Has she slept at all? Nope."
+      },
+      {
+        "key": "dia5_utt1",
+        "wer": 5.0,
+        "gold": "What?",
+        "asr": "What? I was doing great with..."
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia46_utt4",
+        "wer": 0.0,
+        "gold": "You guys, Joey just saw Janice kissing her ex-husband.",
+        "asr": "You guys, Joey just saw Janice kissing her ex-husband."
+      },
+      {
+        "key": "dia110_utt2",
+        "wer": 0.0,
+        "gold": "Well, what period is it from?",
+        "asr": "Well, what period is it from?"
+      },
+      {
+        "key": "dia109_utt7",
+        "wer": 0.0,
+        "gold": "I'm only eating the skin, so the chicken's up for grabs.",
+        "asr": "I'm only eating the skin, so the chicken's up for grabs."
+      },
+      {
+        "key": "dia109_utt6",
+        "wer": 0.0,
+        "gold": "All right, now, I'm going to get back to my bucket.",
+        "asr": "All right. Now, I'm going to get back to my bucket."
+      },
+      {
+        "key": "dia109_utt4",
+        "wer": 0.0,
+        "gold": "Well, I think we've all learned something about who's disgusting and who's not.",
+        "asr": "Well, I think we've all learned something about who's disgusting and who's not."
+      }
+    ]
+  },
+  "test": {
+    "corpus_wer": 0.33036,
+    "corpus_mer": 0.289278,
+    "corpus_wil": 0.386403,
+    "corpus_wip": 0.613597,
+    "corpus_cer": 0.243364,
+    "mean_utt_wer": 0.573788,
+    "std_utt_wer": 1.403032,
+    "n_total": 2610,
+    "n_matched": 2610,
+    "n_missing": 0,
+    "worst_examples": [
+      {
+        "key": "dia212_utt3",
+        "wer": 35.0,
+        "gold": "Y\u0092know?",
+        "asr": "Oh, please. Every moment is precious. You know, besides, somebody had to ride in that other taxi with the rest of your luggage, and your friends don't seem to care very much that you're leaving."
+      },
+      {
+        "key": "dia49_utt9",
+        "wer": 22.0,
+        "gold": "Hey!",
+        "asr": "I know, me too. Hey, you know what? What if we went away for the whole weekend? You know, we'd have no interruptions."
+      },
+      {
+        "key": "dia220_utt0",
+        "wer": 16.0,
+        "gold": "What\u0092s that smell?",
+        "asr": "Well, this is Julie. Uh, Julie, this is Rachel. Hi. Uh, oh, uh, these are... Oh. These are... aren't for you. Uh, these are for you. Welcome to our country. Thank you. I'm from New York. Well, not a problem. We'll just use them to stop the bleeding."
+      },
+      {
+        "key": "dia93_utt4",
+        "wer": 16.0,
+        "gold": "Yeah?",
+        "asr": "Well, I don't want to talk to you, Wayne. I hate you. You ruined my life."
+      },
+      {
+        "key": "dia71_utt5",
+        "wer": 12.0,
+        "gold": "Oh!",
+        "asr": "Uh, Joey, this is the awkward part. Oh, hey. Right. Not a problem."
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia237_utt5",
+        "wer": 0.0,
+        "gold": "Eight and a half hours of aptitude tests, intelligence tests, personality tests... and what do I learn?",
+        "asr": "Eight and a half hours of aptitude tests, intelligence tests, personality tests, and what do I learn?"
+      },
+      {
+        "key": "dia107_utt2",
+        "wer": 0.0,
+        "gold": "Do you still have that, um, Navy uniform?",
+        "asr": "Do you still have that, um, Navy uniform?"
+      },
+      {
+        "key": "dia106_utt2",
+        "wer": 0.0,
+        "gold": "Then why are you smoking?",
+        "asr": "Then why are you smoking?"
+      },
+      {
+        "key": "dia102_utt2",
+        "wer": 0.0,
+        "gold": "How could you not tell me that she has hair?",
+        "asr": "How could you not tell me that she has hair?"
+      },
+      {
+        "key": "dia102_utt0",
+        "wer": 0.0,
+        "gold": "You said she was bald.",
+        "asr": "You said she was bald."
+      }
+    ]
+  }
+}

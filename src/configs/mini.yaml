@@ -3,6 +3,7 @@
 
 model:
   voxtral_id: "mistralai/Voxtral-Mini-3B-2507"
+  whisper_id: "openai/whisper-large-v3"   # standalone ASR baseline (= Voxtral's encoder)
   xlmr_id: "FacebookAI/xlm-roberta-base"
   acoustic_dim: 1280        # Whisper encoder hidden dim — extracted before MLP projector
   text_dim: 768             # XLM-RoBERTa-base hidden dim
@@ -26,6 +27,56 @@ training:
   checkpoint_dir: "/dcs/large/u5734759/checkpoints/mini"
   log_dir: "logs/mini"
   unfreeze_last_n_layers: 2  # for phase 3
+  # Imbalance handling — Phase 1 only
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: true
+
+use_ravdess_pretrain: true    # Phase B: warm-start fusion's acoustic_proj
+                              # from the RAVDESS-pretrained backbone.
+
+ravdess:
+  data_root: "/dcs/large/u5734759/data/ravdess"
+  embeddings_path: "/dcs/large/u5734759/data/ravdess_embeddings/embeddings.pt"
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/ravdess/best_acoustic_backbone.pt"
+  num_classes: 8                # 8 RAVDESS emotions (incl. calm)
+  hidden_dim: 512               # must match model.fusion_hidden so weights transfer
+  train_ratio: 0.70
+  val_ratio: 0.15
+  max_duration_sec: 5.0
+  epochs: 30
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+combined:
+  # Joint acoustic-only training on RAVDESS + MELD, all labels mapped into
+  # MELD's 7-class emotion space. RAVDESS calm → MELD neutral (supervisor
+  # said do not drop). Val = MELD dev (target domain) for early stopping.
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_acoustic_backbone.pt"
+  full_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_full_model.pt"
+  hidden_dim: 512
+  epochs: 20
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+augmentation:
+  paraphrases_path: "/dcs/large/u5734759/data/meld_transcripts/train_paraphrases.json"
+  # Number of paraphrases generated per minority utterance.
+  # Skipped classes (e.g., neutral, joy, surprise, anger) get 0.
+  per_class_multiplier:
+    fear: 4
+    disgust: 4
+    sadness: 1
+    anger: 0
+    joy: 0
+    surprise: 0
+    neutral: 0
+  voxtral_temperature: 0.8
+  voxtral_max_tokens: 80
+  voxtral_batch_size: 32
 
 data:
   meld_root: "/dcs/large/u5734759/data/meld_raw"

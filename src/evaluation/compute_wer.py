@@ -48,6 +48,16 @@ NORMALISE = jiwer.Compose([
     jiwer.RemovePunctuation(),
     jiwer.Strip(),
     jiwer.RemoveMultipleSpaces(),
+    jiwer.ReduceToListOfListOfWords(),
+])
+
+# Same normalisation but reduced to characters, for CER.
+NORMALISE_CHARS = jiwer.Compose([
+    jiwer.ToLowerCase(),
+    jiwer.RemovePunctuation(),
+    jiwer.Strip(),
+    jiwer.RemoveMultipleSpaces(),
+    jiwer.ReduceToListOfListOfChars(),
 ])
 
 _SPLIT_CSV: Dict[str, str] = {
@@ -66,18 +76,24 @@ def compute_split_wer(
     meld_root: Path,
     transcripts_dir: Path,
     logger,
+    filename_tmpl: str = "{split}_transcripts.json",
+    n_examples: int = 5,
 ) -> Dict:
     """Compute WER for one MELD split.
 
     Args:
         split: One of 'train', 'dev', 'test'.
         meld_root: Path to directory containing MELD CSV files.
-        transcripts_dir: Path to directory containing {split}_transcripts.json.
+        transcripts_dir: Path to directory containing the transcript JSON.
         logger: Logger instance.
+        filename_tmpl: Template for the transcript filename; must contain
+            "{split}" (e.g. "{split}_transcripts.json" for Voxtral or
+            "{split}_transcripts_whisper.json" for Whisper).
+        n_examples: How many best / worst utterances to record.
 
     Returns:
-        Dictionary with corpus_wer, mean_utt_wer, std_utt_wer,
-        n_matched, n_missing, n_total.
+        Dictionary with corpus measures, per-utterance stats, and the
+        best/worst example utterances.
     """
     # ---- Load CSV ----
     csv_path = meld_root / _SPLIT_CSV[split]
@@ -86,7 +102,7 @@ def compute_split_wer(
     df = df.dropna(subset=["utterance"]).reset_index(drop=True)
 
     # ---- Load transcripts ----
-    transcript_file = transcripts_dir / f"{split}_transcripts.json"
+    transcript_file = transcripts_dir / filename_tmpl.format(split=split)
     if not transcript_file.exists():
         raise FileNotFoundError(f"Transcripts not found: {transcript_file}")
     with open(transcript_file, "r", encoding="utf-8") as f:
@@ -116,12 +132,24 @@ def compute_split_wer(
         split, n_total, n_matched, n_missing,
     )
 
-    # ---- Compute corpus-level WER ----
-    corpus_wer = jiwer.wer(
+    # ---- Compute corpus-level word measures (WER/MER/WIL/WIP) ----
+    word_out = jiwer.process_words(
         gold_texts,
         hyp_texts,
         reference_transform=NORMALISE,
         hypothesis_transform=NORMALISE,
+    )
+    corpus_wer = word_out.wer
+    corpus_mer = word_out.mer
+    corpus_wil = word_out.wil
+    corpus_wip = word_out.wip
+
+    # ---- Compute corpus-level CER ----
+    corpus_cer = jiwer.cer(
+        gold_texts,
+        hyp_texts,
+        reference_transform=NORMALISE_CHARS,
+        hypothesis_transform=NORMALISE_CHARS,
     )
 
     # ---- Compute per-utterance WER for mean/std ----
@@ -143,28 +171,68 @@ def compute_split_wer(
     std_wer  = float(np.std(utt_arr))
 
     logger.info(
-        "[%s] Corpus WER: %.4f | Mean utt WER: %.4f ± %.4f",
-        split, corpus_wer, mean_wer, std_wer,
+        "[%s] Corpus WER: %.4f | MER: %.4f | WIL: %.4f | WIP: %.4f | "
+        "CER: %.4f",
+        split, corpus_wer, corpus_mer, corpus_wil, corpus_wip, corpus_cer,
+    )
+    logger.info(
+        "[%s] Mean utt WER: %.4f ± %.4f",
+        split, mean_wer, std_wer,
     )
 
-    # ---- Log worst examples ----
-    worst_idx = np.argsort(utt_arr)[-5:][::-1]
-    logger.info("[%s] Worst 5 utterances by WER:", split)
-    for i in worst_idx:
-        row = df.iloc[i]
-        key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
+    # ---- Build per-utterance keys ----
+    keys = [
+        f"dia{int(r['dialogue_id'])}_utt{int(r['utterance_id'])}"
+        for _, r in df.iterrows()
+    ]
+
+    def _example(i: int) -> Dict:
+        return {
+            "key":  keys[i],
+            "wer":  round(float(utt_arr[i]), 6),
+            "gold": gold_texts[i],
+            "asr":  hyp_texts[i],
+        }
+
+    # ---- Worst examples (highest WER) ----
+    worst_idx = np.argsort(utt_arr)[::-1][:n_examples]
+    worst = [_example(i) for i in worst_idx]
+    logger.info("[%s] Worst %d utterances by WER:", split, n_examples)
+    for ex in worst:
         logger.info(
             "  %s | WER=%.4f\n    GOLD: %s\n    ASR : %s",
-            key, utt_arr[i], gold_texts[i], hyp_texts[i],
+            ex["key"], ex["wer"], ex["gold"], ex["asr"],
+        )
+
+    # ---- Best examples (lowest WER, gold >= 5 words so they are not
+    #      trivial one-word utterances like "What?") ----
+    gold_lens = np.array([len(g.split()) for g in gold_texts])
+    meaningful = np.where(gold_lens >= 5)[0]
+    best_pool = meaningful if len(meaningful) else np.arange(len(utt_arr))
+    best_idx = best_pool[np.argsort(utt_arr[best_pool])][:n_examples]
+    best = [_example(i) for i in best_idx]
+    logger.info(
+        "[%s] Best %d utterances by WER (gold >= 5 words):", split, n_examples
+    )
+    for ex in best:
+        logger.info(
+            "  %s | WER=%.4f\n    GOLD: %s\n    ASR : %s",
+            ex["key"], ex["wer"], ex["gold"], ex["asr"],
         )
 
     return {
         "corpus_wer":   round(corpus_wer, 6),
+        "corpus_mer":   round(corpus_mer, 6),
+        "corpus_wil":   round(corpus_wil, 6),
+        "corpus_wip":   round(corpus_wip, 6),
+        "corpus_cer":   round(corpus_cer, 6),
         "mean_utt_wer": round(mean_wer, 6),
         "std_utt_wer":  round(std_wer, 6),
         "n_total":      n_total,
         "n_matched":    n_matched,
         "n_missing":    n_missing,
+        "worst_examples": worst,
+        "best_examples":  best,
     }
 
 
@@ -189,13 +257,30 @@ def main() -> None:
         choices=["train", "dev", "test"],
         help="Which splits to evaluate (default: all three)",
     )
+    parser.add_argument(
+        "--asr",
+        type=str,
+        default="voxtral",
+        choices=["voxtral", "whisper"],
+        help="Which ASR transcripts to score (default: voxtral)",
+    )
     args = parser.parse_args()
 
     config = load_config(args.config)
 
+    # Transcript filename template + output filename per ASR system.
+    filename_tmpl = {
+        "voxtral": "{split}_transcripts.json",
+        "whisper": "{split}_transcripts_whisper.json",
+    }[args.asr]
+    out_filename = {
+        "voxtral": "wer_analysis.json",
+        "whisper": "wer_analysis_whisper.json",
+    }[args.asr]
+
     log_dir = config["training"]["log_dir"]
     logger  = setup_logging(log_dir, "compute_wer")
-    logger.info("Config: %s | Splits: %s", args.config, args.splits)
+    logger.info("Config: %s | ASR: %s | Splits: %s", args.config, args.asr, args.splits)
 
     meld_root       = Path(config["data"]["meld_root"])
     transcripts_dir = Path(config["data"]["transcripts_path"])
@@ -207,28 +292,33 @@ def main() -> None:
     for split in args.splits:
         logger.info("=" * 50)
         logger.info("Processing split: %s", split)
-        results = compute_split_wer(split, meld_root, transcripts_dir, logger)
+        results = compute_split_wer(
+            split, meld_root, transcripts_dir, logger,
+            filename_tmpl=filename_tmpl,
+        )
         all_results[split] = results
 
     # ---- Summary ----
     logger.info("=" * 50)
-    logger.info("WER SUMMARY — Voxtral ASR vs MELD Gold Transcripts")
+    logger.info("WER SUMMARY — %s ASR vs MELD Gold Transcripts", args.asr.upper())
     logger.info("=" * 50)
     for split, res in all_results.items():
         logger.info(
-            "%5s | Corpus WER: %.4f | Mean utt WER: %.4f ± %.4f | "
-            "Matched: %d / %d",
+            "%5s | WER: %.4f | MER: %.4f | WIL: %.4f | WIP: %.4f | "
+            "CER: %.4f | Matched: %d / %d",
             split,
             res["corpus_wer"],
-            res["mean_utt_wer"],
-            res["std_utt_wer"],
+            res["corpus_mer"],
+            res["corpus_wil"],
+            res["corpus_wip"],
+            res["corpus_cer"],
             res["n_matched"],
             res["n_total"],
         )
 
     # ---- Save results ----
     output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / "wer_analysis.json"
+    out_path = output_dir / out_filename
     with open(out_path, "w") as f:
         json.dump(all_results, f, indent=2)
     logger.info("Results saved to %s", out_path)

@@ -380,6 +380,16 @@ def main() -> None:
             "Defaults to checkpoints/mini/fusion/{fusion_type}/best_model.pt"
         ),
     )
+    parser.add_argument(
+        "--tag",
+        type=str,
+        default="",
+        help=(
+            "Suffix added to output filenames "
+            "(test_results_{fusion_type}<tag>.json, confusion_*<tag>.png). "
+            "Use to keep ablation runs distinct."
+        ),
+    )
     args = parser.parse_args()
 
     config      = load_config(args.config)
@@ -461,25 +471,26 @@ def main() -> None:
     # ---- Confusion matrices ----
     plot_confusion_matrix(
         emotion_preds, emotion_labels, EMOTION_NAMES,
-        title     = f"Emotion — {FusionClass.__name__} (test)",
-        save_path = output_dir / f"confusion_emotion_{fusion_type}.png",
+        title     = f"Emotion — {FusionClass.__name__} (test){args.tag}",
+        save_path = output_dir / f"confusion_emotion_{fusion_type}{args.tag}.png",
     )
     plot_confusion_matrix(
         sentiment_preds, sentiment_labels, SENTIMENT_NAMES,
-        title     = f"Sentiment — {FusionClass.__name__} (test)",
-        save_path = output_dir / f"confusion_sentiment_{fusion_type}.png",
+        title     = f"Sentiment — {FusionClass.__name__} (test){args.tag}",
+        save_path = output_dir / f"confusion_sentiment_{fusion_type}{args.tag}.png",
     )
 
     # ---- Save JSON results ----
     results = {
         "config":       args.config,
         "fusion_type":  fusion_type,
+        "tag":          args.tag,
         "checkpoint":   str(ckpt_path),
         "test_samples": len(test_ds),
         "emotion":      {k: v for k, v in emotion_metrics.items() if k != "report"},
         "sentiment":    {k: v for k, v in sentiment_metrics.items() if k != "report"},
     }
-    results_path = output_dir / f"test_results_{fusion_type}.json"
+    results_path = output_dir / f"test_results_{fusion_type}{args.tag}.json"
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
     logger.info("Results saved to %s", results_path)

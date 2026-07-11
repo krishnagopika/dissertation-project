@@ -1,0 +1,87 @@
+# mini_asr.yaml — same as mini.yaml but the TEXT embeddings come from Voxtral
+# ASR transcripts (meld_text_embeddings_asr) instead of gold CSV text.
+# Used to train the bc-LSTM on realistic ASR-derived text (matches the dialect
+# scenario where no gold transcripts exist). Acoustic features unchanged.
+
+model:
+  voxtral_id: "mistralai/Voxtral-Mini-3B-2507"
+  xlmr_id: "FacebookAI/xlm-roberta-base"
+  acoustic_dim: 1280
+  text_dim: 768
+  tensor_parallel_size: 1
+  fusion_hidden: 512
+  num_classes: 7
+  num_sentiment_classes: 3
+  dropout: 0.3
+
+training:
+  phase1_lr: 0.00002
+  phase2_lr: 0.0001
+  phase3_lr: 0.00001
+  batch_size: 16
+  epochs_phase1: 10
+  epochs_phase2: 10
+  epochs_phase3: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/mini"
+  log_dir: "logs/mini"
+  unfreeze_last_n_layers: 2
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: true
+
+use_ravdess_pretrain: true
+
+ravdess:
+  data_root: "/dcs/large/u5734759/data/ravdess"
+  embeddings_path: "/dcs/large/u5734759/data/ravdess_embeddings/embeddings.pt"
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/ravdess/best_acoustic_backbone.pt"
+  num_classes: 8
+  hidden_dim: 512
+  train_ratio: 0.70
+  val_ratio: 0.15
+  max_duration_sec: 5.0
+  epochs: 30
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+combined:
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_acoustic_backbone.pt"
+  full_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_full_model.pt"
+  hidden_dim: 512
+  epochs: 20
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+augmentation:
+  paraphrases_path: "/dcs/large/u5734759/data/meld_transcripts/train_paraphrases.json"
+  per_class_multiplier:
+    fear: 4
+    disgust: 4
+    sadness: 1
+    anger: 0
+    joy: 0
+    surprise: 0
+    neutral: 0
+  voxtral_temperature: 0.8
+  voxtral_max_tokens: 80
+  voxtral_batch_size: 32
+
+data:
+  meld_root: "/dcs/large/u5734759/data/meld_raw"
+  transcripts_path: "/dcs/large/u5734759/data/meld_transcripts"
+  embeddings_path: "/dcs/large/u5734759/data/meld_embeddings"
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings_asr"
+  max_audio_duration: 40
+  max_text_length: 128
+  num_workers: 4
+  seed: 42
+
+evaluation:
+  primary_metric: "weighted_f1"
+  output_dir: "results/mini"

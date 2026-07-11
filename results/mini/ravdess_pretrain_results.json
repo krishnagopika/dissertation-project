@@ -1,0 +1,20 @@
+{
+  "config": "src/configs/mini.yaml",
+  "best_val_weighted_f1": 0.6705836882265012,
+  "test_weighted_f1": 0.5944739695897027,
+  "test_macro_f1": 0.5917605343225794,
+  "test_per_class_f1": {
+    "neutral": 0.4878048780487805,
+    "calm": 0.5925925925925926,
+    "happy": 0.4888888888888889,
+    "sad": 0.5070422535211268,
+    "angry": 0.676923076923077,
+    "fearful": 0.6792452830188679,
+    "disgust": 0.6349206349206349,
+    "surprised": 0.6666666666666666
+  },
+  "n_train": 1007,
+  "n_val": 216,
+  "n_test": 217,
+  "backbone_checkpoint": "/dcs/large/u5734759/checkpoints/ravdess/best_acoustic_backbone.pt"
+}

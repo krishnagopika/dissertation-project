@@ -416,6 +416,41 @@ def main() -> None:
         num_emotion_classes   = config["model"]["num_classes"],
         dropout_prob          = config["model"]["dropout"],
     )
+
+    # ---- Phase B: optionally warm-start acoustic_proj from RAVDESS pretrain ----
+    if bool(config.get("use_ravdess_pretrain", False)):
+        if not hasattr(fusion, "acoustic_proj"):
+            logger.warning(
+                "use_ravdess_pretrain=true but %s has no acoustic_proj — "
+                "FusionModel (concat) feeds the acoustic embedding into a "
+                "joint MLP, so there is no transferable submodule. "
+                "Skipping warm-start.",
+                FusionClass.__name__,
+            )
+        else:
+            backbone_ckpt = Path(config["ravdess"]["backbone_checkpoint"])
+            if not backbone_ckpt.exists():
+                raise FileNotFoundError(
+                    f"RAVDESS backbone checkpoint not found: {backbone_ckpt}. "
+                    "Run pretrain_ravdess.sbatch first."
+                )
+            state = torch.load(str(backbone_ckpt), map_location="cpu")
+            backbone_state = state["backbone_state_dict"]
+            # backbone_state keys are 'acoustic_proj.0.weight' etc. — strip
+            # the prefix and load into fusion.acoustic_proj directly.
+            stripped = {
+                k[len("acoustic_proj."):]: v
+                for k, v in backbone_state.items()
+                if k.startswith("acoustic_proj.")
+            }
+            missing, unexpected = fusion.acoustic_proj.load_state_dict(
+                stripped, strict=True,
+            )
+            logger.info(
+                "Warm-started acoustic_proj from %s (val WF1 on RAVDESS: %.4f)",
+                backbone_ckpt, state.get("val_weighted_f1", float("nan")),
+            )
+
     fusion = fusion.to(device)
 
     if torch.cuda.device_count() > 1:

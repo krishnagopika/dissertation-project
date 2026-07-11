@@ -193,6 +193,7 @@ def train_and_evaluate(
     y_dev: np.ndarray,
     output_dir: Path,
     logger,
+    tag: str = "",
 ) -> Dict:
     """Fit classifier and evaluate on dev set.
 
@@ -228,7 +229,7 @@ def train_and_evaluate(
 
     # Save results
     output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / f"classical_{clf_name}_{task}.json"
+    out_path = output_dir / f"classical_{clf_name}_{task}{tag}.json"
     with open(out_path, "w") as f:
         json.dump(metrics, f, indent=2)
     logger.info("Results saved to %s", out_path)
@@ -262,6 +263,16 @@ def main() -> None:
         type=str,
         default=None,
         help="Path to Phase 1 best_model.pt (defaults to config checkpoint_dir/best_model.pt)",
+    )
+    parser.add_argument(
+        "--tag",
+        type=str,
+        default="",
+        help=(
+            "Suffix added to output filenames "
+            "(classical_{model}_{task}<tag>.json). Use to keep ablation runs "
+            "distinct."
+        ),
     )
     args = parser.parse_args()
 
@@ -366,6 +377,7 @@ def main() -> None:
             y_dev      = y_dev_emo,
             output_dir = output_dir,
             logger     = logger,
+            tag        = args.tag,
         )
 
         # Sentiment
@@ -379,6 +391,7 @@ def main() -> None:
             y_dev      = y_dev_sent,
             output_dir = output_dir,
             logger     = logger,
+            tag        = args.tag,
         )
 
         all_results[clf_name] = {

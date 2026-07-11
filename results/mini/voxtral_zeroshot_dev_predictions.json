@@ -1,0 +1,7765 @@
+{
+  "dia0_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia0_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia1_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia1_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia1_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt11": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia1_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia1_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia1_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia2_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia2_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia2_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia2_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia2_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia2_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia3_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia3_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia3_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia4_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia4_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia4_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia4_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia4_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia4_utt11": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia4_utt12": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia4_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia4_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia5_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia5_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia5_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia5_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia5_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia5_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Negative**"
+  },
+  "dia5_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia5_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia5_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia5_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia5_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia5_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia5_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please listen to the audio first."
+  },
+  "dia6_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia6_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia6_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia6_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia6_utt4": {
+    "emotion_pred": 5,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Disgust\nSentiment: Negative"
+  },
+  "dia6_utt5": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia6_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia6_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia6_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia6_utt9": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia7_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: positive"
+  },
+  "dia7_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia7_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia7_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia7_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia7_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia7_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Surprise**\n**Sentiment: Negative**"
+  },
+  "dia7_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia7_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia7_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia7_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia8_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia8_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia8_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Positive**"
+  },
+  "dia8_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia8_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia9_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia9_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia9_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia9_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia9_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia9_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia9_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia9_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia10_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia10_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia10_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia10_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia11_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia11_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia11_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia11_utt3": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia11_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia11_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia11_utt6": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia11_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia11_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia11_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia11_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia11_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia11_utt12": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia12_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia12_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia12_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia12_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio. Could you please provide the text of the audio instead?"
+  },
+  "dia12_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia13_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia13_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia13_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio."
+  },
+  "dia13_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia13_utt7": {
+    "emotion_pred": 2,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Fear\nSentiment: Negative"
+  },
+  "dia13_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt9": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia13_utt11": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia13_utt13": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia13_utt14": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt15": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia13_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia13_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia13_utt19": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia13_utt20": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia13_utt21": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia14_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia14_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia14_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia14_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia14_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia14_utt5": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia14_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia14_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia14_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia15_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia15_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia15_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia15_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia15_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia15_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia15_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia15_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia15_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia15_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia16_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia16_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia16_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia16_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process the audio you've provided."
+  },
+  "dia16_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt10": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia16_utt11": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia16_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia16_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt14": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia16_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia16_utt17": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia16_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia17_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia17_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia17_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia17_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia17_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia18_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia18_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia18_utt2": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia18_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia18_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Joy**\n**Sentiment: Positive**"
+  },
+  "dia18_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia18_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia18_utt7": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia18_utt8": {
+    "emotion_pred": 2,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Fear\nSentiment: Negative"
+  },
+  "dia18_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia18_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia18_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia18_utt12": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia18_utt13": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia19_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia19_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia19_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia19_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia19_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia19_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia19_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt9": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia19_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia19_utt11": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt13": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia19_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt15": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt16": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt18": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia19_utt19": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt20": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia19_utt21": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia19_utt22": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia20_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia20_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia20_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia20_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia20_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia20_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "I need the audio to analyze your request."
+  },
+  "dia20_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia20_utt7": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia21_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia21_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia21_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia21_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia21_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia21_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia21_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio. Could you please provide the text of the audio instead?"
+  },
+  "dia22_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia22_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia22_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia22_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia22_utt5": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia22_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia22_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia22_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia23_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia23_utt2": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia23_utt3": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia23_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia23_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia23_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia23_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia23_utt12": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia23_utt13": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia24_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia24_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia24_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia24_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia24_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia24_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia24_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia24_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia24_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia25_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia25_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia25_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia25_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia25_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia25_utt5": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia26_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio. However, I can help with text or other types of information. If you have a specific question"
+  },
+  "dia26_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia26_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia26_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia26_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia26_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia26_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia26_utt7": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia26_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia26_utt9": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia26_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia26_utt11": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia26_utt12": {
+    "emotion_pred": 2,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Fear\nSentiment: Negative"
+  },
+  "dia26_utt13": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia26_utt14": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia26_utt15": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia26_utt16": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia27_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia27_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia27_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia27_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia27_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia27_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia27_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia27_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia27_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia27_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia28_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Let's listen to the audio."
+  },
+  "dia28_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia28_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia28_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia28_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia28_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia28_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia28_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia28_utt8": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia28_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia28_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia29_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia29_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia29_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia29_utt3": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia29_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia29_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia29_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia29_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia29_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia29_utt9": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia29_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt0": {
+    "emotion_pred": 2,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Fear\nSentiment: Negative"
+  },
+  "dia30_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia30_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia30_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia30_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia30_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia30_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia30_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia30_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia30_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia30_utt14": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia30_utt15": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia30_utt16": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia30_utt17": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia30_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia31_utt0": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia31_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia31_utt2": {
+    "emotion_pred": 3,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Positive"
+  },
+  "dia31_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia31_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia31_utt5": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia31_utt6": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia31_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia31_utt8": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia31_utt9": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "**Emotion: Joy**\n**Sentiment: Positive**"
+  },
+  "dia31_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia31_utt11": {
+    "emotion_pred": 5,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Disgust**\n**Sentiment: Negative**"
+  },
+  "dia31_utt12": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia32_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia32_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia32_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia32_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia33_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia33_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia34_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia34_utt8": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia34_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia34_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia35_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia36_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia36_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia36_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia36_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia36_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia36_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia36_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia36_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia36_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please listen to the audio first."
+  },
+  "dia36_utt9": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia36_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "```json\n{\n  \"Emotion\": \"Anger\",\n  \"Sentiment\": \"Negative\"\n}\n```"
+  },
+  "dia36_utt11": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia37_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia37_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia37_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia37_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia37_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia37_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia37_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia37_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia37_utt8": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia37_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia37_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia38_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia39_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia39_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia39_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia40_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia40_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia40_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia40_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia40_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia40_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia40_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia40_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia40_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia40_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Negative**"
+  },
+  "dia40_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia41_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia41_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia41_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia42_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia42_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia42_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia42_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia42_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia43_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia43_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia44_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia44_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia44_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia44_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia44_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia44_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process the audio you've provided."
+  },
+  "dia45_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia45_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia45_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia45_utt8": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia45_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia45_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia45_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia46_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia46_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia46_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia46_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia46_utt9": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia47_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia47_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia47_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I currently don't have the tools to analyze the audio you've provided."
+  },
+  "dia47_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia48_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia48_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia48_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia48_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia48_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Joy**\n**Sentiment: Positive**"
+  },
+  "dia48_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia48_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia48_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia49_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia49_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia49_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia49_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia49_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia49_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia49_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia49_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia49_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia49_utt11": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia49_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia49_utt13": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia49_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia50_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia50_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia50_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia50_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia51_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia51_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia51_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia51_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia51_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia51_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia51_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia52_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia52_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia52_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia53_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia53_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia53_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia53_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia54_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia54_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia54_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia54_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia55_utt0": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia56_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia56_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia56_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt4": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia56_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia56_utt6": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia56_utt7": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia56_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt9": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia56_utt10": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia56_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt12": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia56_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia56_utt15": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia56_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia57_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia57_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, I can't process audio."
+  },
+  "dia57_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia57_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia57_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia57_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia57_utt11": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia57_utt12": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia58_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia58_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: positive"
+  },
+  "dia58_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia58_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia58_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia58_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia58_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia59_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia59_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia59_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia59_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia59_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia60_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia60_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia60_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia60_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia60_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia60_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia60_utt6": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia61_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia61_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia61_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia61_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia61_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia61_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia62_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia62_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia62_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia62_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia62_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia62_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia63_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia63_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia63_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia63_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia63_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia63_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "**Emotion: Surprise**\n**Sentiment: Negative**"
+  },
+  "dia63_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt11": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia63_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt14": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia63_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia63_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt19": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia63_utt20": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia64_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia64_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia64_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia64_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia64_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia65_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia65_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia65_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia65_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia65_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia65_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia65_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia65_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia65_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia65_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia65_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia66_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia66_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia66_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia66_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia66_utt4": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia66_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia66_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia66_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia66_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia66_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio."
+  },
+  "dia67_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia67_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia67_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia67_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia67_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia67_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia68_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Surprise**\n**Sentiment: Positive**"
+  },
+  "dia68_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia68_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Joy**\n**Sentiment: Positive**"
+  },
+  "dia68_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia68_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia68_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia68_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt5": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia69_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia69_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt11": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia69_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio. However, I can help with text or other types of information. If you have a specific question"
+  },
+  "dia69_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia69_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia69_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt17": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia69_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia69_utt19": {
+    "emotion_pred": 2,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Fear**\n**Sentiment: Negative**"
+  },
+  "dia70_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia70_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia70_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia70_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "```"
+  },
+  "dia70_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia70_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia71_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia71_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia71_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia71_utt3": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia71_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia71_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia72_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia72_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia72_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia72_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia72_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia72_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia72_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia72_utt15": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia72_utt16": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia72_utt17": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia72_utt18": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia73_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia73_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia73_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia74_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia74_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia74_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia74_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia74_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I currently don't have the tools to analyze the audio you've provided."
+  },
+  "dia74_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I need the audio to analyze."
+  },
+  "dia74_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt16": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia74_utt19": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia75_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia76_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia76_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia76_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia76_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia76_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia76_utt10": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia76_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt14": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia76_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia76_utt16": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia77_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio."
+  },
+  "dia77_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia77_utt4": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia77_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process the audio you've provided."
+  },
+  "dia77_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt13": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia77_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt15": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia77_utt16": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia77_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia77_utt19": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia78_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia78_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia78_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia78_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia78_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia78_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia78_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia78_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia78_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia79_utt8": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia79_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia79_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia80_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia80_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia80_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia81_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia81_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia81_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia82_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia82_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia82_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia82_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia82_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia82_utt8": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia82_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia82_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt13": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia82_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I currently don't have the tools to analyze the audio you've provided."
+  },
+  "dia82_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt16": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia82_utt17": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia82_utt18": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia83_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia83_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia83_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia83_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia83_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia83_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia83_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio for me to analyze."
+  },
+  "dia83_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia84_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia84_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia84_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia84_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia84_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia84_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia84_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia84_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia85_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia85_utt6": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia85_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia85_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia85_utt11": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia85_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia85_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia85_utt16": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia86_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia86_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia86_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia86_utt3": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia87_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia87_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia87_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia87_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia87_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia88_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia88_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia88_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I need the audio to analyze."
+  },
+  "dia88_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia88_utt4": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia88_utt5": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia89_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia89_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia89_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia89_utt3": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia89_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia89_utt5": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia89_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia89_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia89_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia89_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia89_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia90_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia90_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia90_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia90_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia90_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia90_utt5": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia90_utt6": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia91_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia91_utt1": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia91_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia91_utt3": {
+    "emotion_pred": 5,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Disgust\nSentiment: Negative"
+  },
+  "dia91_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia91_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia91_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia91_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia91_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia91_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia91_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt1": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia92_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia92_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia92_utt7": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia92_utt8": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia92_utt9": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia92_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia92_utt11": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia93_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia93_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia93_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia93_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia93_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia93_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia93_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia93_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia94_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia94_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia94_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia95_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia95_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt5": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia95_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia95_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia95_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia95_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I currently don't have the tools to analyze the audio you've provided."
+  },
+  "dia96_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia96_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia96_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia96_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia97_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia97_utt3": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia97_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia97_utt9": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia97_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt11": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia97_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt15": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt16": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia97_utt17": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: surprise\nSentiment: negative"
+  },
+  "dia97_utt18": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia97_utt19": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia97_utt20": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia97_utt21": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia98_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia98_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia98_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia98_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia98_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia99_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia99_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia99_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia99_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Please provide the audio."
+  },
+  "dia99_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia99_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia99_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia99_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia99_utt8": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia100_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia101_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia102_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia102_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia103_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia103_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia103_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia103_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia103_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 0,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Negative"
+  },
+  "dia104_utt0": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia104_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia104_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia104_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia104_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio you'd like me to analyze."
+  },
+  "dia104_utt5": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia104_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia104_utt7": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia104_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia104_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia104_utt10": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia104_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia104_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia104_utt13": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia104_utt14": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia104_utt15": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia105_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia105_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Please provide the audio."
+  },
+  "dia105_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia105_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia105_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia105_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia105_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia105_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia105_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia105_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "I'm sorry, I can't process audio."
+  },
+  "dia105_utt10": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia105_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia106_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia106_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia106_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia106_utt3": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Neutral"
+  },
+  "dia106_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia106_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia107_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia107_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Positive**"
+  },
+  "dia107_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia107_utt3": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia108_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt1": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia110_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "<missing audio>"
+  },
+  "dia108_utt2": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia108_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia108_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia108_utt6": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Anger\nSentiment: Negative"
+  },
+  "dia108_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt10": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia108_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 2,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia108_utt13": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia108_utt14": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia109_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia109_utt1": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia109_utt2": {
+    "emotion_pred": 1,
+    "sentiment_pred": 0,
+    "emotion_gold": 5,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Surprise\nSentiment: Negative"
+  },
+  "dia109_utt3": {
+    "emotion_pred": 5,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Disgust\nSentiment: Negative"
+  },
+  "dia109_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia109_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia109_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia109_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt0": {
+    "emotion_pred": 1,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Surprise\nSentiment: Positive"
+  },
+  "dia110_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt5": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia110_utt6": {
+    "emotion_pred": 0,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Positive"
+  },
+  "dia110_utt8": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia110_utt9": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 4,
+    "sentiment_gold": 2,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia111_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia111_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia111_utt2": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia112_utt0": {
+    "emotion_pred": 6,
+    "sentiment_pred": 0,
+    "emotion_gold": 6,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Anger**\n**Sentiment: Negative**"
+  },
+  "dia112_utt1": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia112_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia112_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia112_utt4": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt0": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt1": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt2": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "**Emotion: Neutral**\n**Sentiment: Neutral**"
+  },
+  "dia113_utt3": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Please provide the audio."
+  },
+  "dia113_utt4": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Joy\nSentiment: Positive"
+  },
+  "dia113_utt5": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt6": {
+    "emotion_pred": 1,
+    "sentiment_pred": 1,
+    "emotion_gold": 1,
+    "sentiment_gold": 0,
+    "raw": "Emotion: surprise\nSentiment: neutral"
+  },
+  "dia113_utt7": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 0,
+    "sentiment_gold": 1,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt8": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Sadness**\n**Sentiment: Negative**"
+  },
+  "dia113_utt9": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion:\nSentiment:"
+  },
+  "dia113_utt10": {
+    "emotion_pred": 3,
+    "sentiment_pred": 0,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Sadness\nSentiment: Negative"
+  },
+  "dia113_utt11": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "I'm sorry, but I can't process audio."
+  },
+  "dia113_utt12": {
+    "emotion_pred": 0,
+    "sentiment_pred": 1,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "Emotion: Neutral\nSentiment: Neutral"
+  },
+  "dia113_utt13": {
+    "emotion_pred": 4,
+    "sentiment_pred": 2,
+    "emotion_gold": 3,
+    "sentiment_gold": 0,
+    "raw": "**Emotion: Joy**\n**Sentiment: Positive**"
+  }
+}

@@ -59,12 +59,22 @@ def compute_emotion_metrics(
     if class_names is None:
         class_names = EMOTION_NAMES
 
-    weighted_f1 = f1_score(labels, preds, average="weighted", zero_division=0)
-    macro_f1 = f1_score(labels, preds, average="macro", zero_division=0)
+    # Fixed label set (0..K-1) so metrics are stable even when a class is
+    # absent from preds/labels (e.g. small eval subsets) — otherwise sklearn
+    # raises "Number of classes does not match size of target_names".
+    label_ids = list(range(len(class_names)))
+
+    weighted_f1 = f1_score(
+        labels, preds, labels=label_ids, average="weighted", zero_division=0
+    )
+    macro_f1 = f1_score(
+        labels, preds, labels=label_ids, average="macro", zero_division=0
+    )
 
     report = classification_report(
         labels,
         preds,
+        labels=label_ids,
         target_names=class_names,
         output_dict=True,
         zero_division=0,
@@ -103,12 +113,22 @@ def compute_sentiment_metrics(
     if class_names is None:
         class_names = SENTIMENT_NAMES
 
-    weighted_f1 = f1_score(labels, preds, average="weighted", zero_division=0)
-    macro_f1 = f1_score(labels, preds, average="macro", zero_division=0)
+    # Fixed label set (0..K-1) so metrics are stable even when a class is
+    # absent from preds/labels (e.g. small eval subsets) — otherwise sklearn
+    # raises "Number of classes does not match size of target_names".
+    label_ids = list(range(len(class_names)))
+
+    weighted_f1 = f1_score(
+        labels, preds, labels=label_ids, average="weighted", zero_division=0
+    )
+    macro_f1 = f1_score(
+        labels, preds, labels=label_ids, average="macro", zero_division=0
+    )
 
     report = classification_report(
         labels,
         preds,
+        labels=label_ids,
         target_names=class_names,
         output_dict=True,
         zero_division=0,

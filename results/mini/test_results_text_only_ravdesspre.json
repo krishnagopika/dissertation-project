@@ -1,0 +1,37 @@
+{
+  "config": "src/configs/mini.yaml",
+  "model": "text_only",
+  "tag": "_ravdesspre",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/best_model.pt",
+  "test_samples": 2610,
+  "emotion": {
+    "accuracy": 0.4804597701149425,
+    "weighted_precision": 0.4954190154756348,
+    "weighted_recall": 0.4804597701149425,
+    "weighted_f1": 0.4675744516318138,
+    "macro_f1": 0.3107397516986975,
+    "auc": 0.7038824129209486,
+    "per_class_f1": {
+      "neutral": 0.6523191094619666,
+      "surprise": 0.43951612903225806,
+      "fear": 0.1111111111111111,
+      "sadness": 0.2848297213622291,
+      "joy": 0.38184663536776214,
+      "disgust": 0.16666666666666666,
+      "anger": 0.1388888888888889
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.5674329501915709,
+    "weighted_precision": 0.5631278988393461,
+    "weighted_recall": 0.5674329501915709,
+    "weighted_f1": 0.5591475575342869,
+    "macro_f1": 0.524441509777887,
+    "auc": 0.6893385761263336,
+    "per_class_f1": {
+      "negative": 0.5398280802292263,
+      "neutral": 0.6411519514967791,
+      "positive": 0.3923444976076555
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "split": "test",
+  "n_scored": 2610,
+  "n_missing_audio": 0,
+  "emotion_accuracy": 0.5486590038314176,
+  "emotion_weighted_f1": 0.5042714117999095,
+  "emotion_macro_f1": 0.31997246437876786,
+  "emotion_per_class_f1": {
+    "neutral": 0.6966364812419146,
+    "surprise": 0.31808278867102396,
+    "fear": 0.06896551724137931,
+    "sadness": 0.3104693140794224,
+    "joy": 0.35834609494640124,
+    "disgust": 0.10256410256410256,
+    "anger": 0.38474295190713104
+  },
+  "sentiment_accuracy": 0.5643678160919541,
+  "sentiment_weighted_f1": 0.5514744918845358,
+  "sentiment_macro_f1": 0.5159130203312888,
+  "sentiment_per_class_f1": {
+    "negative": 0.49050632911392406,
+    "neutral": 0.6529774127310062,
+    "positive": 0.40425531914893614
+  }
+}

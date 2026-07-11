@@ -1,0 +1,230 @@
+{
+  "train": {
+    "corpus_wer": 0.382804,
+    "corpus_mer": 0.32579,
+    "corpus_wil": 0.423783,
+    "corpus_wip": 0.576217,
+    "corpus_cer": 0.295723,
+    "mean_utt_wer": 0.684971,
+    "std_utt_wer": 2.754651,
+    "n_total": 9989,
+    "n_matched": 9988,
+    "n_missing": 1,
+    "worst_examples": [
+      {
+        "key": "dia512_utt3",
+        "wer": 169.0,
+        "gold": "Good.",
+        "asr": "I'm going to be talking about the new book that I've written, which is called \"The Art of the Deal.\" It's a book that I wrote with my son, Donald Trump Jr. And it's a book that I think is going to be very popular. It's a book that's going to be very helpful for people who are looking to make a deal, whether it's a business deal, a real estate deal, or a personal deal. And it's a book that I think is going to be very helpful for people who are looking to make a deal, whether it's a business deal, a real estate deal, or a personal deal. And it's a book that I think is going to be very helpful for people who are looking to make a deal, whether it's a business deal, a real estate deal, or a personal deal. And it's a book that I think is going to be very helpful for people who are looking to make a deal, whether"
+      },
+      {
+        "key": "dia935_utt1",
+        "wer": 112.0,
+        "gold": "Thanks.",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on how to find help. If you're experiencing symptoms, it's important to speak with a healthcare professional. They can provide a proper diagnosis and recommend appropriate treatment. If you're looking for information on a specific condition, I can try to provide some general information, but please remember that I can't replace a doctor's advice. If you're looking for information on a specific condition, I can try to provide some general information, but please remember that I can't replace a doctor's advice."
+      },
+      {
+        "key": "dia922_utt5",
+        "wer": 76.5,
+        "gold": "You can?",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on how to find a doctor or other healthcare professionals who can help. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're"
+      },
+      {
+        "key": "dia127_utt2",
+        "wer": 49.5,
+        "gold": "No, no-n-n-n-no!!",
+        "asr": "No, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no, no,"
+      },
+      {
+        "key": "dia779_utt1",
+        "wer": 48.0,
+        "gold": "No.",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on symptoms and suggest that you consult a healthcare professional for advice tailored to your specific situation."
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia168_utt6",
+        "wer": 0.0,
+        "gold": "What?! What else did he say?",
+        "asr": "What? What else did he say?"
+      },
+      {
+        "key": "dia306_utt7",
+        "wer": 0.0,
+        "gold": "I guess it all started when Rachel got this new job.",
+        "asr": "I guess it all started when Rachel got this new job."
+      },
+      {
+        "key": "dia305_utt8",
+        "wer": 0.0,
+        "gold": "Hey, what are you guys doing tomorrow night?",
+        "asr": "Hey, what are you guys doing tomorrow night?"
+      },
+      {
+        "key": "dia809_utt7",
+        "wer": 0.0,
+        "gold": "I gotta buy some food.",
+        "asr": "I gotta buy some food."
+      },
+      {
+        "key": "dia806_utt11",
+        "wer": 0.0,
+        "gold": "So are you ever gonna tell whoever it is?",
+        "asr": "So are you ever gonna tell whoever it is?"
+      }
+    ]
+  },
+  "dev": {
+    "corpus_wer": 0.340171,
+    "corpus_mer": 0.295019,
+    "corpus_wil": 0.393615,
+    "corpus_wip": 0.606385,
+    "corpus_cer": 0.249772,
+    "mean_utt_wer": 0.633781,
+    "std_utt_wer": 1.776887,
+    "n_total": 1109,
+    "n_matched": 1108,
+    "n_missing": 1,
+    "worst_examples": [
+      {
+        "key": "dia36_utt8",
+        "wer": 33.0,
+        "gold": "Okay?",
+        "asr": "I'm not sure if I can help with that. I'm an AI and I don't have personal experiences or feelings. I can provide information and answer questions to the best of my ability."
+      },
+      {
+        "key": "dia10_utt5",
+        "wer": 20.666667,
+        "gold": "Yeah, no one talks like that!",
+        "asr": "I'm going to be talking about the new book that I've written, which is called \"The New York Times Bestseller.\" It's a book that I've been working on for a long time, and I'm really excited to share it with you. It's a book that I've been working on for a long time, and I'm really excited to share it with you. It's a book that I've been working on for a long time, and I'm really excited to share it with you. It's a book that I've been working on for a long time, and I'm really excited to share it with you. It's a book that I've been working on for a long time, and I'm really excited to share it with you."
+      },
+      {
+        "key": "dia108_utt5",
+        "wer": 19.0,
+        "gold": "Ow!",
+        "asr": "I'm not sure if you're asking about the specific details of the conversation, but I can help with that."
+      },
+      {
+        "key": "dia77_utt0",
+        "wer": 16.0,
+        "gold": "Oh!",
+        "asr": "I'm not sure if you're asking me to do something or if you're just saying that."
+      },
+      {
+        "key": "dia113_utt3",
+        "wer": 9.6,
+        "gold": "Just let me finish, okay?",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on symptoms and suggest that you consult a healthcare professional for advice tailored to your specific situation."
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia110_utt8",
+        "wer": 0.0,
+        "gold": "Yes! That I know, this is from White Plains.",
+        "asr": "Yes, that I know. This is from White Plains."
+      },
+      {
+        "key": "dia6_utt5",
+        "wer": 0.0,
+        "gold": "I left my guitar in their apartment.",
+        "asr": "I left my guitar in their apartment."
+      },
+      {
+        "key": "dia110_utt2",
+        "wer": 0.0,
+        "gold": "Well, what period is it from?",
+        "asr": "Well, what period is it from?"
+      },
+      {
+        "key": "dia8_utt3",
+        "wer": 0.0,
+        "gold": "This is a serious, legitimate movie.",
+        "asr": "This is a serious legitimate movie."
+      },
+      {
+        "key": "dia97_utt10",
+        "wer": 0.0,
+        "gold": "Not one that can pee on the roof.",
+        "asr": "Not one that can pee on the roof."
+      }
+    ]
+  },
+  "test": {
+    "corpus_wer": 0.424415,
+    "corpus_mer": 0.347919,
+    "corpus_wil": 0.447096,
+    "corpus_wip": 0.552904,
+    "corpus_cer": 0.33574,
+    "mean_utt_wer": 0.912047,
+    "std_utt_wer": 4.883654,
+    "n_total": 2610,
+    "n_matched": 2610,
+    "n_missing": 0,
+    "worst_examples": [
+      {
+        "key": "dia124_utt8",
+        "wer": 154.0,
+        "gold": "Chandler!",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on how to find a doctor or other healthcare professionals who can help. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're"
+      },
+      {
+        "key": "dia95_utt6",
+        "wer": 121.0,
+        "gold": "Y'know?",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on how to find a doctor or other healthcare professionals who can help. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having a medical emergency, call 911 or your local emergency number. If you're not having a medical emergency, you can try calling your primary care physician or a local urgent care center. They can provide guidance and help you find the right care. If you're not sure where to start, you can also try calling your local hospital or health department for advice."
+      },
+      {
+        "key": "dia246_utt5",
+        "wer": 77.0,
+        "gold": "Hey, Peter!",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on how to find a doctor or other healthcare professionals who can help. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're having trouble breathing, it's important to seek immediate medical attention. If you're"
+      },
+      {
+        "key": "dia70_utt13",
+        "wer": 48.0,
+        "gold": "Huh?",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on symptoms and suggest that you consult a healthcare professional for advice tailored to your specific situation."
+      },
+      {
+        "key": "dia261_utt2",
+        "wer": 47.0,
+        "gold": "Thanks!",
+        "asr": "I'm not sure if I can help with that. I'm not a doctor, and I don't have the tools to diagnose or treat any medical conditions. I can, however, provide information on symptoms and suggest that you consult a healthcare professional for advice tailored to your situation."
+      }
+    ],
+    "best_examples": [
+      {
+        "key": "dia240_utt10",
+        "wer": 0.0,
+        "gold": "Oh that was a real person?!",
+        "asr": "Oh that was a real person?"
+      },
+      {
+        "key": "dia46_utt7",
+        "wer": 0.0,
+        "gold": "I stepped in something icky.",
+        "asr": "I stepped in something icky."
+      },
+      {
+        "key": "dia70_utt10",
+        "wer": 0.0,
+        "gold": "No ... the leather sticks to my ass.",
+        "asr": "No. The leather sticks to my ass."
+      },
+      {
+        "key": "dia244_utt15",
+        "wer": 0.0,
+        "gold": "Sure, your dresser is missing but this she notices.",
+        "asr": "Sure, your dresser is missing, but this she notices."
+      },
+      {
+        "key": "dia244_utt10",
+        "wer": 0.0,
+        "gold": "So how many more do you have tomorrow?",
+        "asr": "So how many more do you have tomorrow?"
+      }
+    ]
+  }
+}
