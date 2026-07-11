@@ -142,6 +142,15 @@ def main() -> None:
         description="Extract and cache XLM-RoBERTa CLS embeddings from gold MELD text."
     )
     parser.add_argument("--config", type=str, required=True)
+    parser.add_argument(
+        "--checkpoint_path",
+        type=str,
+        default=None,
+        help=(
+            "Path to Phase 1 best_model.pt. Defaults to "
+            "<checkpoint_dir>/best_model.pt from the config."
+        ),
+    )
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -154,8 +163,10 @@ def main() -> None:
     xlmr_id   = config["model"]["xlmr_id"]
     tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
 
-    # Load Phase 1 checkpoint
-    ckpt_path = Path(config["training"]["checkpoint_dir"]) / "best_model.pt"
+    # Load Phase 1 checkpoint (CLI override takes precedence over config path)
+    ckpt_path = Path(args.checkpoint_path) if args.checkpoint_path else (
+        Path(config["training"]["checkpoint_dir"]) / "best_model.pt"
+    )
     if not ckpt_path.exists():
         raise FileNotFoundError(
             f"Phase 1 checkpoint not found: {ckpt_path}. "

@@ -179,3 +179,20 @@ Next Steps:
 - visualisation of embeddings (audio association with emotions)
 - class imbalance - (data auggumenttaion, weighted F1, diagonal - for kernel based methods)
 
+
+
+# to do
+
+- wispher transcription
+- voxtral prompt tuning
+- tensor board
+
+- focal loss ( abalation for gamma)
+- evalaute the misclassifications
+
+
+
+- VAD
+- WER
+- Voxtral (training data)
+- utterance -> dialogue 

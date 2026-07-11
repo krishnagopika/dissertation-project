@@ -1,0 +1,35 @@
+{
+  "config": "src/configs/mini.yaml",
+  "model": "acoustic_only_combined",
+  "label_mapping": {
+    "0": 0,
+    "1": 0,
+    "2": 4,
+    "3": 3,
+    "4": 6,
+    "5": 2,
+    "6": 5,
+    "7": 1
+  },
+  "best_meld_dev_weighted_f1": 0.420711068525698,
+  "test_samples_meld": 2610,
+  "meld_test": {
+    "weighted_f1": 0.41307326870535716,
+    "macro_f1": 0.28288884593527835,
+    "per_class_f1": {
+      "neutral": 0.5244140625,
+      "surprise": 0.30404463040446306,
+      "fear": 0.12213740458015267,
+      "sadness": 0.2857142857142857,
+      "joy": 0.32913518052057095,
+      "disgust": 0.025,
+      "anger": 0.38977635782747605
+    }
+  },
+  "n_train_ravdess": 1440,
+  "n_train_meld": 9989,
+  "n_val_meld_dev": 1109,
+  "n_test_meld_test": 2610,
+  "backbone_checkpoint": "/dcs/large/u5734759/checkpoints/combined/best_acoustic_backbone.pt",
+  "full_checkpoint": "/dcs/large/u5734759/checkpoints/combined/best_full_model.pt"
+}

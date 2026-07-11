@@ -1,0 +1,392 @@
+"""
+voxtral_zeroshot.py — Zero-shot emotion/sentiment classification with Voxtral
+==============================================================================
+Prompts Voxtral's 3B LLM **directly** to classify the emotion and sentiment of
+each MELD utterance from audio — no fine-tuning, no fusion head. This is the
+forward-only baseline: it uses the full Voxtral path (Whisper encoder →
+projector → 3B LLM), so attention over the audio frames ("pooling") happens
+inside the model for free, exactly like transcription.
+
+Purpose
+-------
+Answer one question cheaply, before committing to any fine-tuning:
+    "Out of the box, how well can Voxtral classify MELD emotion from speech?"
+
+If the zero-shot weighted-F1 is promising, fine-tuning the encoder / LoRA-ing
+the LLM is justified. If it is near-chance, the audio signal (or the model's
+zero-shot ability) is the ceiling — and that is itself a result.
+
+Pipeline
+--------
+Mirrors Pass 1 of transcribe_all.py (vllm, batched), but swaps the
+transcription prompt for a classification prompt and parses a label out of the
+generated text.
+
+  Output: results/<run>/voxtral_zeroshot_{split}_predictions.json
+          results/<run>/voxtral_zeroshot_{split}_metrics.json
+
+Usage
+-----
+  python3.12 src/evaluation/voxtral_zeroshot.py --config src/configs/mini.yaml
+  python3.12 src/evaluation/voxtral_zeroshot.py --config src/configs/mini.yaml \\
+      --splits dev --max_samples 50      # quick smoke test
+
+Slurm: see src/scripts/voxtral_zeroshot.sbatch
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import logging
+import re
+import sys
+from pathlib import Path
+from typing import Dict, List, Tuple
+
+import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
+
+from src.evaluation.metrics import (
+    EMOTION_NAMES,
+    SENTIMENT_NAMES,
+    compute_emotion_metrics,
+    compute_sentiment_metrics,
+    log_metrics,
+)
+from src.preprocessing.transcribe_all import (
+    CSV_MAP,
+    audio_to_wav_base64,
+    build_utterance_index,
+    extract_tar_if_needed,
+)
+from src.utils import load_config, set_seed, setup_logging
+
+# Label name → index maps (canonical ordering from metrics.py / CLAUDE.md §15).
+EMOTION2IDX: Dict[str, int] = {name: i for i, name in enumerate(EMOTION_NAMES)}
+SENTIMENT2IDX: Dict[str, int] = {name: i for i, name in enumerate(SENTIMENT_NAMES)}
+
+# Fallback indices when the model output cannot be parsed.
+_DEFAULT_EMOTION_IDX: int = EMOTION2IDX["neutral"]      # 0 — the majority class
+_DEFAULT_SENTIMENT_IDX: int = SENTIMENT2IDX["neutral"]  # 1
+
+
+# ---------------------------------------------------------------------------
+# Prompt
+# ---------------------------------------------------------------------------
+
+def build_classification_prompt() -> str:
+    """Return the instruction text appended after the audio in the chat turn.
+
+    Returns:
+        The classification instruction string. Lists the exact allowed labels
+        and pins the output format so the response can be parsed reliably.
+    """
+    emotions = ", ".join(EMOTION_NAMES)
+    sentiments = ", ".join(SENTIMENT_NAMES)
+    return (
+        "You are an expert at recognising emotion and sentiment from speech. "
+        "Listen to the audio and classify the speaker's emotional state. "
+        "Judge from tone, pitch, pace and intonation as well as the words.\n\n"
+        f"Choose EXACTLY ONE emotion from this list: {emotions}.\n"
+        f"Choose EXACTLY ONE sentiment from this list: {sentiments}.\n\n"
+        "Respond in EXACTLY this format and nothing else:\n"
+        "Emotion: <emotion>\n"
+        "Sentiment: <sentiment>"
+    )
+
+
+def build_messages(audio_b64: str, instruction: str) -> List[dict]:
+    """Build the vllm chat message list for one utterance.
+
+    Args:
+        audio_b64: Base64-encoded 16 kHz mono WAV bytes.
+        instruction: Classification instruction text.
+
+    Returns:
+        A single-turn chat conversation (list with one user message).
+    """
+    return [
+        {
+            "role": "user",
+            "content": [
+                {
+                    "type": "audio_url",
+                    "audio_url": {"url": f"data:audio/wav;base64,{audio_b64}"},
+                },
+                {"type": "text", "text": instruction},
+            ],
+        },
+    ]
+
+
+# ---------------------------------------------------------------------------
+# Output parsing
+# ---------------------------------------------------------------------------
+
+def parse_prediction(text: str) -> Tuple[int, int]:
+    """Parse an emotion index and sentiment index from generated text.
+
+    Strategy (most reliable first):
+      1. Look for the pinned ``Emotion:``/``Sentiment:`` lines.
+      2. Otherwise scan the whole response for any known label word.
+      3. Otherwise fall back to the majority class (neutral).
+
+    Args:
+        text: Raw text generated by Voxtral.
+
+    Returns:
+        Tuple of (emotion_idx, sentiment_idx).
+    """
+    lower = text.lower()
+
+    def _from_line(field: str, name2idx: Dict[str, int], default: int) -> int:
+        m = re.search(rf"{field}\s*[:\-]?\s*([a-z]+)", lower)
+        if m and m.group(1) in name2idx:
+            return name2idx[m.group(1)]
+        # Fall back: first known label word appearing anywhere in the text.
+        for name, idx in name2idx.items():
+            if re.search(rf"\b{name}\b", lower):
+                return idx
+        return default
+
+    emotion_idx = _from_line("emotion", EMOTION2IDX, _DEFAULT_EMOTION_IDX)
+    sentiment_idx = _from_line("sentiment", SENTIMENT2IDX, _DEFAULT_SENTIMENT_IDX)
+    return emotion_idx, sentiment_idx
+
+
+# ---------------------------------------------------------------------------
+# Gold labels
+# ---------------------------------------------------------------------------
+
+def load_gold_labels(
+    meld_root: Path,
+    split: str,
+) -> Dict[str, Tuple[int, int]]:
+    """Load ground-truth (emotion_idx, sentiment_idx) keyed by utterance.
+
+    Args:
+        meld_root: Root directory containing the MELD CSV files.
+        split: One of 'train', 'dev', 'test'.
+
+    Returns:
+        Dict mapping "dia{d}_utt{u}" → (emotion_idx, sentiment_idx).
+    """
+    csv_path = meld_root / CSV_MAP[split]
+    if not csv_path.exists():
+        raise FileNotFoundError(f"MELD CSV not found: {csv_path}")
+
+    df = pd.read_csv(csv_path)
+    df.columns = (
+        df.columns.str.strip().str.lower().str.replace(" ", "_", regex=False)
+    )
+    df = df.dropna(subset=["emotion", "sentiment"]).reset_index(drop=True)
+    df["emotion"] = df["emotion"].str.strip().str.lower()
+    df["sentiment"] = df["sentiment"].str.strip().str.lower()
+
+    gold: Dict[str, Tuple[int, int]] = {}
+    for _, row in df.iterrows():
+        key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
+        gold[key] = (
+            EMOTION2IDX.get(row["emotion"], _DEFAULT_EMOTION_IDX),
+            SENTIMENT2IDX.get(row["sentiment"], _DEFAULT_SENTIMENT_IDX),
+        )
+    return gold
+
+
+# ---------------------------------------------------------------------------
+# Per-split classification
+# ---------------------------------------------------------------------------
+
+def classify_split(
+    split: str,
+    records: List[Tuple[str, Path]],
+    gold: Dict[str, Tuple[int, int]],
+    llm,
+    sampling_params,
+    instruction: str,
+    batch_size: int,
+    output_dir: Path,
+    logger: logging.Logger,
+) -> None:
+    """Zero-shot classify one split and write predictions + metrics.
+
+    Args:
+        split: Dataset split name.
+        records: List of (key, audio_path) pairs.
+        gold: Ground-truth labels keyed by utterance.
+        llm: A loaded vllm ``LLM`` instance.
+        sampling_params: vllm ``SamplingParams`` for generation.
+        instruction: Classification instruction text.
+        batch_size: Number of utterances per vllm batch.
+        output_dir: Directory to write the results JSON files.
+        logger: Logger instance.
+    """
+    logger.info("Split '%s' | %d utterances | zero-shot classification", split, len(records))
+
+    predictions: Dict[str, dict] = {}
+    missing_audio = 0
+
+    for batch_start in range(0, len(records), batch_size):
+        batch = records[batch_start: batch_start + batch_size]
+        messages_batch: List[List[dict]] = []
+        valid_keys: List[str] = []
+
+        for key, audio_path in batch:
+            if key not in gold:
+                continue  # no label → skip (metrics need gold)
+            if not audio_path.exists():
+                # Count as a default prediction so the sample is not silently dropped.
+                e_pred, s_pred = _DEFAULT_EMOTION_IDX, _DEFAULT_SENTIMENT_IDX
+                predictions[key] = {
+                    "emotion_pred": e_pred, "sentiment_pred": s_pred,
+                    "emotion_gold": gold[key][0], "sentiment_gold": gold[key][1],
+                    "raw": "<missing audio>",
+                }
+                missing_audio += 1
+                continue
+            try:
+                audio_b64 = audio_to_wav_base64(audio_path)
+                messages_batch.append(build_messages(audio_b64, instruction))
+                valid_keys.append(key)
+            except Exception as exc:  # noqa: BLE001 — log and continue
+                logger.error("Error preparing %s: %s", key, exc)
+
+        if messages_batch:
+            try:
+                outputs = llm.chat(messages_batch, sampling_params=sampling_params)
+                for key, output in zip(valid_keys, outputs):
+                    raw = output.outputs[0].text.strip()
+                    e_pred, s_pred = parse_prediction(raw)
+                    predictions[key] = {
+                        "emotion_pred": e_pred, "sentiment_pred": s_pred,
+                        "emotion_gold": gold[key][0], "sentiment_gold": gold[key][1],
+                        "raw": raw,
+                    }
+            except Exception as exc:  # noqa: BLE001
+                logger.error("vllm batch error (start %d): %s", batch_start, exc)
+
+        done = min(batch_start + batch_size, len(records))
+        logger.info("  %s | %d / %d done", split, done, len(records))
+
+    # ---- Metrics ----
+    keys_sorted = sorted(predictions.keys())
+    emotion_preds = [predictions[k]["emotion_pred"] for k in keys_sorted]
+    emotion_gold = [predictions[k]["emotion_gold"] for k in keys_sorted]
+    sentiment_preds = [predictions[k]["sentiment_pred"] for k in keys_sorted]
+    sentiment_gold = [predictions[k]["sentiment_gold"] for k in keys_sorted]
+
+    emotion_metrics = compute_emotion_metrics(emotion_preds, emotion_gold)
+    sentiment_metrics = compute_sentiment_metrics(sentiment_preds, sentiment_gold)
+
+    emotion_acc = sum(int(p == g) for p, g in zip(emotion_preds, emotion_gold)) / max(len(emotion_preds), 1)
+    sentiment_acc = sum(int(p == g) for p, g in zip(sentiment_preds, sentiment_gold)) / max(len(sentiment_preds), 1)
+
+    logger.info("=== Zero-shot Voxtral | split '%s' | %d scored (%d missing audio) ===",
+                split, len(keys_sorted), missing_audio)
+    logger.info("Emotion accuracy: %.4f", emotion_acc)
+    log_metrics(emotion_metrics, split, "emotion", logger)
+    logger.info("Sentiment accuracy: %.4f", sentiment_acc)
+    log_metrics(sentiment_metrics, split, "sentiment", logger)
+
+    # ---- Save ----
+    output_dir.mkdir(parents=True, exist_ok=True)
+    pred_path = output_dir / f"voxtral_zeroshot_{split}_predictions.json"
+    with open(pred_path, "w", encoding="utf-8") as f:
+        json.dump(predictions, f, ensure_ascii=False, indent=2)
+
+    metrics_summary = {
+        "split": split,
+        "n_scored": len(keys_sorted),
+        "n_missing_audio": missing_audio,
+        "emotion_accuracy": emotion_acc,
+        "emotion_weighted_f1": emotion_metrics["weighted_f1"],
+        "emotion_macro_f1": emotion_metrics["macro_f1"],
+        "emotion_per_class_f1": emotion_metrics["per_class_f1"],
+        "sentiment_accuracy": sentiment_acc,
+        "sentiment_weighted_f1": sentiment_metrics["weighted_f1"],
+        "sentiment_macro_f1": sentiment_metrics["macro_f1"],
+        "sentiment_per_class_f1": sentiment_metrics["per_class_f1"],
+    }
+    metrics_path = output_dir / f"voxtral_zeroshot_{split}_metrics.json"
+    with open(metrics_path, "w", encoding="utf-8") as f:
+        json.dump(metrics_summary, f, ensure_ascii=False, indent=2)
+
+    logger.info("Saved predictions → %s", pred_path)
+    logger.info("Saved metrics → %s", metrics_path)
+
+
+# ---------------------------------------------------------------------------
+# Entry point
+# ---------------------------------------------------------------------------
+
+def main() -> None:
+    parser = argparse.ArgumentParser(
+        description="Zero-shot emotion/sentiment classification with Voxtral (no fine-tuning)."
+    )
+    parser.add_argument("--config", type=str, required=True,
+                        help="Path to config yaml (mini.yaml or small.yaml)")
+    parser.add_argument("--splits", nargs="+", default=["test"],
+                        choices=["train", "dev", "test"],
+                        help="Which splits to classify (default: test)")
+    parser.add_argument("--batch_size", type=int, default=32,
+                        help="Utterances per vllm batch (default: 32)")
+    parser.add_argument("--max_samples", type=int, default=None,
+                        help="Limit each split to N utterances — for smoke tests.")
+    args = parser.parse_args()
+
+    config = load_config(args.config)
+    set_seed(config["data"]["seed"])
+
+    logger = setup_logging(config["training"]["log_dir"], "voxtral_zeroshot")
+    logger.info("Config: %s | Splits: %s", args.config, args.splits)
+
+    meld_root = Path(config["data"]["meld_root"])
+    model_id = config["model"]["voxtral_id"]
+    tensor_parallel_size = int(config["model"].get("tensor_parallel_size", 1))
+    output_dir = Path(config["evaluation"]["output_dir"])
+
+    # Build records + gold for each split up front.
+    for split in args.splits:
+        extract_tar_if_needed(meld_root, split, logger)
+    split_records = {s: build_utterance_index(meld_root, s) for s in args.splits}
+    split_gold = {s: load_gold_labels(meld_root, s) for s in args.splits}
+    if args.max_samples is not None:
+        split_records = {s: r[: args.max_samples] for s, r in split_records.items()}
+        logger.info("--max_samples=%d: truncating each split for smoke test", args.max_samples)
+
+    # Load Voxtral via vllm (mirrors Pass 1 of transcribe_all.py).
+    from vllm import LLM, SamplingParams
+
+    logger.info("Loading Voxtral via vllm: %s (tp=%d)", model_id, tensor_parallel_size)
+    llm = LLM(
+        model=model_id,
+        tokenizer_mode="mistral",
+        max_model_len=8192,
+        dtype="bfloat16",
+        gpu_memory_utilization=0.85,
+        tensor_parallel_size=tensor_parallel_size,
+        enforce_eager=True,
+    )
+    sampling_params = SamplingParams(max_tokens=30, temperature=0.0)
+    instruction = build_classification_prompt()
+
+    for split in args.splits:
+        classify_split(
+            split=split,
+            records=split_records[split],
+            gold=split_gold[split],
+            llm=llm,
+            sampling_params=sampling_params,
+            instruction=instruction,
+            batch_size=args.batch_size,
+            output_dir=output_dir,
+            logger=logger,
+        )
+
+    logger.info("Zero-shot classification complete.")
+
+
+if __name__ == "__main__":
+    main()

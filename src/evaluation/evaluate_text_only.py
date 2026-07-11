@@ -136,6 +136,25 @@ def main() -> None:
         description="Text-only baseline evaluation using Phase 1 checkpoint."
     )
     parser.add_argument("--config", type=str, required=True)
+    parser.add_argument(
+        "--checkpoint_path",
+        type=str,
+        default=None,
+        help=(
+            "Path to Phase 1 best_model.pt. Defaults to "
+            "<checkpoint_dir>/best_model.pt from the config."
+        ),
+    )
+    parser.add_argument(
+        "--tag",
+        type=str,
+        default="",
+        help=(
+            "Suffix added to output filenames (test_results_text_only<tag>.json, "
+            "confusion_*_text_only<tag>.png). Use to keep ablation runs distinct. "
+            "Example: '_focal_sampler'."
+        ),
+    )
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -143,7 +162,10 @@ def main() -> None:
     device = get_device()
 
     logger = setup_logging(config["training"]["log_dir"], "evaluate_text_only")
-    logger.info("Config: %s | Device: %s | Text-only baseline", args.config, device)
+    logger.info(
+        "Config: %s | Device: %s | Text-only baseline | tag=%r",
+        args.config, device, args.tag,
+    )
 
     xlmr_id   = config["model"]["xlmr_id"]
     tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
@@ -166,8 +188,10 @@ def main() -> None:
         drop_last   = False,
     )
 
-    # Load Phase 1 checkpoint
-    ckpt_path = Path(config["training"]["checkpoint_dir"]) / "best_model.pt"
+    # Load Phase 1 checkpoint (CLI override takes precedence over config path)
+    ckpt_path = Path(args.checkpoint_path) if args.checkpoint_path else (
+        Path(config["training"]["checkpoint_dir"]) / "best_model.pt"
+    )
     if not ckpt_path.exists():
         raise FileNotFoundError(f"Phase 1 checkpoint not found: {ckpt_path}")
 
@@ -201,24 +225,25 @@ def main() -> None:
 
     plot_confusion_matrix(
         emotion_preds, emotion_labels, EMOTION_NAMES,
-        title     = "Emotion — XLM-RoBERTa text-only (test)",
-        save_path = output_dir / "confusion_emotion_text_only.png",
+        title     = f"Emotion — XLM-RoBERTa text-only (test){args.tag}",
+        save_path = output_dir / f"confusion_emotion_text_only{args.tag}.png",
     )
     plot_confusion_matrix(
         sentiment_preds, sentiment_labels, SENTIMENT_NAMES,
-        title     = "Sentiment — XLM-RoBERTa text-only (test)",
-        save_path = output_dir / "confusion_sentiment_text_only.png",
+        title     = f"Sentiment — XLM-RoBERTa text-only (test){args.tag}",
+        save_path = output_dir / f"confusion_sentiment_text_only{args.tag}.png",
     )
 
     results = {
         "config":       args.config,
         "model":        "text_only",
+        "tag":          args.tag,
         "checkpoint":   str(ckpt_path),
         "test_samples": len(test_ds),
         "emotion":      {k: v for k, v in emotion_metrics.items() if k != "report"},
         "sentiment":    {k: v for k, v in sentiment_metrics.items() if k != "report"},
     }
-    results_path = output_dir / "test_results_text_only.json"
+    results_path = output_dir / f"test_results_text_only{args.tag}.json"
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
     logger.info("Results saved to %s", results_path)

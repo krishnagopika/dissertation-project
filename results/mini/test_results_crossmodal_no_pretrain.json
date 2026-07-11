@@ -1,0 +1,37 @@
+{
+  "config": "src/configs/mini.yaml",
+  "fusion_type": "crossmodal",
+  "tag": "_no_pretrain",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/fusion/crossmodal/best_model.pt",
+  "test_samples": 2610,
+  "emotion": {
+    "accuracy": 0.5773946360153257,
+    "weighted_precision": 0.6026895295999986,
+    "weighted_recall": 0.5773946360153257,
+    "weighted_f1": 0.5857393149055717,
+    "macro_f1": 0.41783522646663257,
+    "auc": 0.7876661032798473,
+    "per_class_f1": {
+      "neutral": 0.728923476005188,
+      "surprise": 0.5333333333333333,
+      "fear": 0.1782178217821782,
+      "sadness": 0.31981981981981983,
+      "joy": 0.5675057208237986,
+      "disgust": 0.16666666666666666,
+      "anger": 0.43037974683544306
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.671647509578544,
+    "weighted_precision": 0.6810939057860551,
+    "weighted_recall": 0.671647509578544,
+    "weighted_f1": 0.6736056112316656,
+    "macro_f1": 0.6477399300498909,
+    "auc": 0.829108947348837,
+    "per_class_f1": {
+      "negative": 0.593252705283259,
+      "neutral": 0.7627187627187627,
+      "positive": 0.587248322147651
+    }
+  }
+}
