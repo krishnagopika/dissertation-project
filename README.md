@@ -181,7 +181,7 @@ Next Steps:
 
 
 
-# to do
+
 
 - wispher transcription
 - voxtral prompt tuning
@@ -190,9 +190,8 @@ Next Steps:
 - focal loss ( abalation for gamma)
 - evalaute the misclassifications
 
+# to do
 
-
-- VAD
-- WER
+- VAD +WER filter pipeline
 - Voxtral (training data)
 - utterance -> dialogue 
