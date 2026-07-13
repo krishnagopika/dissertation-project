@@ -106,8 +106,8 @@ All experiments run on the `wmlg-ada` partition:
 | March 2026 | Environment setup, GPU config, dataset preprocessing, basic Voxtral inference pipeline, embedding extraction proof-of-concept |
 | April 2026 | XLM-RoBERTa ASR-aware fine-tuning, acoustic embedding extraction, baseline experiments |
 | May 2026 | Fusion layer implementation, full pipeline training, all ablation experiments |
-| June 2026 | Error analysis, dialect robustness evaluation, figures and tables |
-| July 2026 | Dissertation writing (all results finalised) |
+| June and July 2026 | Error analysis, dialect robustness evaluation, figures and tables |
+| August 2026 | Dissertation writing (all results finalised) |
 
 ### Submission Deadlines
 | Assessment | Weight | Deadline |
@@ -504,3 +504,35 @@ Cached embeddings, checkpoints, HF model weights, and the venv are all too large
 | Where are the metrics computed? | `src/evaluation/metrics.py` |
 | Where are cached embeddings on disk? | `/dcs/large/u5734759/data/meld_*` and `ravdess_embeddings/` |
 | Where are Phase 1 checkpoints archived? | `/dcs/large/u5734759/checkpoints/mini_<recipe>/best_model.pt` |
+
+---
+
+Next Steps:
+
+1. classification : ML models
+2. transcriptions from wisper 
+3. MELD dataset evaluation
+4. Overleaf doc 
+5. abalation for text and acoustic embeddings
+6. Feature Ranking
+
+
+
+- visualisation of embeddings (audio association with emotions)
+- class imbalance - (data auggumenttaion, weighted F1, diagonal - for kernel based methods)
+
+
+
+
+- wispher transcription
+- voxtral prompt tuning
+- tensor board
+
+- focal loss ( abalation for gamma)
+- evalaute the misclassifications
+
+# to do
+
+- VAD +WER filter pipeline
+- Voxtral (training data)
+- utterance -> dialogue 
