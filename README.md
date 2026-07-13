@@ -518,7 +518,6 @@ Next Steps:
 
 
 
-- visualisation of embeddings (audio association with emotions)
 - class imbalance - (data auggumenttaion, weighted F1, diagonal - for kernel based methods)
 
 
@@ -535,4 +534,6 @@ Next Steps:
 
 - VAD +WER filter pipeline
 - Voxtral (training data)
-- utterance -> dialogue 
+- utterance -> dialogue
+- visualisation of embeddings (audio association with emotions)
+
