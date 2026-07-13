@@ -18,7 +18,7 @@ from sklearn.metrics import (
     f1_score,
 )
 
-# Canonical label names — must match MELD_EMOTIONS in CLAUDE.md
+# Canonical label names
 EMOTION_NAMES: List[str] = [
     "neutral",   # 0
     "surprise",  # 1

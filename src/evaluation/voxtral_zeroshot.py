@@ -63,7 +63,7 @@ from src.preprocessing.transcribe_all import (
 )
 from src.utils import load_config, set_seed, setup_logging
 
-# Label name → index maps (canonical ordering from metrics.py / CLAUDE.md §15).
+# Label name → index maps (canonical ordering from metrics.py).
 EMOTION2IDX: Dict[str, int] = {name: i for i, name in enumerate(EMOTION_NAMES)}
 SENTIMENT2IDX: Dict[str, int] = {name: i for i, name in enumerate(SENTIMENT_NAMES)}
 
