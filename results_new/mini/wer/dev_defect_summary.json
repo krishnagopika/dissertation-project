@@ -1,0 +1,215 @@
+{
+  "n_utterances": 1109,
+  "n_scored": 1109,
+  "all": {
+    "n": 1109,
+    "corpus_wer": 0.3124,
+    "median_wer": 0.1667,
+    "mean_wer": 0.5898
+  },
+  "clean_only": {
+    "count": 918,
+    "pct": 82.78,
+    "n": 918,
+    "corpus_wer": 0.2392,
+    "median_wer": 0.1538,
+    "mean_wer": 0.3616
+  },
+  "per_class": {
+    "is_dup_copy": {
+      "count": 1,
+      "pct": 0.09,
+      "n": 1,
+      "corpus_wer": 1.2,
+      "median_wer": 1.2,
+      "mean_wer": 1.2
+    },
+    "is_short": {
+      "count": 107,
+      "pct": 9.65,
+      "n": 107,
+      "corpus_wer": 2.5635,
+      "median_wer": 0.5,
+      "mean_wer": 2.368
+    },
+    "is_low_vad": {
+      "count": 130,
+      "pct": 11.72,
+      "n": 130,
+      "corpus_wer": 1.4665,
+      "median_wer": 0.5,
+      "mean_wer": 2.2751
+    },
+    "is_no_speech": {
+      "count": 118,
+      "pct": 10.64,
+      "n": 118,
+      "corpus_wer": 1.7808,
+      "median_wer": 0.6667,
+      "mean_wer": 2.4811
+    },
+    "is_runaway": {
+      "count": 2,
+      "pct": 0.18,
+      "n": 2,
+      "corpus_wer": 31.5455,
+      "median_wer": 35.0,
+      "mean_wer": 31.8333
+    },
+    "is_empty_asr": {
+      "count": 1,
+      "pct": 0.09,
+      "n": 1,
+      "corpus_wer": 1.0,
+      "median_wer": 1.0,
+      "mean_wer": 1.0
+    },
+    "is_high_wer": {
+      "count": 242,
+      "pct": 21.82,
+      "n": 242,
+      "corpus_wer": 1.4287,
+      "median_wer": 1.0,
+      "mean_wer": 2.2096
+    },
+    "is_wer_over_1": {
+      "count": 99,
+      "pct": 8.93,
+      "n": 99,
+      "corpus_wer": 3.4879,
+      "median_wer": 2.6667,
+      "mean_wer": 4.1838
+    }
+  },
+  "wer_threshold_sweep": {
+    "0.10": {
+      "removed": 646,
+      "removed_pct": 58.25,
+      "already_flagged_by_audio": 111,
+      "uniquely_removed_by_wer": 535,
+      "kept": 463,
+      "kept_corpus_wer": 0.0314
+    },
+    "0.15": {
+      "removed": 570,
+      "removed_pct": 51.4,
+      "already_flagged_by_audio": 110,
+      "uniquely_removed_by_wer": 460,
+      "kept": 539,
+      "kept_corpus_wer": 0.0507
+    },
+    "0.20": {
+      "removed": 486,
+      "removed_pct": 43.82,
+      "already_flagged_by_audio": 107,
+      "uniquely_removed_by_wer": 379,
+      "kept": 623,
+      "kept_corpus_wer": 0.0715
+    },
+    "0.25": {
+      "removed": 420,
+      "removed_pct": 37.87,
+      "already_flagged_by_audio": 101,
+      "uniquely_removed_by_wer": 319,
+      "kept": 689,
+      "kept_corpus_wer": 0.089
+    },
+    "0.30": {
+      "removed": 389,
+      "removed_pct": 35.08,
+      "already_flagged_by_audio": 98,
+      "uniquely_removed_by_wer": 291,
+      "kept": 720,
+      "kept_corpus_wer": 0.1018
+    },
+    "0.40": {
+      "removed": 313,
+      "removed_pct": 28.22,
+      "already_flagged_by_audio": 91,
+      "uniquely_removed_by_wer": 222,
+      "kept": 796,
+      "kept_corpus_wer": 0.1253
+    },
+    "0.50": {
+      "removed": 242,
+      "removed_pct": 21.82,
+      "already_flagged_by_audio": 75,
+      "uniquely_removed_by_wer": 167,
+      "kept": 867,
+      "kept_corpus_wer": 0.1449
+    },
+    "0.75": {
+      "removed": 189,
+      "removed_pct": 17.04,
+      "already_flagged_by_audio": 70,
+      "uniquely_removed_by_wer": 119,
+      "kept": 920,
+      "kept_corpus_wer": 0.174
+    },
+    "1.00": {
+      "removed": 99,
+      "removed_pct": 8.93,
+      "already_flagged_by_audio": 44,
+      "uniquely_removed_by_wer": 55,
+      "kept": 1010,
+      "kept_corpus_wer": 0.2061
+    }
+  },
+  "combinations": {
+    "clean": 752,
+    "high_wer": 166,
+    "low_vad|no_speech": 47,
+    "short": 45,
+    "short|low_vad|no_speech|high_wer": 34,
+    "low_vad|no_speech|high_wer": 23,
+    "short|high_wer": 14,
+    "short|low_vad|no_speech": 12,
+    "low_vad": 11,
+    "short|low_vad|no_speech|runaway|high_wer": 2,
+    "dup_copy|high_wer": 1,
+    "low_vad|high_wer": 1,
+    "empty_asr|high_wer": 1
+  },
+  "by_emotion": {
+    "neutral": {
+      "n": 470,
+      "defective": 152,
+      "pct_defective": 32.3
+    },
+    "joy": {
+      "n": 163,
+      "defective": 46,
+      "pct_defective": 28.2
+    },
+    "anger": {
+      "n": 153,
+      "defective": 55,
+      "pct_defective": 35.9
+    },
+    "surprise": {
+      "n": 150,
+      "defective": 58,
+      "pct_defective": 38.7
+    },
+    "sadness": {
+      "n": 111,
+      "defective": 27,
+      "pct_defective": 24.3
+    },
+    "fear": {
+      "n": 40,
+      "defective": 13,
+      "pct_defective": 32.5
+    },
+    "disgust": {
+      "n": 22,
+      "defective": 6,
+      "pct_defective": 27.3
+    }
+  },
+  "keep_lists": {
+    "audio_clean": 918,
+    "text_clean": 752,
+    "total": 1109
+  }
+}

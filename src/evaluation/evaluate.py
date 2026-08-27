@@ -32,7 +32,7 @@ import json
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -99,6 +99,7 @@ class EvalDataset(Dataset):
         split: str,
         text_dim: int = 768,
         acoustic_dim: int = 1280,
+        filtered_keys_path: Optional[str] = None,
     ) -> None:
         assert split in ("train", "dev", "test"), (
             f"split must be train/dev/test, got {split}"
@@ -117,6 +118,17 @@ class EvalDataset(Dataset):
         df = df.dropna(subset=["emotion", "sentiment"]).reset_index(drop=True)
         df["emotion"]   = df["emotion"].str.strip().str.lower()
         df["sentiment"] = df["sentiment"].str.strip().str.lower()
+
+        keep_set: Optional[set] = None
+        self.num_before_filter = len(df)
+        if filtered_keys_path is not None:
+            p = Path(filtered_keys_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"filtered_keys_path set but file not found at {p}."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                keep_set = set(json.load(f)["keys"])
 
         text_emb_file = Path(text_embeddings_path) / f"{split}_text_embeddings.pt"
         if not text_emb_file.exists():
@@ -141,6 +153,8 @@ class EvalDataset(Dataset):
         self.samples: List[Tuple[Tensor, Tensor, int, int]] = []
         for _, row in df.iterrows():
             key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
+            if keep_set is not None and key not in keep_set:
+                continue
             text_emb = text_embeddings.get(
                 key, torch.zeros(text_dim, dtype=torch.float32)
             )
@@ -150,6 +164,7 @@ class EvalDataset(Dataset):
             emotion_idx   = EMOTION2IDX.get(row["emotion"], 0)
             sentiment_idx = SENTIMENT2IDX.get(row["sentiment"], 1)
             self.samples.append((text_emb, acoustic_emb, emotion_idx, sentiment_idx))
+        self.num_after_filter = len(self.samples)
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -408,6 +423,15 @@ def main() -> None:
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # ---- Test dataset ----
+    filt_cfg = config.get("filtering", {})
+    test_filter_keys: Optional[str] = None
+    if bool(filt_cfg.get("enabled", False)):
+        test_filter_keys = filt_cfg.get("keys_paths", {}).get("test")
+        if test_filter_keys is None:
+            raise KeyError(
+                "filtering.enabled=true but filtering.keys_paths.test not set."
+            )
+
     test_ds = EvalDataset(
         meld_root            = config["data"]["meld_root"],
         text_embeddings_path = config["data"]["text_embeddings_path"],
@@ -415,8 +439,14 @@ def main() -> None:
         split                = "test",
         text_dim             = config["model"]["text_dim"],
         acoustic_dim         = config["model"]["acoustic_dim"],
+        filtered_keys_path   = test_filter_keys,
     )
     logger.info("Test set: %d samples", len(test_ds))
+    if test_filter_keys is not None:
+        logger.info(
+            "Filter enabled | test: %d/%d kept",
+            test_ds.num_after_filter, test_ds.num_before_filter,
+        )
 
     test_loader = DataLoader(
         test_ds,

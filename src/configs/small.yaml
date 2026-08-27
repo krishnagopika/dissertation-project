@@ -25,21 +25,28 @@ training:
   phase1_lr: 0.00002
   phase2_lr: 0.0001
   phase3_lr: 0.00001        # optional light unfreezing of XLM-R last 2 layers
-  batch_size: 4             # reduced vs mini due to 24B model VRAM
-  epochs_phase1: 3
+  batch_size: 16            # Phase 1 trains XLM-R only, no Voxtral loaded — use full batch
+  epochs_phase1: 10         # XLM-R fine-tune length (independent of Voxtral size)
   epochs_phase2: 10
   epochs_phase3: 3
-  warmup_steps: 50
+  warmup_steps: 100
   weight_decay: 0.01
   max_grad_norm: 1.0
-  checkpoint_dir: "checkpoints/small"
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/small"
   log_dir: "logs/small"
   unfreeze_last_n_layers: 2  # for phase 3
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: false
 
 data:
   meld_root: "/dcs/large/u5734759/data/meld_raw"
   transcripts_path: "/dcs/large/u5734759/data/meld_transcripts_small"
   embeddings_path: "/dcs/large/u5734759/data/meld_embeddings"
+  # Text [CLS] cache is per-XLM-R-checkpoint. Keep small's cache separate from
+  # mini's so switching between them doesn't require re-extraction each time.
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings_small"
   max_audio_duration: 40
   max_text_length: 128
   num_workers: 4

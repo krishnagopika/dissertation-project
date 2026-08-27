@@ -1,0 +1,200 @@
+{
+  "train": {
+    "total_utts": 9989,
+    "total_dlgs": 1038,
+    "stages": [
+      {
+        "stage": "dup_copy",
+        "desc": "duplicate audio (MELD shipped one file for several utts)",
+        "removed": 19,
+        "utts_left": 9970,
+        "dlgs_left": 1038,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "no_speech",
+        "desc": "VAD finds no speech at all",
+        "removed": 860,
+        "utts_left": 9110,
+        "dlgs_left": 1023,
+        "dlgs_lost": 15
+      },
+      {
+        "stage": "short",
+        "desc": "under 1.0 s",
+        "removed": 546,
+        "utts_left": 8564,
+        "dlgs_left": 1023,
+        "dlgs_lost": 15
+      },
+      {
+        "stage": "low_vad",
+        "desc": "speech_ratio < 0.20",
+        "removed": 88,
+        "utts_left": 8476,
+        "dlgs_left": 1023,
+        "dlgs_lost": 15
+      },
+      {
+        "stage": "runaway",
+        "desc": "ASR > 5x gold and >= 40 words",
+        "removed": 6,
+        "utts_left": 8470,
+        "dlgs_left": 1022,
+        "dlgs_lost": 16
+      },
+      {
+        "stage": "empty_asr",
+        "desc": "ASR produced nothing",
+        "removed": 1,
+        "utts_left": 8469,
+        "dlgs_left": 1022,
+        "dlgs_lost": 16
+      },
+      {
+        "stage": "high_wer",
+        "desc": "WER > 0.40",
+        "removed": 2213,
+        "utts_left": 6256,
+        "dlgs_left": 951,
+        "dlgs_lost": 87
+      }
+    ],
+    "final_utts": 6256,
+    "final_dlgs": 951,
+    "dialogues_shrunk": 945,
+    "dialogues_singleton": 70
+  },
+  "dev": {
+    "total_utts": 1109,
+    "total_dlgs": 114,
+    "stages": [
+      {
+        "stage": "dup_copy",
+        "desc": "duplicate audio (MELD shipped one file for several utts)",
+        "removed": 1,
+        "utts_left": 1108,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "no_speech",
+        "desc": "VAD finds no speech at all",
+        "removed": 118,
+        "utts_left": 990,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "short",
+        "desc": "under 1.0 s",
+        "removed": 59,
+        "utts_left": 931,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "low_vad",
+        "desc": "speech_ratio < 0.20",
+        "removed": 12,
+        "utts_left": 919,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "runaway",
+        "desc": "ASR > 5x gold and >= 40 words",
+        "removed": 0,
+        "utts_left": 919,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "empty_asr",
+        "desc": "ASR produced nothing",
+        "removed": 1,
+        "utts_left": 918,
+        "dlgs_left": 114,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "high_wer",
+        "desc": "WER > 0.40",
+        "removed": 221,
+        "utts_left": 697,
+        "dlgs_left": 109,
+        "dlgs_lost": 5
+      }
+    ],
+    "final_utts": 697,
+    "final_dlgs": 109,
+    "dialogues_shrunk": 101,
+    "dialogues_singleton": 4
+  },
+  "test": {
+    "total_utts": 2610,
+    "total_dlgs": 280,
+    "stages": [
+      {
+        "stage": "dup_copy",
+        "desc": "duplicate audio (MELD shipped one file for several utts)",
+        "removed": 22,
+        "utts_left": 2588,
+        "dlgs_left": 280,
+        "dlgs_lost": 0
+      },
+      {
+        "stage": "no_speech",
+        "desc": "VAD finds no speech at all",
+        "removed": 234,
+        "utts_left": 2354,
+        "dlgs_left": 278,
+        "dlgs_lost": 2
+      },
+      {
+        "stage": "short",
+        "desc": "under 1.0 s",
+        "removed": 110,
+        "utts_left": 2244,
+        "dlgs_left": 278,
+        "dlgs_lost": 2
+      },
+      {
+        "stage": "low_vad",
+        "desc": "speech_ratio < 0.20",
+        "removed": 19,
+        "utts_left": 2225,
+        "dlgs_left": 277,
+        "dlgs_lost": 3
+      },
+      {
+        "stage": "runaway",
+        "desc": "ASR > 5x gold and >= 40 words",
+        "removed": 2,
+        "utts_left": 2223,
+        "dlgs_left": 277,
+        "dlgs_lost": 3
+      },
+      {
+        "stage": "empty_asr",
+        "desc": "ASR produced nothing",
+        "removed": 0,
+        "utts_left": 2223,
+        "dlgs_left": 277,
+        "dlgs_lost": 3
+      },
+      {
+        "stage": "high_wer",
+        "desc": "WER > 0.40",
+        "removed": 549,
+        "utts_left": 1674,
+        "dlgs_left": 252,
+        "dlgs_lost": 28
+      }
+    ],
+    "final_utts": 1674,
+    "final_dlgs": 252,
+    "dialogues_shrunk": 248,
+    "dialogues_singleton": 11
+  }
+}

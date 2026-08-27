@@ -1,0 +1,63 @@
+# small_smoke.yaml — SMOKE TEST ONLY for Voxtral-Small-24B transcription.
+#
+# Identical to small.yaml EXCEPT:
+#   1. model.voxtral_id points at a PATCHED local snapshot (see below)
+#   2. data.transcripts_path is a throwaway directory
+#
+# (2) matters because transcribe_all.py skips any split whose
+# {split}_transcripts.json already exists — a 20-utterance smoke run writing
+# into the real meld_transcripts_small/ would make the full run silently skip
+# that split and leave you with 20 transcripts forever.
+#
+# (1) is the fix for the crash in jobs 1401458 / 1406769 / 1407700:
+# vllm's HF loader reads config.audio_config.downsample_factor (voxtral.py:332),
+# but Voxtral-Small's config.json has no such key and transformers'
+# VoxtralEncoderConfig cannot supply it (absent from __init__ and attribute_map).
+# Mini never hit this because its snapshot has NO config.json at all — it is
+# packaged Mistral-style, so vllm reads params.json, where downsample_factor
+# does exist. The patched dir adds "downsample_factor": 4 to audio_config,
+# the value taken from Voxtral-Small's OWN params.json.
+
+model:
+  voxtral_id: "/dcs/large/u5734759/models/voxtral-small-patched"
+  xlmr_id: "FacebookAI/xlm-roberta-base"
+  acoustic_dim: 1280
+  text_dim: 768
+  tensor_parallel_size: 2
+  fusion_hidden: 512
+  num_classes: 7
+  num_sentiment_classes: 3
+  dropout: 0.3
+
+training:
+  phase1_lr: 0.00002
+  phase2_lr: 0.0001
+  phase3_lr: 0.00001
+  batch_size: 16
+  epochs_phase1: 10
+  epochs_phase2: 10
+  epochs_phase3: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/small"
+  log_dir: "logs/small"
+  unfreeze_last_n_layers: 2
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: false
+
+data:
+  meld_root: "/dcs/large/u5734759/data/meld_raw"
+  transcripts_path: "/dcs/large/u5734759/data/_smoke_small"   # <-- THROWAWAY
+  embeddings_path: "/dcs/large/u5734759/data/meld_embeddings"
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings_small"
+  max_audio_duration: 40
+  max_text_length: 128
+  num_workers: 4
+  seed: 42
+
+evaluation:
+  primary_metric: "weighted_f1"
+  output_dir: "results/small"

@@ -22,9 +22,10 @@ Usage
 from __future__ import annotations
 
 import argparse
+import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import pandas as pd
 import torch
@@ -69,13 +70,29 @@ class DialogueDataset(Dataset):
     """
 
     def __init__(self, meld_root, text_embeddings_path, embeddings_path, split,
-                 text_dim=768, acoustic_dim=1280) -> None:
+                 text_dim=768, acoustic_dim=1280,
+                 filtered_keys_path: Optional[str] = None) -> None:
         self.text_dim, self.acoustic_dim = text_dim, acoustic_dim
 
         text_emb: Dict[str, Tensor] = torch.load(
             str(Path(text_embeddings_path) / f"{split}_text_embeddings.pt"), map_location="cpu")
         acou_emb: Dict[str, Tensor] = torch.load(
             str(Path(embeddings_path) / f"{split}_embeddings.pt"), map_location="cpu")
+
+        # Optional keep-list from VAD+WER filter. Filtered utterances stay in
+        # the dialogue (so the BiLSTM keeps its context) but their labels are
+        # masked to PAD_LABEL so they contribute to neither loss nor metrics.
+        keep_set: Optional[Set[str]] = None
+        if filtered_keys_path is not None:
+            p = Path(filtered_keys_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"filtered_keys_path set but file not found at {p}."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                keep_set = set(json.load(f)["keys"])
+        self.num_total_utts = 0
+        self.num_kept_utts = 0
 
         df = pd.read_csv(Path(meld_root) / _SPLIT_CSV[split])
         df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_", regex=False)
@@ -94,8 +111,15 @@ class DialogueDataset(Dataset):
                 t = text_emb.get(key, torch.zeros(text_dim))
                 a = acou_emb.get(key, torch.zeros(acoustic_dim))
                 feats.append(torch.cat([t.float(), a.float()]))
-                emos.append(EMOTION2IDX.get(row["emotion"], 0))
-                sents.append(SENTIMENT2IDX.get(row["sentiment"], 1))
+                self.num_total_utts += 1
+                if keep_set is not None and key not in keep_set:
+                    # Filtered-out — keep in dialogue for context, mask labels.
+                    emos.append(PAD_LABEL)
+                    sents.append(PAD_LABEL)
+                else:
+                    emos.append(EMOTION2IDX.get(row["emotion"], 0))
+                    sents.append(SENTIMENT2IDX.get(row["sentiment"], 1))
+                    self.num_kept_utts += 1
             self.dialogues.append({
                 "features": torch.stack(feats),                       # (T, 2048)
                 "emotions": torch.tensor(emos, dtype=torch.long),     # (T,)
@@ -107,6 +131,54 @@ class DialogueDataset(Dataset):
 
     def __getitem__(self, idx: int) -> Dict:
         return self.dialogues[idx]
+
+
+class WindowedDialogueDataset(Dataset):
+    """One training example per utterance, with a fixed ±K neighbour window.
+
+    For each utterance ``i`` in each dialogue we extract features from indices
+    ``[max(0, i-K), min(T-1, i+K)]`` (up to ``2K+1`` utterances, shorter near
+    dialogue edges). All labels in the window are set to ``PAD_LABEL`` except
+    the centre, so loss and metrics score only the centre utterance while the
+    BiLSTM sees its ±K neighbours as context.
+
+    Args:
+        base: A :class:`DialogueDataset` whose dialogues are already loaded.
+        context_window: K, the number of neighbours on each side (>=0).
+    """
+
+    def __init__(self, base: "DialogueDataset", context_window: int) -> None:
+        assert context_window >= 0, "context_window must be >= 0"
+        self.context_window = context_window
+        self.samples: List[Dict] = []
+        for dia in base.dialogues:
+            feats = dia["features"]
+            emos = dia["emotions"]
+            sents = dia["sentiments"]
+            T = feats.size(0)
+            for i in range(T):
+                start = max(0, i - context_window)
+                end = min(T, i + context_window + 1)
+                center_idx = i - start
+                W = end - start
+                w_e = torch.full((W,), PAD_LABEL, dtype=torch.long)
+                w_s = torch.full((W,), PAD_LABEL, dtype=torch.long)
+                w_e[center_idx] = emos[i]
+                w_s[center_idx] = sents[i]
+                self.samples.append({
+                    "features": feats[start:end],
+                    "emotions": w_e,
+                    "sentiments": w_s,
+                })
+        # Reuse the count trackers so main() log lines still make sense
+        self.num_total_utts = base.num_total_utts
+        self.num_kept_utts = base.num_kept_utts
+
+    def __len__(self) -> int:
+        return len(self.samples)
+
+    def __getitem__(self, idx: int) -> Dict:
+        return self.samples[idx]
 
 
 def collate(batch: List[Dict]) -> Tuple[Tensor, Tensor, Tensor, Tensor]:
@@ -185,25 +257,59 @@ def main() -> None:
     parser.add_argument("--epochs", type=int, default=30)
     parser.add_argument("--patience", type=int, default=5)
     parser.add_argument("--batch_size", type=int, default=16, help="dialogues per batch")
+    parser.add_argument("--tag", type=str, default="",
+                        help="Suffix for the results JSON, e.g. '_wer25_filter'.")
+    parser.add_argument("--context_window", type=int, default=-1,
+                        help=("If ≥ 0, restrict each utterance's context to ±K "
+                              "neighbours (K=0 → no context, K=1 → ±1 utterance, "
+                              "etc.). Default −1 = whole dialogue."))
     args = parser.parse_args()
 
     config = load_config(args.config)
     set_seed(config["data"]["seed"])
     device = get_device()
     logger = setup_logging(config["training"]["log_dir"], "train_context")
-    logger.info("Config: %s | hidden=%d layers=%d | device=%s",
-                args.config, args.hidden_dim, args.num_layers, device)
+    logger.info("Config: %s | hidden=%d layers=%d | device=%s | tag=%r",
+                args.config, args.hidden_dim, args.num_layers, device, args.tag)
 
     text_dim = config["model"]["text_dim"]
     acoustic_dim = config["model"]["acoustic_dim"]
 
+    # Filter keep-lists (per-split) come from filtering.keys_paths when
+    # filtering.enabled=true. Filtered utterances remain in each dialogue for
+    # BiLSTM context but their labels are masked, so they do not contribute to
+    # loss or metrics — same convention as the other datasets.
+    filt = config.get("filtering", {})
+    filter_on = bool(filt.get("enabled", False))
+    filter_keys = filt.get("keys_paths", {}) if filter_on else {}
+
     def make_ds(split):
         return DialogueDataset(
             config["data"]["meld_root"], config["data"]["text_embeddings_path"],
-            config["data"]["embeddings_path"], split, text_dim, acoustic_dim)
+            config["data"]["embeddings_path"], split, text_dim, acoustic_dim,
+            filtered_keys_path=filter_keys.get(split))
 
     train_ds, dev_ds = make_ds("train"), make_ds("dev")
     logger.info("Train dialogues: %d | Dev dialogues: %d", len(train_ds), len(dev_ds))
+    if filter_on:
+        logger.info(
+            "Filter enabled | train utterances: %d/%d kept | dev utterances: %d/%d kept",
+            train_ds.num_kept_utts, train_ds.num_total_utts,
+            dev_ds.num_kept_utts, dev_ds.num_total_utts,
+        )
+
+    # Windowed mode — replace each dialogue with per-utterance ±K windows.
+    # Auto-append e.g. "_win1" to the tag so results file names are distinct.
+    tag = args.tag
+    if args.context_window >= 0:
+        K = args.context_window
+        tag = f"{tag}_win{K}" if tag else f"_win{K}"
+        logger.info("Context window K=%d (window size %d) — using WindowedDialogueDataset", K, 2 * K + 1)
+        train_ds = WindowedDialogueDataset(train_ds, K)
+        dev_ds   = WindowedDialogueDataset(dev_ds, K)
+        logger.info("Windowed | train examples: %d | dev examples: %d",
+                    len(train_ds), len(dev_ds))
+    args.tag = tag
     train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collate)
     dev_loader = DataLoader(dev_ds, batch_size=args.batch_size, shuffle=False, collate_fn=collate)
 
@@ -223,7 +329,12 @@ def main() -> None:
     s_crit = FocalLoss(gamma=gamma).to(device)
     max_grad_norm = float(config["training"].get("max_grad_norm", 1.0))
 
-    ckpt_dir = Path(config["training"]["checkpoint_dir"]) / "context_bclstm"
+    # NOTE: the tag MUST be part of the checkpoint directory. Previously this was
+    # a fixed "context_bclstm" path while --tag only renamed the results JSON, so
+    # every run silently overwrote the previous run's weights -- the unfiltered
+    # and wer25 models never coexisted on disk, making them impossible to compare
+    # or re-evaluate afterwards. Distinct tag => distinct directory.
+    ckpt_dir = Path(config["training"]["checkpoint_dir"]) / f"context_bclstm{tag}"
     ckpt_dir.mkdir(parents=True, exist_ok=True)
     best_wf1, no_improve = 0.0, 0
 
@@ -252,12 +363,43 @@ def main() -> None:
     # ---- Final TEST evaluation of the best checkpoint (comparable to other test numbers) ----
     best = torch.load(ckpt_dir / "best_context.pt", map_location=device)
     model.load_state_dict(best["model_state_dict"])
-    test_loader = DataLoader(make_ds("test"), batch_size=args.batch_size,
+    test_ds = make_ds("test")
+    if filter_on:
+        logger.info("Filter enabled | test utterances: %d/%d kept",
+                    test_ds.num_kept_utts, test_ds.num_total_utts)
+    if args.context_window >= 0:
+        test_ds = WindowedDialogueDataset(test_ds, args.context_window)
+        logger.info("Windowed test examples: %d", len(test_ds))
+    test_loader = DataLoader(test_ds, batch_size=args.batch_size,
                              shuffle=False, collate_fn=collate)
     _, em_t, sm_t = evaluate(model, test_loader, device, e_crit, s_crit)
     logger.info("=== TEST (best checkpoint, epoch %d) ===", best["epoch"] + 1)
     log_metrics(em_t, "test", "emotion", logger)
     log_metrics(sm_t, "test", "sentiment", logger)
+
+    # ---- Save test results as JSON (same format as evaluate.py) ----
+    output_dir = Path(config["evaluation"]["output_dir"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+    def _drop_report(d: Dict) -> Dict:
+        return {k: v for k, v in d.items() if k != "report"}
+    results = {
+        "config": args.config,
+        "model":  "bclstm",
+        "tag":    args.tag,
+        "checkpoint": str(ckpt_dir / "best_context.pt"),
+        "best_epoch": best["epoch"] + 1,
+        "filter_enabled": filter_on,
+        "n_train_dialogues": len(train_ds),
+        "n_dev_dialogues": len(dev_ds),
+        "n_test_dialogues": len(test_ds),
+        "n_test_utterances_scored": test_ds.num_kept_utts if filter_on else test_ds.num_total_utts,
+        "emotion":   _drop_report(em_t),
+        "sentiment": _drop_report(sm_t),
+    }
+    results_path = output_dir / f"test_results_bclstm{args.tag}.json"
+    with open(results_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
+    logger.info("Results saved to %s", results_path)
 
 
 if __name__ == "__main__":

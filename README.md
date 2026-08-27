@@ -537,3 +537,5 @@ Next Steps:
 - utterance -> dialogue
 - visualisation of embeddings (audio association with emotions)
 
+- PCA and UMAP
+
