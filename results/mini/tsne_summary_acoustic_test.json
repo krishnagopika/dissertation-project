@@ -1,0 +1,17 @@
+{
+  "modality": "acoustic",
+  "split": "test",
+  "checkpoint": null,
+  "n_points": 2610,
+  "head_accuracy": null,
+  "per_class_counts": {
+    "neutral": 1256,
+    "surprise": 281,
+    "fear": 50,
+    "sadness": 208,
+    "joy": 402,
+    "disgust": 68,
+    "anger": 345
+  },
+  "per_class_recall": null
+}

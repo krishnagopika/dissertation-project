@@ -1,0 +1,37 @@
+{
+  "config": "src/configs/xlmr_gold_focal.yaml",
+  "model": "text_only",
+  "tag": "_focal_TESTON_asr_clean",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/xlmr_gold_focal/best_model.pt",
+  "test_samples": 1787,
+  "emotion": {
+    "accuracy": 0.4986010072747622,
+    "weighted_precision": 0.5116278155032699,
+    "weighted_recall": 0.4986010072747622,
+    "weighted_f1": 0.5013290135552049,
+    "macro_f1": 0.3405882800515639,
+    "auc": 0.7339181712823847,
+    "per_class_f1": {
+      "neutral": 0.6636871508379888,
+      "surprise": 0.48427672955974843,
+      "fear": 0.08,
+      "sadness": 0.29607250755287007,
+      "joy": 0.40313111545988256,
+      "disgust": 0.18181818181818182,
+      "anger": 0.2751322751322751
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.5948517067711248,
+    "weighted_precision": 0.5863429907864731,
+    "weighted_recall": 0.5948517067711248,
+    "weighted_f1": 0.5837283582074466,
+    "macro_f1": 0.5380986300565808,
+    "auc": 0.7148646496828478,
+    "per_class_f1": {
+      "negative": 0.5187376725838264,
+      "neutral": 0.693564862104188,
+      "positive": 0.4019933554817276
+    }
+  }
+}

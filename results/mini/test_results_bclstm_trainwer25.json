@@ -1,0 +1,34 @@
+{
+  "config": "src/configs/ctx_trainwer25_testfull.yaml",
+  "model": "bclstm",
+  "tag": "_trainwer25",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/context_bclstm_trainwer25/best_context.pt",
+  "best_epoch": 7,
+  "filter_enabled": true,
+  "n_train_dialogues": 1038,
+  "n_dev_dialogues": 114,
+  "n_test_dialogues": 280,
+  "n_test_utterances_scored": 2610,
+  "emotion": {
+    "weighted_f1": 0.6066108481185115,
+    "macro_f1": 0.4222848529028064,
+    "per_class_f1": {
+      "neutral": 0.7679492264974217,
+      "surprise": 0.553125,
+      "fear": 0.1111111111111111,
+      "sadness": 0.35638297872340424,
+      "joy": 0.5807200929152149,
+      "disgust": 0.18867924528301888,
+      "anger": 0.3980263157894737
+    }
+  },
+  "sentiment": {
+    "weighted_f1": 0.6815778118489979,
+    "macro_f1": 0.661419540647198,
+    "per_class_f1": {
+      "negative": 0.622349570200573,
+      "neutral": 0.7495867768595041,
+      "positive": 0.6123222748815166
+    }
+  }
+}

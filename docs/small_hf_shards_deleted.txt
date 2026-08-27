@@ -1,0 +1,16 @@
+# Voxtral-Small HF-format shards deleted 2026-08-23T07:21:05+01:00
+# Reason: vLLM's Voxtral loader only remaps MISTRAL weight names; these
+# HF-format shards route into a loader path that cannot work.
+# Re-fetch with: allow_patterns=['model-*.safetensors','model.safetensors.index.json']
+model-00001-of-00011.safetensors  4947893992  -> 9e4c3fde4ef4a1141b4b06f2125c63bb2032f71a7985fafb4b3ae8243ca17be2
+model-00002-of-00011.safetensors  4781593336  -> 6998429899fc08e533b7ef0bb65a66d0c744a490c31b5210ea5f61e62e8fb997
+model-00003-of-00011.safetensors  4781593344  -> b692e60c5d9acfd5b6e7fd2c0337349a421bb687c8cef14627469f744efa83df
+model-00004-of-00011.safetensors  4886472248  -> 0c34b0b04a59f62c3d1f320803f421c45d51dbf917f4e3f90eda957640ae85da
+model-00005-of-00011.safetensors  4781593376  -> bcea8514dd1330b2478deeff5b48b6788c1e6fbd1c6d5034faeeee5c066b6288
+model-00006-of-00011.safetensors  4781593368  -> 3e415b6a5cc6f266acdd8aeba526288abd8345ebaa4022ab0e26ea30eaaffa91
+model-00007-of-00011.safetensors  4886472248  -> 720bbe6314e0b69b97fd13e07ffdef4953dc5aec3b4b91c15a9c1d40d7b1c7fc
+model-00008-of-00011.safetensors  4781593376  -> 85c590b7d4d6c843dc083b3048f5b00cda7ee7ddfeb18a3732ff2db65926a6eb
+model-00009-of-00011.safetensors  4781593368  -> fc973532e7f8faea778ed22aac9867b84e1d4bb4ad9c9a50744fc1eeeb6c9115
+model-00010-of-00011.safetensors  3670112232  -> 365913969c7a5c93cc2d9e19b6f9d4128e675db8a1941c2436f0a2a2c64870e2
+model-00011-of-00011.safetensors  1447035256  -> 2515d18911999b503000115208d6c5ae46777223227c18a170cbff3095aaf697
+model.safetensors.index.json  76870  -> 278fc5279d7632ed981e211e62f73f476452de29

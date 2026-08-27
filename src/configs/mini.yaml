@@ -88,6 +88,55 @@ data:
   num_workers: 4
   seed: 42
 
+filtering:
+  # Two-step pipeline:
+  #   compute_filter_metadata.py → {split}_filter_metadata.json     (heavy)
+  #   apply_filter.py              → {split}_filtered_keys_<policy>.json (fast)
+  # Datasets load a keep-list at train time via filtering.keys_paths.
+  enabled: true
+  metadata_dir: "/dcs/large/u5734759/data/meld_filter_metadata"
+  keys_dir:     "/dcs/large/u5734759/data/meld_filter_keys"
+  audio_max_duration: 40
+
+  # Which keep-list to actually use during training (per split).
+  # Set filtering.enabled: true to activate.
+  keys_paths:
+    train: "/dcs/large/u5734759/data/meld_filter_keys/train_filtered_keys_wer25.json"
+    dev:   "/dcs/large/u5734759/data/meld_filter_keys/dev_filtered_keys_wer25.json"
+    test:  "/dcs/large/u5734759/data/meld_filter_keys/test_filtered_keys_wer25.json"
+
+  # Ablation policies — apply_filter.py writes one keep-list per policy per split.
+  # All thresholds are meaningful ASR-quality gates: WER > ~50% means the
+  # transcript is more wrong than right, which is garbage-in-garbage-out
+  # even with a correct emotion label, so we don't offer thresholds above
+  # ~40%. See PROGRESS.md for the WER distribution.
+  policies:
+    # Uniform filter — same threshold across all splits
+    wer10:
+      wer_source: vox              # "vox" or "whisper"
+      wer_max: 0.10
+      vad_min_speech_ratio: 0.20
+    wer15:
+      wer_source: vox
+      wer_max: 0.15
+      vad_min_speech_ratio: 0.20
+    wer20:
+      wer_source: vox
+      wer_max: 0.20
+      vad_min_speech_ratio: 0.20
+    wer25:
+      wer_source: vox
+      wer_max: 0.25
+      vad_min_speech_ratio: 0.20
+
+    # Split-dependent — eval on clean audio, train slightly looser but still
+    # meaningful (WER ≤ 40% keeps clips where at least ~60% of words are right).
+    wer25_eval_wer40_train:
+      per_split:
+        train: {wer_source: vox, wer_max: 0.40, vad_min_speech_ratio: 0.20}
+        dev:   {wer_source: vox, wer_max: 0.25, vad_min_speech_ratio: 0.20}
+        test:  {wer_source: vox, wer_max: 0.25, vad_min_speech_ratio: 0.20}
+
 evaluation:
   primary_metric: "weighted_f1"
   output_dir: "results/mini"

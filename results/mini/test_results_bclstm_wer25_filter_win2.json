@@ -1,0 +1,34 @@
+{
+  "config": "src/configs/mini.yaml",
+  "model": "bclstm",
+  "tag": "_wer25_filter_win2",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/context_bclstm/best_context.pt",
+  "best_epoch": 1,
+  "filter_enabled": true,
+  "n_train_dialogues": 9989,
+  "n_dev_dialogues": 1109,
+  "n_test_dialogues": 2610,
+  "n_test_utterances_scored": 909,
+  "emotion": {
+    "weighted_f1": 0.6038401240452645,
+    "macro_f1": 0.3879776909202005,
+    "per_class_f1": {
+      "neutral": 0.7683397683397684,
+      "surprise": 0.5290322580645161,
+      "fear": 0.06451612903225806,
+      "sadness": 0.3409090909090909,
+      "joy": 0.42162162162162165,
+      "disgust": 0.23076923076923078,
+      "anger": 0.36065573770491804
+    }
+  },
+  "sentiment": {
+    "weighted_f1": 0.6808942508007904,
+    "macro_f1": 0.6161034434176612,
+    "per_class_f1": {
+      "negative": 0.6137931034482759,
+      "neutral": 0.7675568743818002,
+      "positive": 0.4669603524229075
+    }
+  }
+}

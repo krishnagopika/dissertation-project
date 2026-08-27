@@ -1,0 +1,147 @@
+# extract_mini.yaml — single-pass extraction, mistralai/Voxtral-Mini-3B-2507
+# Writes ONLY under /dcs/large/u5734759/data/meld_extracted/mini/ .
+# Nothing under meld_transcripts/ or meld_embeddings/ is touched,
+# and the two models cannot overwrite each other.
+# filtering.enabled: false — this extraction is UNFILTERED, every utterance.
+# mini.yaml — Voxtral-Mini-3B + XLM-RoBERTa-base
+# Fits on 1x L40S (48 GB). Submit with gpu:1.
+
+model:
+  voxtral_id: "mistralai/Voxtral-Mini-3B-2507"
+  whisper_id: "openai/whisper-large-v3"   # standalone ASR baseline (= Voxtral's encoder)
+  xlmr_id: "FacebookAI/xlm-roberta-base"
+  acoustic_dim: 1280        # Whisper encoder hidden dim — extracted before MLP projector
+  text_dim: 768             # XLM-RoBERTa-base hidden dim
+  tensor_parallel_size: 1
+  fusion_hidden: 512
+  num_classes: 7
+  num_sentiment_classes: 3
+  dropout: 0.3
+
+training:
+  phase1_lr: 0.00002
+  phase2_lr: 0.0001
+  phase3_lr: 0.00001        # optional light unfreezing of XLM-R last 2 layers
+  batch_size: 16
+  epochs_phase1: 10
+  epochs_phase2: 10
+  epochs_phase3: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/mini"
+  log_dir: "logs/mini"
+  unfreeze_last_n_layers: 2  # for phase 3
+  # Imbalance handling — Phase 1 only
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: true
+
+use_ravdess_pretrain: true    # Phase B: warm-start fusion's acoustic_proj
+                              # from the RAVDESS-pretrained backbone.
+
+ravdess:
+  data_root: "/dcs/large/u5734759/data/ravdess"
+  embeddings_path: "/dcs/large/u5734759/data/ravdess_embeddings/embeddings.pt"
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/ravdess/best_acoustic_backbone.pt"
+  num_classes: 8                # 8 RAVDESS emotions (incl. calm)
+  hidden_dim: 512               # must match model.fusion_hidden so weights transfer
+  train_ratio: 0.70
+  val_ratio: 0.15
+  max_duration_sec: 5.0
+  epochs: 30
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+combined:
+  # Joint acoustic-only training on RAVDESS + MELD, all labels mapped into
+  # MELD's 7-class emotion space. RAVDESS calm → MELD neutral (supervisor
+  # said do not drop). Val = MELD dev (target domain) for early stopping.
+  backbone_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_acoustic_backbone.pt"
+  full_checkpoint: "/dcs/large/u5734759/checkpoints/combined/best_full_model.pt"
+  hidden_dim: 512
+  epochs: 20
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+
+augmentation:
+  paraphrases_path: "/dcs/large/u5734759/data/meld_transcripts/train_paraphrases.json"
+  # Number of paraphrases generated per minority utterance.
+  # Skipped classes (e.g., neutral, joy, surprise, anger) get 0.
+  per_class_multiplier:
+    fear: 4
+    disgust: 4
+    sadness: 1
+    anger: 0
+    joy: 0
+    surprise: 0
+    neutral: 0
+  voxtral_temperature: 0.8
+  voxtral_max_tokens: 80
+  voxtral_batch_size: 32
+
+data:
+  meld_root: "/dcs/large/u5734759/data/meld_raw"
+  transcripts_path: "/dcs/large/u5734759/data/meld_extracted/mini/transcripts"
+  embeddings_path: "/dcs/large/u5734759/data/meld_extracted/mini/acoustic"
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_extracted/mini/text"
+  max_audio_duration: 40
+  max_text_length: 128
+  num_workers: 4
+  seed: 42
+
+filtering:
+  # Two-step pipeline:
+  #   compute_filter_metadata.py → {split}_filter_metadata.json     (heavy)
+  #   apply_filter.py              → {split}_filtered_keys_<policy>.json (fast)
+  # Datasets load a keep-list at train time via filtering.keys_paths.
+  enabled: false
+  metadata_dir: "/dcs/large/u5734759/data/meld_extracted/mini/filter_metadata"
+  keys_dir:     "/dcs/large/u5734759/data/meld_extracted/mini/filter_keys"
+  audio_max_duration: 40
+
+  # Which keep-list to actually use during training (per split).
+  # Set filtering.enabled: true to activate.
+  keys_paths:
+    train: "/dcs/large/u5734759/data/meld_filter_keys/train_filtered_keys_wer25.json"
+    dev:   "/dcs/large/u5734759/data/meld_filter_keys/dev_filtered_keys_wer25.json"
+    test:  "/dcs/large/u5734759/data/meld_filter_keys/test_filtered_keys_wer25.json"
+
+  # Ablation policies — apply_filter.py writes one keep-list per policy per split.
+  # All thresholds are meaningful ASR-quality gates: WER > ~50% means the
+  # transcript is more wrong than right, which is garbage-in-garbage-out
+  # even with a correct emotion label, so we don't offer thresholds above
+  # ~40%. See PROGRESS.md for the WER distribution.
+  policies:
+    # Uniform filter — same threshold across all splits
+    wer10:
+      wer_source: vox              # "vox" or "whisper"
+      wer_max: 0.10
+      vad_min_speech_ratio: 0.20
+    wer15:
+      wer_source: vox
+      wer_max: 0.15
+      vad_min_speech_ratio: 0.20
+    wer20:
+      wer_source: vox
+      wer_max: 0.20
+      vad_min_speech_ratio: 0.20
+    wer25:
+      wer_source: vox
+      wer_max: 0.25
+      vad_min_speech_ratio: 0.20
+
+    # Split-dependent — eval on clean audio, train slightly looser but still
+    # meaningful (WER ≤ 40% keeps clips where at least ~60% of words are right).
+    wer25_eval_wer40_train:
+      per_split:
+        train: {wer_source: vox, wer_max: 0.40, vad_min_speech_ratio: 0.20}
+        dev:   {wer_source: vox, wer_max: 0.25, vad_min_speech_ratio: 0.20}
+        test:  {wer_source: vox, wer_max: 0.25, vad_min_speech_ratio: 0.20}
+
+evaluation:
+  primary_metric: "weighted_f1"
+  output_dir: "results_new/mini"

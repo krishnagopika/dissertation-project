@@ -1,0 +1,34 @@
+{
+  "config": "src/configs/eval_testwer25.yaml",
+  "model": "bclstm",
+  "tag": "_trainwer25_on_testwer25",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/context_bclstm_trainwer25/best_context.pt",
+  "trained_epoch": 7,
+  "eval_only": true,
+  "filter_enabled": true,
+  "test_filter_keys": "/dcs/large/u5734759/data/meld_filter_keys/test_filtered_keys_wer25.json",
+  "n_test_dialogues": 280,
+  "n_test_utterances_scored": 909,
+  "emotion": {
+    "weighted_f1": 0.6327823328409934,
+    "macro_f1": 0.4099952327089634,
+    "per_class_f1": {
+      "neutral": 0.7884057971014493,
+      "surprise": 0.5549132947976878,
+      "fear": 0.0,
+      "sadness": 0.38666666666666666,
+      "joy": 0.5294117647058824,
+      "disgust": 0.24390243902439024,
+      "anger": 0.36666666666666664
+    }
+  },
+  "sentiment": {
+    "weighted_f1": 0.696817435115122,
+    "macro_f1": 0.6461213992126608,
+    "per_class_f1": {
+      "negative": 0.6228373702422145,
+      "neutral": 0.7723169508525577,
+      "positive": 0.5432098765432098
+    }
+  }
+}

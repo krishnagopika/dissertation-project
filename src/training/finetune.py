@@ -70,14 +70,29 @@ _SPLIT_CSV = {
 
 
 class TranscriptDataset(Dataset):
-    """Dataset that serves ASR transcripts paired with MELD emotion labels.
+    """Dataset serving either ASR transcripts or MELD gold text, with labels.
+
+    BUG HISTORY: this class accepted `transcripts_path` and then never used it,
+    reading `row["utterance"]` -- MELD's GOLD text -- regardless. Every
+    text-only and fusion result produced before 2026-08-26 therefore trained on
+    gold text while the class name and docstring claimed ASR transcripts. That
+    silently made WER-filtering the training data a no-op by construction: a
+    branch that never sees a transcription error cannot benefit from removing
+    utterances with transcription errors. See POSTMORTEMS.md PM-010.
+
+    `text_source` now makes the choice explicit and required at the call site.
 
     Args:
         meld_root: Path to MELD root directory (contains CSV files).
-        transcripts_path: Path to directory with {split}_transcripts.json.
+        transcripts_path: Directory with {split}_transcripts.json.
         split: One of 'train', 'dev', 'test'.
         tokenizer: HuggingFace tokenizer for XLM-RoBERTa.
         max_length: Maximum tokenised sequence length.
+        paraphrases_path: Optional augmentation file (train only).
+        filtered_keys_path: Optional keep-list; drops rows not in its "keys".
+        text_source: "asr" reads {split}_transcripts.json -- the realistic
+            end-to-end setting. "gold" reads the MELD CSV, which is the
+            historical behaviour and assumes perfect transcription.
     """
 
     def __init__(
@@ -88,10 +103,16 @@ class TranscriptDataset(Dataset):
         tokenizer,
         max_length: int = 128,
         paraphrases_path: Optional[str] = None,
+        filtered_keys_path: Optional[str] = None,
+        text_source: str = "asr",
     ) -> None:
         assert split in ("train", "dev", "test"), (
             f"split must be train/dev/test, got {split}"
         )
+        assert text_source in ("asr", "gold"), (
+            f"text_source must be 'asr' or 'gold', got {text_source!r}"
+        )
+        self.text_source = text_source
         self.split = split
         self.tokenizer = tokenizer
         self.max_length = max_length
@@ -110,15 +131,57 @@ class TranscriptDataset(Dataset):
         df["emotion"] = df["emotion"].str.strip().str.lower()
         df["sentiment"] = df["sentiment"].str.strip().str.lower()
 
+        # Optional VAD+WER keep-list from apply_filter.py — drops MELD rows
+        # whose utterance key isn't in the policy's keys list.
+        keep_set: Optional[set] = None
+        self.num_before_filter = len(df)
+        if filtered_keys_path is not None:
+            p = Path(filtered_keys_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"filtered_keys_path is set but file not found at {p}. "
+                    "Run preprocessing/compute_filter_metadata.py then "
+                    "preprocessing/apply_filter.py first."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                keep_set = set(json.load(f)["keys"])
+
+        # Load ASR transcripts when asked for. Previously this file was never
+        # opened, which is the bug described in the class docstring.
+        transcripts: Dict[str, str] = {}
+        if text_source == "asr":
+            tp = Path(transcripts_path) / f"{split}_transcripts.json"
+            if not tp.exists():
+                raise FileNotFoundError(
+                    f"text_source='asr' but no transcripts at {tp}. "
+                    "Run preprocessing/transcribe_all.py first."
+                )
+            with open(tp, "r", encoding="utf-8") as f:
+                transcripts = json.load(f)
+
+        self.n_empty_text = 0
         self.samples: List[Tuple[str, int, int]] = []
         for _, row in df.iterrows():
-            text = str(row.get("utterance", "")).strip()
+            key = (f"dia{int(row['dialogue_id'])}"
+                   f"_utt{int(row['utterance_id'])}")
+            if keep_set is not None and key not in keep_set:
+                continue
+            if text_source == "asr":
+                text = str(transcripts.get(key, "") or "").strip()
+            else:
+                text = str(row.get("utterance", "") or "").strip()
+            if not text:
+                # Kept, not dropped: an empty transcript is a real outcome of
+                # the ASR pipeline and the label is still valid. Counted so the
+                # run log states how many the model saw.
+                self.n_empty_text += 1
             emotion_idx = EMOTION2IDX.get(row["emotion"], 0)
             sentiment_idx = SENTIMENT2IDX.get(row["sentiment"], 1)
             self.samples.append((text, emotion_idx, sentiment_idx))
 
         self.num_original = len(self.samples)
         self.num_paraphrases = 0
+        self.num_after_filter = len(self.samples)
 
         if paraphrases_path is not None and split == "train":
             p = Path(paraphrases_path)
@@ -248,7 +311,7 @@ def build_class_weighted_sampler(
 # Checkpointing
 # ---------------------------------------------------------------------------
 
-def save_checkpoint(
+def save_checkpoint(  # noqa: PLR0913
     model: nn.Module,
     optimizer: torch.optim.Optimizer,
     epoch: int,
@@ -256,6 +319,8 @@ def save_checkpoint(
     config: dict,
     checkpoint_dir: str,
     is_best: bool = False,
+    scheduler=None,
+    best_metric_so_far: float = 0.0,
 ) -> None:
     """Save model checkpoint.
 
@@ -267,13 +332,26 @@ def save_checkpoint(
         config: Full config dictionary.
         checkpoint_dir: Directory to save checkpoints.
         is_best: If True, also save as best_model.pt.
+        scheduler: LR scheduler, so a deliberate resume restores the schedule.
+        best_metric_so_far: Best dev metric seen across ALL epochs so far --
+            distinct from `metric`, which is this epoch's score.
     """
     Path(checkpoint_dir).mkdir(parents=True, exist_ok=True)
     state = {
         "epoch": epoch,
         "model_state_dict": model.state_dict(),
         "optimizer_state_dict": optimizer.state_dict(),
+        # Saved so a deliberate --resume can restore the LR schedule. Without
+        # it a resumed run rebuilds the scheduler from step 0, re-running
+        # warmup mid-training while the optimizer carries on from where it was.
+        "scheduler_state_dict": (scheduler.state_dict()
+                                 if scheduler is not None else None),
         "metric": metric,
+        # best_metric_so_far, NOT this epoch's metric. `metric` above is what
+        # THIS epoch scored; on resume you need the best seen so far, or a
+        # later worse epoch is mistaken for an improvement and overwrites
+        # best_model.pt with an inferior model.
+        "best_metric_so_far": best_metric_so_far,
         "config": config,
     }
     filename = f"checkpoint_epoch{epoch:03d}_f1{metric:.4f}.pt"
@@ -441,6 +519,31 @@ def main() -> None:
         required=True,
         help="Path to config yaml (mini.yaml or small.yaml)",
     )
+    parser.add_argument(
+        "--loss", type=str, default="weighted",
+        choices=["plain", "weighted", "focal"],
+        help=("'plain' = unweighted CE (baseline control); 'weighted' = CE with "
+              "inverse-frequency class alpha (previous default); 'focal' = "
+              "FocalLoss(gamma from config) with the same alpha."),
+    )
+    parser.add_argument(
+        "--resume", action="store_true",
+        help=("Resume from the latest checkpoint. OFF by default: resume "
+              "restores best_metric from the LATEST epoch rather than the best "
+              "one, and rebuilds the LR scheduler from scratch. Both silently "
+              "change results, so never use it for a controlled comparison."),
+    )
+    parser.add_argument(
+        "--patience", type=int, default=3,
+        help=("Stop when dev weighted F1 has not improved for this many "
+              "epochs. 0 disables early stopping."),
+    )
+    parser.add_argument(
+        "--text_source", type=str, default="asr", choices=["asr", "gold"],
+        help=("'asr' trains on {split}_transcripts.json (realistic end-to-end); "
+              "'gold' trains on the MELD CSV utterance column (assumes perfect "
+              "transcription -- the historical, undocumented behaviour)."),
+    )
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -475,6 +578,37 @@ def main() -> None:
                 "augmentation.paraphrases_path is not set."
             )
 
+    filt_cfg = config.get("filtering", {})
+    use_filter = bool(filt_cfg.get("enabled", False))
+    train_filter_keys: Optional[str] = None
+    dev_filter_keys: Optional[str] = None
+    if use_filter:
+        keys_paths = filt_cfg.get("keys_paths", {})
+        train_filter_keys = keys_paths.get("train")
+        if train_filter_keys is None:
+            raise KeyError(
+                "filtering.enabled=true but filtering.keys_paths.train "
+                "is not set in the config."
+            )
+        # filter_dev decides whether the SELECTION set is filtered too.
+        #
+        # false (default): train on filtered data, select on the FULL dev set.
+        #   Question answered: "does removing bad ASR examples from training
+        #   improve performance on the general ASR distribution?" -- the filter
+        #   is the treatment and dev is a fixed yardstick.
+        #
+        # true: train and select on filtered data.
+        #   Question answered: "does the model do better on the cleaner
+        #   distribution?" -- but the filter now changes both the training data
+        #   AND the early-stopping criterion, so the two effects cannot be
+        #   separated, and dev is no longer comparable across runs.
+        filter_dev = bool(filt_cfg.get("filter_dev", False))
+        dev_filter_keys = keys_paths.get("dev") if filter_dev else None
+        logger.info(
+            "Filtering: train=FILTERED, dev=%s",
+            "FILTERED" if filter_dev else "FULL (unfiltered — fixed yardstick)",
+        )
+
     train_ds = TranscriptDataset(
         meld_root=config["data"]["meld_root"],
         transcripts_path=config["data"]["transcripts_path"],
@@ -482,6 +616,8 @@ def main() -> None:
         tokenizer=tokenizer,
         max_length=max_length,
         paraphrases_path=paraphrases_path,
+        filtered_keys_path=train_filter_keys,
+        text_source=args.text_source,
     )
     dev_ds = TranscriptDataset(
         meld_root=config["data"]["meld_root"],
@@ -489,11 +625,21 @@ def main() -> None:
         split="dev",
         tokenizer=tokenizer,
         max_length=max_length,
+        filtered_keys_path=dev_filter_keys,
+        text_source=args.text_source,
     )
+    if use_filter:
+        logger.info(
+            "Filter enabled | train: %d/%d kept | dev: %d/%d kept",
+            train_ds.num_after_filter, train_ds.num_before_filter,
+            dev_ds.num_after_filter, dev_ds.num_before_filter,
+        )
     logger.info(
         "Train dataset: %d originals + %d paraphrases = %d total",
         train_ds.num_original, train_ds.num_paraphrases, len(train_ds),
     )
+    logger.info("TEXT SOURCE: %s | empty text: train %d, dev %d",
+                args.text_source, train_ds.n_empty_text, dev_ds.n_empty_text)
 
     use_sampler = bool(
         config["training"].get("use_weighted_sampler", False)
@@ -570,7 +716,29 @@ def main() -> None:
         weights = len(labels) / (num_classes * counts)
         return weights.to(device)
 
-    if use_sampler:
+    # The A/B/C loss ablation isolates alpha (A->B) and gamma (B->C). A
+    # WeightedRandomSampler re-balances the batches themselves, and the code
+    # below then drops alpha to avoid double-correcting -- so with the sampler
+    # on, B and C would BOTH silently lose their alpha and the ladder would
+    # collapse to (CE+sampler, CE+sampler, focal+sampler). Refuse rather than
+    # rely on the config being right.
+    if use_sampler and args.loss in ("weighted", "focal"):
+        raise ValueError(
+            f"use_weighted_sampler=true is incompatible with --loss {args.loss}. "
+            "The sampler suppresses class alpha, so 'weighted' would be "
+            "identical to 'plain' and 'focal' would lose its alpha term -- the "
+            "A/B/C ablation would silently measure nothing. Set "
+            "training.use_weighted_sampler: false."
+        )
+
+    # `plain` deliberately passes weight=None: an UNWEIGHTED baseline. Without
+    # it there is no control showing what class weighting actually buys, since
+    # weights were previously applied unconditionally.
+    if args.loss == "plain":
+        emotion_weights = None
+        sentiment_weights = None
+        logger.info("loss=plain — unweighted CrossEntropy (no class alpha)")
+    elif use_sampler:
         emotion_weights = None
         sentiment_weights = None
         logger.info(
@@ -589,7 +757,8 @@ def main() -> None:
             [f"{w:.3f}" for w in emotion_weights.cpu().tolist()],
         )
 
-    use_focal = bool(config["training"].get("use_focal_loss", False))
+    # CLI wins over config so one config file serves all three loss variants.
+    use_focal = (args.loss == "focal")
     if use_focal:
         gamma = float(config["training"].get("focal_gamma", 2.0))
         emotion_criterion = FocalLoss(weight=emotion_weights, gamma=gamma)
@@ -600,26 +769,80 @@ def main() -> None:
     else:
         emotion_criterion = nn.CrossEntropyLoss(weight=emotion_weights)
         sentiment_criterion = nn.CrossEntropyLoss(weight=sentiment_weights)
-        logger.info("Using CrossEntropyLoss on both heads")
+        logger.info("Using CrossEntropyLoss on both heads (loss=%s)", args.loss)
 
-    # ---- Resume from checkpoint if available ----
+    # ---- Resume (OFF by default) --------------------------------------
+    # Automatic resume is unsafe here, for two reasons that are easy to miss:
+    #
+    #  1. best_metric is restored from the LATEST checkpoint, not the best one.
+    #     Epochs 0.60 / 0.65 / 0.63 leave checkpoint_epoch003 (0.63) on disk
+    #     alongside best_model.pt (0.65). Resuming sets best_metric=0.63, so a
+    #     later 0.64 epoch counts as "best" and OVERWRITES the genuine 0.65.
+    #     The run then silently reports a worse model than it actually found.
+    #
+    #  2. The scheduler is not part of the checkpoint -- only model and
+    #     optimizer state are saved. A resumed run restores the optimizer but
+    #     builds a FRESH scheduler, so the learning-rate schedule no longer
+    #     matches the step count. Warmup re-runs mid-training.
+    #
+    # For a controlled ablation neither is acceptable: both change the result
+    # without any error. Resume must be asked for explicitly.
     start_epoch = 0
     best_metric = 0.0
     ckpt_dir = Path(checkpoint_dir)
-    if ckpt_dir.exists():
-        checkpoints = sorted(ckpt_dir.glob("checkpoint_*.pt"))
-        if checkpoints:
-            latest = checkpoints[-1]
-            logger.info("Resuming from checkpoint: %s", latest)
-            m = model.module if hasattr(model, "module") else model
-            start_epoch, best_metric = load_checkpoint(
-                str(latest), m, optimizer
-            )
+    if args.resume:
+        if ckpt_dir.exists():
+            checkpoints = sorted(ckpt_dir.glob("checkpoint_*.pt"))
+            if checkpoints:
+                latest = checkpoints[-1]
+                logger.warning(
+                    "--resume: loading %s. best_metric is taken from THIS "
+                    "checkpoint, not from best_model.pt, and the LR schedule "
+                    "restarts. Do not use for controlled comparisons.", latest,
+                )
+                m = model.module if hasattr(model, "module") else model
+                start_epoch, best_metric = load_checkpoint(
+                    str(latest), m, optimizer
+                )
+    elif ckpt_dir.exists() and any(ckpt_dir.glob("checkpoint_*.pt")):
+        logger.info(
+            "Found checkpoints in %s but --resume was not passed — starting "
+            "from base %s as intended.", ckpt_dir, config["model"]["xlmr_id"],
+        )
 
     # ---- Training loop ----
     total_epochs = config["training"]["epochs_phase1"]
+
+    # Guard against the silent no-op: a stale checkpoint from a previous run
+    # can push start_epoch past total_epochs, making range(...) empty and the
+    # job "complete" instantly without training anything.
+    if start_epoch >= total_epochs:
+        logger.error(
+            "start_epoch=%d ≥ epochs_phase1=%d — the training loop would "
+            "run zero iterations. This usually means a stale checkpoint from "
+            "a previous run is still in %s. Move it aside (or delete it) and "
+            "resubmit.",
+            start_epoch, total_epochs, ckpt_dir,
+        )
+        sys.exit(2)
     train_losses: List[float] = []
     val_losses: List[float] = []
+
+    # TensorBoard. One directory per run, derived from log_dir, so the three
+    # runs appear as separate curves rather than overwriting each other --
+    # the same per-run-path discipline PM-001 is about.
+    from torch.utils.tensorboard import SummaryWriter
+    tb_dir = Path(config["training"]["log_dir"]) / "tb"
+    tb_dir.mkdir(parents=True, exist_ok=True)
+    writer = SummaryWriter(log_dir=str(tb_dir))
+    logger.info("TensorBoard: %s", tb_dir)
+    writer.add_text("run/config", args.config, 0)
+    writer.add_text("run/text_source", args.text_source, 0)
+    writer.add_text("run/loss", args.loss, 0)
+    writer.add_text("run/patience", str(args.patience), 0)
+    writer.add_text("run/train_size", str(len(train_ds)), 0)
+
+    epochs_since_best = 0
 
     for epoch in range(start_epoch, total_epochs):
         train_loss = train_one_epoch(
@@ -642,16 +865,67 @@ def main() -> None:
         log_metrics(emotion_metrics, "dev", "emotion", logger)
         log_metrics(sentiment_metrics, "dev", "sentiment", logger)
 
+        writer.add_scalar("loss/train", train_loss, epoch)
+        writer.add_scalar("loss/dev", val_loss, epoch)
+        writer.add_scalar("emotion/dev_weighted_f1", wf1, epoch)
+        writer.add_scalar("emotion/dev_macro_f1",
+                          emotion_metrics.get("macro_f1", 0.0), epoch)
+        writer.add_scalar("sentiment/dev_weighted_f1",
+                          sentiment_metrics.get("weighted_f1", 0.0), epoch)
+        writer.add_scalar("lr", optimizer.param_groups[0]["lr"], epoch)
+        # Per-class F1: the minority classes are where the imbalance bites, and
+        # a weighted average hides them (dev has 22 disgust, 40 fear).
+        for cls, f1 in (emotion_metrics.get("per_class_f1") or {}).items():
+            writer.add_scalar(f"emotion_f1_per_class/{cls}", f1, epoch)
+
         is_best = wf1 > best_metric
         if is_best:
             best_metric = wf1
+            epochs_since_best = 0
+        else:
+            epochs_since_best += 1
 
         m = model.module if hasattr(model, "module") else model
         save_checkpoint(
             m, optimizer, epoch, wf1, config,
             checkpoint_dir, is_best=is_best,
+            scheduler=scheduler, best_metric_so_far=best_metric,
         )
 
+        # Early stopping on dev weighted F1 -- the selection metric, not loss.
+        # best_model.pt already holds the best epoch, so stopping early costs
+        # nothing but wasted epochs. patience<=0 disables.
+        writer.add_scalar("train/epochs_since_best", epochs_since_best, epoch)
+        if args.patience > 0 and epochs_since_best >= args.patience:
+            logger.info(
+                "EARLY STOP at epoch %d — dev weighted F1 has not improved on "
+                "%.4f for %d epoch(s) (patience=%d).",
+                epoch + 1, best_metric, epochs_since_best, args.patience,
+            )
+            break
+
+    writer.add_scalar("emotion/best_dev_weighted_f1", best_metric, 0)
+    writer.flush()
+    writer.close()
+    # Completion marker. best_model.pt appears at the FIRST improving epoch, so
+    # its presence proves a run STARTED, not that it finished. A job killed at
+    # epoch 2 of 10 leaves one behind, and any "skip if checkpoint exists" logic
+    # would then treat a half-trained model as a finished result. This file is
+    # written only here, after the loop exits normally.
+    import json as _json
+    (Path(checkpoint_dir) / "TRAINING_COMPLETE.json").write_text(_json.dumps({
+        "run": Path(checkpoint_dir).name,
+        "config": args.config,
+        "text_source": args.text_source,
+        "loss": args.loss,
+        "patience": args.patience,
+        "epochs_run": epoch + 1,
+        "epochs_configured": total_epochs,
+        "early_stopped": (epoch + 1) < total_epochs,
+        "best_dev_weighted_f1": best_metric,
+        "train_size": len(train_ds),
+        "dev_size": len(dev_ds),
+    }, indent=2), encoding="utf-8")
     logger.info("Phase 1 complete. Best emotion WF1: %.4f", best_metric)
 
     # ---- Loss curve plot ----

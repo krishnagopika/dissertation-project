@@ -1,0 +1,25 @@
+{
+  "modality": "text",
+  "split": "test",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/mini/best_model.pt",
+  "n_points": 2610,
+  "head_accuracy": 0.5858237547892721,
+  "per_class_counts": {
+    "neutral": 1256,
+    "surprise": 281,
+    "fear": 50,
+    "sadness": 208,
+    "joy": 402,
+    "disgust": 68,
+    "anger": 345
+  },
+  "per_class_recall": {
+    "neutral": 0.7300955414012739,
+    "surprise": 0.6298932384341637,
+    "fear": 0.28,
+    "sadness": 0.28365384615384615,
+    "joy": 0.5646766169154229,
+    "disgust": 0.16176470588235295,
+    "anger": 0.35942028985507246
+  }
+}

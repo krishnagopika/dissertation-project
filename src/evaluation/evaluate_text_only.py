@@ -16,7 +16,7 @@ import argparse
 import json
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -54,7 +54,11 @@ class TextDataset(Dataset):
         split: str,
         tokenizer,
         max_length: int = 128,
+        filtered_keys_path: Optional[str] = None,
+        text_source: str = "asr",
     ) -> None:
+        assert text_source in ("asr", "gold"), text_source
+        self.text_source = text_source
         self.tokenizer = tokenizer
         self.max_length = max_length
 
@@ -67,20 +71,41 @@ class TextDataset(Dataset):
         df["emotion"]   = df["emotion"].str.strip().str.lower()
         df["sentiment"] = df["sentiment"].str.strip().str.lower()
 
-        with open(
-            Path(transcripts_path) / f"{split}_transcripts.json", "r", encoding="utf-8"
-        ) as f:
-            transcripts: Dict[str, str] = json.load(f)
+        transcripts: Dict[str, str] = {}
+        if text_source == "asr":
+            with open(
+                Path(transcripts_path) / f"{split}_transcripts.json",
+                "r", encoding="utf-8",
+            ) as f:
+                transcripts = json.load(f)
+
+        keep_set: Optional[set] = None
+        self.num_before_filter = len(df)
+        if filtered_keys_path is not None:
+            p = Path(filtered_keys_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"filtered_keys_path set but file not found at {p}."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                keep_set = set(json.load(f)["keys"])
 
         self.samples: List[Tuple[str, int, int]] = []
         for _, row in df.iterrows():
             key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
-            text = transcripts.get(key, "")
+            if keep_set is not None and key not in keep_set:
+                continue
+            # Must match how the model was TRAINED. Scoring a gold-trained
+            # model on ASR text is a train/test domain mismatch, which is
+            # exactly what the pipeline did unnoticed until 2026-08-26.
+            text = (transcripts.get(key, "") if text_source == "asr"
+                    else str(row.get("utterance", "") or "").strip())
             self.samples.append((
                 text,
                 EMOTION2IDX.get(row["emotion"], 0),
                 SENTIMENT2IDX.get(row["sentiment"], 1),
             ))
+        self.num_after_filter = len(self.samples)
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -137,6 +162,21 @@ def main() -> None:
     )
     parser.add_argument("--config", type=str, required=True)
     parser.add_argument(
+        "--filtered_keys_path", type=str, default=None,
+        help=("Override the config's keep-list for the scored split. Needed for "
+              "a cross-evaluation matrix, where the TEST subset must be chosen "
+              "independently of whatever the model was TRAINED with."),
+    )
+    parser.add_argument(
+        "--text_source", type=str, default="asr", choices=["asr", "gold"],
+        help="Must match the model's training text source.",
+    )
+    parser.add_argument(
+        "--split", type=str, default="test", choices=["train", "dev", "test"],
+        help="Which split to score. dev lets the same code report validation "
+             "metrics, so train/dev/test numbers are all produced identically.",
+    )
+    parser.add_argument(
         "--checkpoint_path",
         type=str,
         default=None,
@@ -170,14 +210,37 @@ def main() -> None:
     xlmr_id   = config["model"]["xlmr_id"]
     tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
 
+    filt_cfg = config.get("filtering", {})
+    test_filter_keys: Optional[str] = None
+    if bool(filt_cfg.get("enabled", False)):
+        test_filter_keys = filt_cfg.get("keys_paths", {}).get(args.split)
+    # CLI wins. Without this the test subset would be dictated by the training
+    # config, so a model trained on filtered data could not be scored on the
+    # full test set -- which is exactly the comparison the matrix needs.
+    if args.filtered_keys_path is not None:
+        test_filter_keys = args.filtered_keys_path
+    elif not use_filter:
+        test_filter_keys = None
+        if test_filter_keys is None:
+            raise KeyError(
+                "filtering.enabled=true but filtering.keys_paths.test not set."
+            )
+
     test_ds = TextDataset(
-        meld_root        = config["data"]["meld_root"],
-        transcripts_path = config["data"]["transcripts_path"],
-        split            = "test",
-        tokenizer        = tokenizer,
-        max_length       = config["data"]["max_text_length"],
+        meld_root          = config["data"]["meld_root"],
+        transcripts_path   = config["data"]["transcripts_path"],
+        split              = args.split,
+        tokenizer          = tokenizer,
+        max_length         = config["data"]["max_text_length"],
+        filtered_keys_path = test_filter_keys,
+        text_source        = args.text_source,
     )
-    logger.info("Test set: %d samples", len(test_ds))
+    logger.info("%s set: %d samples | text_source=%s", args.split, len(test_ds), args.text_source)
+    if test_filter_keys is not None:
+        logger.info(
+            "Filter enabled | test: %d/%d kept",
+            test_ds.num_after_filter, test_ds.num_before_filter,
+        )
 
     test_loader = DataLoader(
         test_ds,

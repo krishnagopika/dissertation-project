@@ -31,10 +31,11 @@ Slurm: see src/scripts/train_fusion.sbatch
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -105,6 +106,7 @@ class FusionDataset(Dataset):
         split: str,
         text_dim: int = 768,
         acoustic_dim: int = 1280,
+        filtered_keys_path: Optional[str] = None,
     ) -> None:
         assert split in ("train", "dev", "test"), (
             f"split must be train/dev/test, got {split}"
@@ -123,6 +125,20 @@ class FusionDataset(Dataset):
         df = df.dropna(subset=["emotion", "sentiment"]).reset_index(drop=True)
         df["emotion"]   = df["emotion"].str.strip().str.lower()
         df["sentiment"] = df["sentiment"].str.strip().str.lower()
+
+        # Optional VAD+WER keep-list from apply_filter.py
+        keep_set: Optional[set] = None
+        self.num_before_filter = len(df)
+        if filtered_keys_path is not None:
+            p = Path(filtered_keys_path)
+            if not p.exists():
+                raise FileNotFoundError(
+                    f"filtered_keys_path set but file not found at {p}. "
+                    "Run preprocessing/compute_filter_metadata.py then "
+                    "preprocessing/apply_filter.py first."
+                )
+            with open(p, "r", encoding="utf-8") as f:
+                keep_set = set(json.load(f)["keys"])
 
         text_emb_file = Path(text_embeddings_path) / f"{split}_text_embeddings.pt"
         if not text_emb_file.exists():
@@ -147,6 +163,8 @@ class FusionDataset(Dataset):
         self.samples: List[Tuple[Tensor, Tensor, int, int]] = []
         for _, row in df.iterrows():
             key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
+            if keep_set is not None and key not in keep_set:
+                continue
             text_emb = text_embeddings.get(
                 key, torch.zeros(text_dim, dtype=torch.float32)
             )
@@ -156,6 +174,8 @@ class FusionDataset(Dataset):
             emotion_idx   = EMOTION2IDX.get(row["emotion"], 0)
             sentiment_idx = SENTIMENT2IDX.get(row["sentiment"], 1)
             self.samples.append((text_emb, acoustic_emb, emotion_idx, sentiment_idx))
+
+        self.num_after_filter = len(self.samples)
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -378,6 +398,20 @@ def main() -> None:
     num_workers  = config["data"]["num_workers"]
     batch_size   = config["training"]["batch_size"]
 
+    filt_cfg = config.get("filtering", {})
+    use_filter = bool(filt_cfg.get("enabled", False))
+    train_filter_keys: Optional[str] = None
+    dev_filter_keys: Optional[str] = None
+    if use_filter:
+        keys_paths = filt_cfg.get("keys_paths", {})
+        train_filter_keys = keys_paths.get("train")
+        dev_filter_keys = keys_paths.get("dev")
+        if train_filter_keys is None or dev_filter_keys is None:
+            raise KeyError(
+                "filtering.enabled=true but filtering.keys_paths.{train,dev} "
+                "not fully set in the config."
+            )
+
     train_ds = FusionDataset(
         meld_root            = config["data"]["meld_root"],
         text_embeddings_path = config["data"]["text_embeddings_path"],
@@ -385,6 +419,7 @@ def main() -> None:
         split                = "train",
         text_dim             = text_dim,
         acoustic_dim         = acoustic_dim,
+        filtered_keys_path   = train_filter_keys,
     )
     dev_ds = FusionDataset(
         meld_root            = config["data"]["meld_root"],
@@ -393,8 +428,15 @@ def main() -> None:
         split                = "dev",
         text_dim             = text_dim,
         acoustic_dim         = acoustic_dim,
+        filtered_keys_path   = dev_filter_keys,
     )
     logger.info("Train: %d | Dev: %d samples", len(train_ds), len(dev_ds))
+    if use_filter:
+        logger.info(
+            "Filter enabled | train: %d/%d kept | dev: %d/%d kept",
+            train_ds.num_after_filter, train_ds.num_before_filter,
+            dev_ds.num_after_filter, dev_ds.num_before_filter,
+        )
 
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
