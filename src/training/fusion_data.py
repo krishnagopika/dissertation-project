@@ -110,8 +110,13 @@ class FusionSequenceDataset(Dataset):
             if not f.exists():
                 raise FileNotFoundError(f"{f} not found. Run {hint} first.")
 
-        text_emb: Dict[str, Tensor] = torch.load(str(text_file), map_location="cpu")
-        acoustic_seq: Dict[str, Tensor] = torch.load(str(seq_file), map_location="cpu")
+            # weights_only=True explicitly: these caches are plain tensor dicts, and
+        # the default flipped in torch >= 2.6 -- pinning it means a cluster
+        # upgrade cannot silently change load behaviour.
+        text_emb: Dict[str, Tensor] = torch.load(
+            str(text_file), map_location="cpu", weights_only=True)
+        acoustic_seq: Dict[str, Tensor] = torch.load(
+            str(seq_file), map_location="cpu", weights_only=True)
 
         keep_set: Optional[set] = None
         if filtered_keys_path is not None:
@@ -158,10 +163,23 @@ class FusionSequenceDataset(Dataset):
                 missing_acoustic.append(key)
                 continue
 
+            # A zero-length sequence would produce an all-False mask row in
+            # collate_sequences, and the pooler would then divide by zero.
+            # Checked explicitly so the "every row has >=1 real frame"
+            # invariant holds by construction, not by numerical coincidence.
+            if a.shape[0] == 0:
+                zero_acoustic.append(key)
+                continue
+
             # An all-zero sequence is what the extractor writes when its hook
             # missed the clip. It is not a valid representation, and it is
             # invisible downstream, so exclude it rather than train on it.
-            if a.shape[0] <= 1 and float(a.abs().sum()) == 0.0:
+            #
+            # Deliberately NOT gated on a.shape[0] <= 1: the extractor knows a
+            # clip's true frame count before it knows whether the hook fired,
+            # so a miss can be written as zeros(T, 1280) at full length. The
+            # earlier `shape[0] <= 1 and ...` form let exactly that through.
+            if float(a.abs().sum()) == 0.0:
                 zero_acoustic.append(key)
                 continue
 
@@ -213,10 +231,36 @@ class FusionSequenceDataset(Dataset):
             log.info("%s | frames per clip: min %d, median %d, max %d",
                      split, frames_sorted[0],
                      frames_sorted[len(frames_sorted) // 2], frames_sorted[-1])
+            # How many clips max_frames actually bites on. Probably ~0 at 1500
+            # frames (30 s) on MELD, but "probably" does not belong in a log.
+            # NOTE: truncation keeps the FIRST max_frames. For emotion that is
+            # a real choice -- the salient part of an utterance is often the
+            # end (rising anger, a sighed ending) -- so a non-zero count here
+            # is a finding, not a formality.
+            if self.max_frames is not None:
+                n_trunc = sum(1 for f in frames if f > self.max_frames)
+                log.info("%s | %d clip(s) exceed max_frames=%d and are "
+                         "truncated (head-kept)", split, n_trunc, self.max_frames)
+
+    @property
+    def keys(self) -> List[str]:
+        """Utterance keys, in dataset order.
+
+        Exposed so callers never index into the sample tuple directly. The
+        trainer hashes the dev key set to detect a changed split; doing that
+        via ``s[0]`` silently hashes text vectors instead if a field is ever
+        added at the front.
+        """
+        return [s[0] for s in self.samples]
 
     def label_counts(self) -> Counter:
         """Emotion label distribution, for class weighting and reporting."""
         return Counter(EMOTION_NAMES[s[3]] for s in self.samples)
+
+    def sentiment_counts(self) -> Counter:
+        """Sentiment label distribution -- symmetric with label_counts()."""
+        inv = {v: k for k, v in SENTIMENT2IDX.items()}
+        return Counter(inv[s[4]] for s in self.samples)
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -254,10 +298,18 @@ def collate_sequences(batch: List[Dict], skip_acoustic: bool = False) -> Dict:
         # A text-only run would otherwise pad every sequence to the batch
         # maximum, move ~1500x1280 floats per sample to the GPU, and discard
         # them inside the model. Emit a placeholder instead.
+        #
+        # Width is the REAL acoustic_dim, not 1. A (B, 1, 1) placeholder is
+        # structurally invalid: if SequenceFusion ever touched it under
+        # modality="text" the result would be a shape error, whereas the
+        # trainer's isolation guard exists to catch a silent leak. At full
+        # width a leak shows up as wrong numbers, which the guard can see.
+        # Cost is 1280 floats per sample instead of 1 -- negligible.
+        dim_ph = batch[0]["acoustic"].shape[1]
         return {
             "keys": [i["key"] for i in batch],
             "text": torch.stack([i["text"] for i in batch]),
-            "acoustic": torch.zeros(len(batch), 1, 1, dtype=torch.float32),
+            "acoustic": torch.zeros(len(batch), 1, dim_ph, dtype=torch.float32),
             "acoustic_mask": torch.ones(len(batch), 1, dtype=torch.bool),
             "emotion_label": torch.stack([i["emotion_label"] for i in batch]),
             "sentiment_label": torch.stack([i["sentiment_label"] for i in batch]),

@@ -210,21 +210,22 @@ def main() -> None:
     xlmr_id   = config["model"]["xlmr_id"]
     tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
 
-    filt_cfg = config.get("filtering", {})
-    test_filter_keys: Optional[str] = None
-    if bool(filt_cfg.get("enabled", False)):
-        test_filter_keys = filt_cfg.get("keys_paths", {}).get(args.split)
-    # CLI wins. Without this the test subset would be dictated by the training
-    # config, so a model trained on filtered data could not be scored on the
-    # full test set -- which is exactly the comparison the matrix needs.
-    if args.filtered_keys_path is not None:
-        test_filter_keys = args.filtered_keys_path
-    elif not use_filter:
-        test_filter_keys = None
-        if test_filter_keys is None:
-            raise KeyError(
-                "filtering.enabled=true but filtering.keys_paths.test not set."
-            )
+    # The TEST subset is decided ENTIRELY by the CLI, never by the training
+    # config. A model trained on asr_cleaned has filtering.enabled=true, and if
+    # that leaked into evaluation it could only ever be scored on the filtered
+    # subset -- making the off-diagonal cells of the cross-evaluation matrix
+    # impossible. Absent --filtered_keys_path means the FULL split.
+    #
+    # The previous form raised unconditionally: it referenced an undefined
+    # `use_filter`, and its branch assigned None and then raised *because* the
+    # value was None. Every gold and asr cell of the matrix failed on it.
+    test_filter_keys: Optional[str] = args.filtered_keys_path
+    if test_filter_keys is not None and not Path(test_filter_keys).exists():
+        raise FileNotFoundError(
+            f"--filtered_keys_path given but not found: {test_filter_keys}")
+    logger.info("test subset: %s",
+                Path(test_filter_keys).name if test_filter_keys
+                else f"FULL {args.split} split")
 
     test_ds = TextDataset(
         meld_root          = config["data"]["meld_root"],

@@ -34,7 +34,10 @@ training:
   warmup_steps: 100
   weight_decay: 0.01
   max_grad_norm: 1.0
-  checkpoint_dir: "/dcs/large/u5734759/checkpoints/fusion_asr_cleaned"
+  # One root for every fusion run. The phase/condition separation lives in
+  # the --tag the grid passes, so all 25 runs land in one readable tree
+  # instead of three sibling directories that hide the phase structure.
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/fusion"
   log_dir: "logs/fusion/asr_cleaned"
   unfreeze_last_n_layers: 2  # for phase 3
   # Imbalance handling — Phase 1 only
@@ -92,7 +95,10 @@ data:
   meld_root: "/dcs/large/u5734759/data/meld_raw"
   transcripts_path: "/dcs/large/u5734759/data/meld_extracted/mini/transcripts"
   embeddings_path: "/dcs/large/u5734759/data/meld_extracted/mini/acoustic"
-  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings_asr"
+  # v2 caches: one per condition, each from THAT condition's own
+  # xlmr_*_plain checkpoint (Aug 26 grid). The previous paths pointed at
+  # Jun 18 / Jul 30 caches produced by pre-fix encoders.
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_emb_v2/asr_cleaned"
   max_audio_duration: 40
   max_text_length: 128
   num_workers: 4
@@ -110,10 +116,21 @@ filtering:
 
   # Which keep-list to actually use during training (per split).
   # Set filtering.enabled: true to activate.
+  # MUST match what xlmr_asr_cleaned_*.yaml used, or the fusion asr_cleaned
+  # condition is not the same condition as the XLM-R one and the text encoder
+  # was selected on a different subset than fusion trains on.
+  #
+  # The old meld_filter_keys/*_filtered_keys_wer25.json lists came from the
+  # PRE-FIX WER computation -- before punctuation was replaced with space
+  # rather than deleted (KL-5 -> "kl5" scored WER 2.0 against ASR "KL 5"),
+  # before repair_encoding fixed the cp1252 mojibake in 27% of gold text, and
+  # at threshold 0.25 rather than 0.50. They keep 3,539 of 9,989 train rows;
+  # the corrected text_clean lists keep 6,729. Nearly half the discarded data
+  # was discarded by a scoring bug.
   keys_paths:
-    train: "/dcs/large/u5734759/data/meld_filter_keys/train_filtered_keys_wer25.json"
-    dev:   "/dcs/large/u5734759/data/meld_filter_keys/dev_filtered_keys_wer25.json"
-    test:  "/dcs/large/u5734759/data/meld_filter_keys/test_filtered_keys_wer25.json"
+    train: "/dcs/large/u5734759/data/meld_extracted/mini/filter_keys/train_keys_text_clean.json"
+    dev:   "/dcs/large/u5734759/data/meld_extracted/mini/filter_keys/dev_keys_text_clean.json"
+    test:  "/dcs/large/u5734759/data/meld_extracted/mini/filter_keys/test_keys_text_clean.json"
 
   # Ablation policies — apply_filter.py writes one keep-list per policy per split.
   # All thresholds are meaningful ASR-quality gates: WER > ~50% means the

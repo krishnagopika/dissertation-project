@@ -235,6 +235,43 @@ class SequenceFusion(nn.Module):
         fused = self.post(self._combine(t, a))
         return self.emotion_head(fused), self.sentiment_head(fused), attn
 
+    def represent(
+        self,
+        text: Tensor,
+        acoustic: Tensor,
+        acoustic_mask: Optional[Tensor] = None,
+    ) -> Tensor:
+        """The fused representation, before the classification heads.
+
+        This is the vector the heads see: pooled acoustics and text, each
+        projected, combined by the configured mechanism, then passed through
+        ``post``. Exposed so a downstream model (e.g. the bc-LSTM dialogue
+        context model) can consume the LEARNED representation instead of a raw
+        concatenation of the two caches.
+
+        That matters for comparability: bc-LSTM on raw features vs fusion on
+        learned features differ in BOTH pooling and context, so neither result
+        isolates context. Feeding this vector to bc-LSTM makes context the only
+        difference between them.
+
+        Args:
+            text: ``(B, text_dim)`` XLM-R [CLS] embeddings.
+            acoustic: ``(B, T, acoustic_dim)`` padded frame sequences.
+            acoustic_mask: ``(B, T)`` bool, True where the frame is real.
+
+        Returns:
+            ``(B, hidden_dim)`` fused representation.
+        """
+        a = None
+        if self.modality in ("both", "acoustic"):
+            pooled, _ = self.pooler(acoustic, acoustic_mask)
+            a = self.acoustic_proj(pooled)
+        t = None
+        if self.modality in ("both", "text"):
+            ref = a if a is not None else text
+            t = self.text_proj(text.to(ref.device))
+        return self.post(self._combine(t, a))
+
     def parameter_report(self) -> Dict[str, int]:
         """Trainable parameters per component.
 

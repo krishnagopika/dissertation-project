@@ -51,7 +51,8 @@ from torch.utils.data import DataLoader
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from src.evaluation.metrics import (EMOTION_NAMES, SENTIMENT_NAMES,
-                                    compute_metrics)
+                                    compute_emotion_metrics,
+                                    compute_sentiment_metrics)
 from src.models.fusion_seq import SequenceFusion
 from functools import partial
 
@@ -92,7 +93,7 @@ class FocalLoss(nn.Module):
         return loss.mean()
 
 
-def class_weights(counts: Counter, names, device) -> Tensor:
+def class_weights(counts: Counter, names) -> Tensor:
     """Inverse-frequency weights: ``N / (C * count_c)``."""
     c = torch.tensor([max(1, counts.get(n, 0)) for n in names],
                      dtype=torch.float32)
@@ -108,8 +109,8 @@ def build_criteria(loss_name: str, train_ds, device, gamma: float, logger):
         we = ws = None
         logger.info("loss=plain — unweighted CrossEntropy (no class alpha)")
     else:
-        we = class_weights(emo_counts, EMOTION_NAMES, device)
-        ws = class_weights(sen_counts, SENTIMENT_NAMES, device)
+        we = class_weights(emo_counts, EMOTION_NAMES)
+        ws = class_weights(sen_counts, SENTIMENT_NAMES)
         logger.info("emotion class weights: %s",
                     [f"{w:.3f}" for w in we.cpu().tolist()])
 
@@ -125,7 +126,7 @@ def build_criteria(loss_name: str, train_ds, device, gamma: float, logger):
 def evaluate(model, loader, device, crit_e, crit_s) -> Tuple[float, Dict, Dict]:
     """Score a loader; return (mean loss, emotion metrics, sentiment metrics)."""
     model.eval()
-    tot, n = 0.0, 0
+    tot, n = torch.zeros((), device=device), 0
     pe, le, ps, ls = [], [], [], []
     for b in loader:
         a = b["acoustic"].to(device)
@@ -134,13 +135,15 @@ def evaluate(model, loader, device, crit_e, crit_s) -> Tuple[float, Dict, Dict]:
         ye = b["emotion_label"].to(device)
         ys = b["sentiment_label"].to(device)
         e_log, s_log, _ = model(t, a, m)
-        tot += float(crit_e(e_log, ye) + crit_s(s_log, ys)) * len(ye)
+        # Accumulate on device: float() here forces a host sync every
+        # batch, the same defect already fixed in the train loop.
+        tot = tot + (crit_e(e_log, ye) + crit_s(s_log, ys)).detach() * len(ye)
         n += len(ye)
         pe += e_log.argmax(-1).cpu().tolist(); le += ye.cpu().tolist()
         ps += s_log.argmax(-1).cpu().tolist(); ls += ys.cpu().tolist()
-    return (tot / max(1, n),
-            compute_metrics(pe, le, EMOTION_NAMES),
-            compute_metrics(ps, ls, SENTIMENT_NAMES))
+    return (float(tot) / max(1, n),
+            compute_emotion_metrics(pe, le, EMOTION_NAMES),
+            compute_sentiment_metrics(ps, ls, SENTIMENT_NAMES))
 
 
 def main() -> None:
@@ -230,8 +233,10 @@ def main() -> None:
         drop_last=False,
     )
     dev_loader = DataLoader(dev_ds, batch_size=args.batch_size, shuffle=False,
-                            num_workers=config["data"]["num_workers"],
-                            pin_memory=True, collate_fn=collate)
+                            num_workers=nw, pin_memory=True, collate_fn=collate,
+                            # Match train_loader: otherwise dev rebuilds its
+                            # worker pool every single epoch.
+                            persistent_workers=nw > 0)
 
     model = SequenceFusion(
         acoustic_dim=config["model"]["acoustic_dim"],
@@ -251,8 +256,13 @@ def main() -> None:
     # different times stop being comparable. A differing hash makes that visible
     # rather than something to infer.
     import hashlib
+    # sorted(): we are hashing SET MEMBERSHIP. Unsorted, a CSV reordering
+    # changes the hash with an identical key set and sends you hunting for a
+    # data problem that does not exist.
+    # dev_ds.keys: never index the sample tuple here -- if a field is ever
+    # added at the front, s_[0] silently hashes text vectors instead.
     dev_hash = hashlib.sha1(
-        "".join(s_[0] for s_ in dev_ds.samples).encode()
+        "".join(sorted(dev_ds.keys)).encode()
     ).hexdigest()[:12]
     logger.info("dev key-set hash: %s (%d utterances)", dev_hash, len(dev_ds))
 
@@ -261,28 +271,75 @@ def main() -> None:
     # require bit-identical logits. If this ever fails, every ablation result is
     # wrong and nothing else in the pipeline would reveal it.
     if args.modality != "both":
+        # The probe MUST use a batch with REAL acoustic data. dev_loader is
+        # built with skip_acoustic=(modality=="text"), so for a text-only run
+        # its "acoustic" entry is a placeholder -- permuting that tests nothing
+        # and the guard would pass vacuously on the one ablation where a
+        # shortcut was actually added. Build an unskipped loader just for this.
+        probe_loader = DataLoader(
+            dev_ds, batch_size=min(8, len(dev_ds)), shuffle=False,
+            num_workers=0,
+            collate_fn=partial(collate_sequences, skip_acoustic=False))
         model.eval()
         with torch.no_grad():
-            probe_batch = next(iter(dev_loader))
+            probe_batch = next(iter(probe_loader))
             pa = probe_batch["acoustic"].to(device)
             pm = probe_batch["acoustic_mask"].to(device)
             pt = probe_batch["text"].to(device)
-            base_e, _, _ = model(pt, pa, pm)
-            if args.modality == "acoustic":
-                perm_e, _, _ = model(torch.randn_like(pt), pa, pm)
-                unused = "text"
-            else:
-                perm_e, _, _ = model(pt, torch.randn_like(pa), pm)
-                unused = "acoustic"
-            if not torch.equal(base_e, perm_e):
+
+            # Without these the guard is only as strong as an assumption you
+            # cannot see from this file. NB: model.pooler is None when
+            # modality=="text", so the width is checked against the config,
+            # never against the model.
+            want_dim = int(config["model"]["acoustic_dim"])
+            if pa.numel() == 0:
                 raise RuntimeError(
-                    f"modality={args.modality} but randomising the {unused} "
-                    f"input changed the logits (max delta "
-                    f"{float((base_e - perm_e).abs().max()):.3e}). The unimodal "
-                    "ablation is NOT isolated; results would be invalid."
-                )
-        logger.info("ablation isolation verified: randomising %s leaves logits "
-                    "bit-identical", unused)
+                    "probe batch carries no acoustic data -- the isolation "
+                    "check would be vacuous. Refusing to certify it.")
+            if pa.shape[-1] != want_dim:
+                raise RuntimeError(
+                    f"probe acoustic width is {pa.shape[-1]}, expected "
+                    f"{want_dim}. A degenerate placeholder would make the "
+                    "isolation check meaningless.")
+            if pt.numel() == 0:
+                raise RuntimeError("probe batch carries no text data.")
+            if pa.shape[0] < 2:
+                logger.warning("probe batch has %d row(s); the permutation "
+                               "variant of the check is a no-op", pa.shape[0])
+
+            base_e, base_s, _ = model(pt, pa, pm)
+
+            # Two perturbations. randn_like changes the values; roll along the
+            # batch keeps the input DISTRIBUTION identical and only changes the
+            # pairing, which is the stricter test of "this branch is unused".
+            def _both(t_in, a_in):
+                e, sm, _ = model(t_in, a_in, pm)
+                return e, sm
+
+            if args.modality == "acoustic":
+                unused = "text"
+                variants = [("randn", _both(torch.randn_like(pt), pa)),
+                            ("roll",  _both(torch.roll(pt, 1, dims=0), pa))]
+            else:
+                unused = "acoustic"
+                variants = [("randn", _both(pt, torch.randn_like(pa))),
+                            ("roll",  _both(pt, torch.roll(pa, 1, dims=0)))]
+
+            for vname, (pe, ps) in variants:
+                # Check BOTH heads: a leak into sentiment alone would otherwise
+                # pass silently.
+                for head, b, v in (("emotion", base_e, pe),
+                                   ("sentiment", base_s, ps)):
+                    if not torch.equal(b, v):
+                        raise RuntimeError(
+                            f"modality={args.modality} but perturbing the "
+                            f"{unused} input ({vname}) changed the {head} "
+                            f"logits (max delta {float((b - v).abs().max()):.3e}). "
+                            "The unimodal ablation is NOT isolated; results "
+                            "would be invalid.")
+        logger.info("ablation isolation verified on REAL acoustic data "
+                    "(%d rows, width %d): randn and roll on %s leave both "
+                    "heads bit-identical", pa.shape[0], pa.shape[-1], unused)
         model.train()
 
     crit_e, crit_s = build_criteria(
@@ -295,7 +352,12 @@ def main() -> None:
     # the reduced LR to demonstrate an effect. At sched=1 / stop=3 the LR halves
     # after 2 stagnant epochs and the run dies one epoch later, so the reduction
     # is never tested and the scheduler is decorative.
-    sched_patience = max(0, args.patience - 2)
+    #
+    # max(0, patience - 2) produced EXACTLY that at the default (3 - 2 = 1):
+    # the comment above described the bug and the line below implemented it.
+    # patience - 3 gives sched=0 at the default -- reduce on the first stagnant
+    # epoch, leaving two epochs at the lower LR before early stopping fires.
+    sched_patience = max(0, args.patience - 3)
     sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
         opt, mode="max", factor=0.5, patience=sched_patience)
     logger.info("LR scheduler patience=%d vs early-stop patience=%d",
@@ -311,9 +373,11 @@ def main() -> None:
                  "params": str(rep["TOTAL"])}.items():
         writer.add_text(f"run/{k}", str(v), 0)
 
-    best, since_best, epoch = 0.0, 0, -1
+    # best_epoch stays None until a checkpoint is actually written. best=0.0
+    # alone cannot distinguish "never improved" from "improved to exactly
+    # 0.0", and the marker exists to certify a USABLE artefact exists.
+    best, since_best, epoch, best_epoch = 0.0, 0, -1, None
     stopped_early = False
-    tot = torch.zeros((), device=device)
     for epoch in range(args.epochs):
         model.train()
         tot = torch.zeros((), device=device); n = 0
@@ -355,7 +419,7 @@ def main() -> None:
             writer.add_scalar(f"emotion_f1_per_class/{cls}", f1, epoch)
 
         if wf1 > best:
-            best, since_best = wf1, 0
+            best, since_best, best_epoch = wf1, 0, epoch
             torch.save({"epoch": epoch, "model_state_dict": model.state_dict(),
                         "metric": wf1, "args": vars(args),
                         "parameter_report": rep},
@@ -380,6 +444,12 @@ def main() -> None:
                    # distinguish "converged" from "ran out of budget".
                    "early_stopped": stopped_early,
                    "best_dev_weighted_f1": best,
+                   # None => no checkpoint was ever saved. The grid script
+                   # should treat that as a failed run, not a completed one.
+                   "best_epoch": best_epoch,
+                   "checkpoint_written": best_epoch is not None,
+                   # The only thing tying the shuffle generator to this run.
+                   "seed": config["data"]["seed"],
                    "train_size": len(train_ds), "dev_size": len(dev_ds),
                    "dev_key_hash": dev_hash,
                    "lambda_sentiment": args.lambda_sentiment,

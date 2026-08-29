@@ -406,7 +406,7 @@ def transcribe_and_extract_split(
     Voxtral's Whisper encoder already runs on every clip during transcription --
     vllm needs it to build the audio tokens the LLM attends to, then discards
     the result once the adapter has projected it. A forward hook (see
-    :mod:`src.preprocessing.acoustic_hook`) intercepts that tensor, so the
+    :mod:`src.preprocessing.acoustic_hook_small`) intercepts that tensor, so the
     second HF model load the old Pass 2 required is no longer needed.
 
     Writes three artefacts:
@@ -439,7 +439,7 @@ def transcribe_and_extract_split(
     """
     from vllm import SamplingParams
 
-    from src.preprocessing.acoustic_hook import (
+    from src.preprocessing.acoustic_hook_small import (
         drain_acoustic_hook,
         drain_hook_errors,
         merge_worker_captures,
@@ -914,7 +914,7 @@ def main() -> None:
     # Single pass (default) — one vllm load, both artefacts
     # ------------------------------------------------------------------
     if not args.legacy_two_pass:
-        from src.preprocessing.acoustic_hook import (
+        from src.preprocessing.acoustic_hook_small import (
             install_acoustic_hook,
             remove_acoustic_hook,
         )
