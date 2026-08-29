@@ -10,24 +10,37 @@
 #SBATCH --output=logs/slurm_%j.out
 #SBATCH --error=logs/slurm_%j.err
 
-# Does Voxtral-Small load and produce usable acoustics?
+# Can the acoustic hook coexist with Voxtral-Small's tp=2 forward pass?
 #
-# Every attempt before the weights landed died inside
-# vllm/model_executor/models/voxtral.py -- first AttributeError:
-# downsample_factor, then TypeError: NoneType is not iterable.
-# Hypothesis (docs/DECISIONS.md ADR-006): the snapshot held only HF-format
-# shards, so vLLM took a loading path with no HF->vLLM weight-name mapping and
-# never read downsample_factor from params.json's multimodal block. Mini worked
-# because its snapshot happened to hold consolidated.safetensors.
+# SETTLED (job 9708): Small LOADS. The old failures inside voxtral.py --
+# AttributeError: downsample_factor, then TypeError: NoneType is not iterable
+# -- were the missing consolidated.safetensors, exactly as ADR-006 predicted.
+# build_llm() in transcribe_all_small.py now forces
+# config_format/load_format="mistral" rather than relying on auto-detection,
+# which would otherwise find Small's config.json and take the HF path.
 #
-# Confirmed by job 9708: with consolidated.safetensors present AND build_llm()
-# passing config_format/load_format="mistral" explicitly, the model loads.
-# Presence alone is NOT relied upon to select the loader -- it is forced.
+# OPEN, and what this run tests: 9702 and 9708 both loaded, attached the hook,
+# then FROZE on the first hooked audio forward -- tqdm elapsed stuck at 00:00,
+# both Worker_TP procs at ~100% of a core, both GPUs at 100%, zero tokens.
+# That is an NCCL spin-wait, not slow arithmetic.
 #
-# This run tests that and nothing else: 24 dev clips, throwaway output.
+# Hypothesis: Mini's hook does two blocking .cpu() copies INSIDE forward().
+# At tp=1 that is merely slow. At tp=2 with NCCL_P2P_DISABLE=1 the collectives
+# are staged through host memory -- the same path -- and a synchronising copy
+# inside a collective-bearing forward wedges both ranks.
+#
+# So this uses acoustic_hook_small.py, whose hook does only asynchronous
+# device-to-device clones and defers every host transfer, hash and truncation
+# to drain_acoustic_hook, called between batches with no collective in flight.
+# Mini's acoustic_hook.py is untouched -- proven over 13,708 clips at tp=1.
+#
+# Passes 24/24 -> the deferred-capture hypothesis is confirmed.
+# Freezes again  -> the hook is exonerated and the tp=2 audio path is at fault.
+#
+# 24 dev clips, throwaway output.
 # Do NOT run the full 13,708-clip extraction until this passes.
 #
-# gpu:2 because Small is 24B (~45 GB in bf16, more than one 46 GB L40S).
+# gpu:2 because Small is 24B (~48 GB in bf16, more than one 46 GB L40S).
 
 set -u
 source /etc/profile.d/modules.sh
@@ -100,7 +113,7 @@ PY
 
 echo ""
 echo "=== 24 dev clips through Voxtral-Small ==="
-$VENV/bin/python3.12 src/preprocessing/transcribe_all.py \
+$VENV/bin/python3.12 src/preprocessing/transcribe_all_small.py \
     --config src/configs/_smoke_small.yaml \
     --splits dev \
     --max_samples 24 \

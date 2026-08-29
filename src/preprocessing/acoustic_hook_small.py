@@ -157,10 +157,47 @@ def waveform_fingerprint(waveform: "np.ndarray | torch.Tensor") -> str:
 # ---------------------------------------------------------------------------
 
 def install_acoustic_hook(model) -> str:
-    """Attach the capture hook. Returns a short status string for logging."""
-    import hashlib as _hashlib
-    import math as _math
+    """Attach the capture hook. Returns a short status string for logging.
 
+    TENSOR-PARALLEL-SAFE CAPTURE PATH (needed for Voxtral-Small, tp=2).
+    -------------------------------------------------------------------
+    Nothing here is intrinsically Small-specific -- the quantity captured is
+    the same ``VoxtralEncoderModel`` output, ``(T, 1280)``, from the same
+    Whisper large-v3 encoder, and this path would be valid for Mini too. It is
+    introduced now because tp=2 is the first execution context in which a
+    blocking side effect inside forward() is unsafe. Mini keeps the original
+    in-forward version because it is proven over 13,708 clips at tp=1.
+
+    The Mini version does its whole pipeline INSIDE the forward
+    pass: ``wav.detach().to(bfloat16).cpu()``, ``torch.nonzero``, a blake2b
+    hash, then ``enc.detach().to(float16).cpu().numpy()``. Two of those are
+    blocking device-to-host copies, and each one synchronises the CUDA stream.
+
+    At tp=1 that is merely slow. At tp=2 it deadlocks. Jobs 9702 and 9708 both
+    loaded Small, ran warmup (which does push audio through the encoder), then
+    froze on the first HOOKED audio forward with:
+
+      * tqdm elapsed frozen at 00:00, "Processed prompts: 0/8" indefinitely
+      * both VLLM::Worker_TP processes at ~100% of a core (NCCL busy-polls)
+      * both GPUs at 100% utilisation with no tokens emitted
+
+    That is a spin-wait, not slow arithmetic. NCCL_P2P_DISABLE=1 is required on
+    this node (see small_smoke.sbatch), which makes NCCL stage its all-reduces
+    through host memory -- the same path the hook's D2H copies use. A
+    synchronising copy inside a collective-bearing forward is what wedges it.
+
+    The fix is to do NOTHING in the hook but retain references. It performs
+    only ``detach()``; all copying, hashing, truncation and host transfer are
+    deferred to ``drain_acoustic_hook``, which the caller invokes immediately
+    after ``llm.chat()`` returns, with no collective in flight.
+
+    An earlier version of this file cloned in the hook, on the theory that only
+    a host sync was unsafe. Job 9713 hung anyway, so allocation itself is
+    implicated -- see the inline note at the capture site.
+
+    Memory: references only, so nothing is retained beyond the tensors vllm
+    already holds for the batch. The caller drains per batch regardless.
+    """
     import torch as _torch
 
     encoder = getattr(model, "whisper_encoder", None)
@@ -170,9 +207,9 @@ def install_acoustic_hook(model) -> str:
             f"implementation differs. Model class: {type(model).__name__}"
         )
 
-    store: Dict[str, "np.ndarray"] = {}
+    pending: List = []            # [(wav_gpu, enc_gpu)] awaiting drain
     errors: List[str] = []
-    setattr(model, _ATTR, store)
+    setattr(model, _ATTR + "_pending", pending)
     setattr(model, _ATTR + "_errors", errors)
 
     def _hook(module, args, output):
@@ -193,29 +230,26 @@ def install_acoustic_hook(model) -> str:
 
         for wav, enc in zip(inputs, output):
             try:
-                # Canonicalise: strip vllm's 30 s zero-padding and keep the
-                # bf16 quantisation the encoder actually received. Inlined
-                # rather than imported so the closure survives being shipped
-                # to the worker by value.
-                t = wav.detach().to(_torch.bfloat16).cpu()
-                nz = _torch.nonzero(t).flatten()
-                t = (_torch.zeros(1, dtype=_torch.bfloat16) if nz.numel() == 0
-                     else t[: int(nz[-1]) + 1].contiguous())
-
-                fp = _hashlib.blake2b(
-                    t.view(_torch.int16).numpy().tobytes(), digest_size=16
-                ).hexdigest()
-
-                # Truncate the encoder output to the frames the real audio
-                # occupies. Keeping vllm's padding would reintroduce the exact
-                # defect ADR-003 exists to remove, and inflate the cache ~8x
-                # (measured: 92 MB for 24 clips before this).
-                n_true = max(1, int(_math.ceil(t.numel() / 320)))
-                enc = enc[: min(n_true, enc.shape[0])]
-
-                # fp16 halves the cache; the encoder ran in bf16 anyway, so
-                # this discards no precision the values actually carried.
-                store[fp] = enc.detach().to(_torch.float16).cpu().numpy()
+                # Reference-only capture. No clone(), no .cpu(), no .numpy(),
+                # no nonzero(), no hashing -- and crucially NO ALLOCATION.
+                #
+                # The previous version cloned here, on the theory that only a
+                # host sync was dangerous. That was too optimistic: clone()
+                # allocates ~38 MB per batch of 8 through the caching
+                # allocator, and with gpu_memory_utilization=0.85 plus a
+                # preallocated KV cache, an allocation that misses the pool
+                # falls through to cudaMalloc -- which DOES synchronise, and
+                # can wedge an in-flight NCCL collective. Job 9713 still hung
+                # with clone(), so the copy was not innocent.
+                #
+                # Retaining references is safe because the driver drains
+                # immediately after llm.chat() returns, before the next batch.
+                # If vllm's encoder cache were to reuse a buffer between the
+                # several encoder invocations WITHIN one chat() call, an alias
+                # would corrupt the capture -- but not silently: the waveform
+                # fingerprint would then match no expected key and the run
+                # reports unmatched keys. Corruption fails loudly here.
+                pending.append((wav.detach(), enc.detach()))
             except Exception as exc:                           # noqa: BLE001
                 # Do NOT swallow silently -- PM-002. A capture that fails here
                 # becomes an unmatched key, which is loud, but the reason for
@@ -224,16 +258,59 @@ def install_acoustic_hook(model) -> str:
 
     handle = encoder.register_forward_hook(_hook, with_kwargs=False)
     setattr(model, _ATTR + "_handle", handle)
-    return f"hooked {type(encoder).__name__}"
+    return f"hooked {type(encoder).__name__} (tp-safe, deferred D2H)"
 
 
 def drain_acoustic_hook(model) -> Dict[str, "np.ndarray"]:
-    """Return everything captured so far and clear the buffer."""
-    store = getattr(model, _ATTR, None)
-    if store is None:
+    """Do the deferred work and return {fingerprint: (T, 1280) fp16 array}.
+
+    This is where everything the Mini hook does inline now happens: the host
+    transfer, the padding strip, the fingerprint and the fp16 cast. It runs
+    from ``llm.apply_model(...)`` BETWEEN batches, so no collective is in
+    flight and a synchronising copy is safe here.
+
+    The transformations must match the Mini hook exactly, because the
+    fingerprint is what pairs a sequence back to its utterance key: the driver
+    hashes the waveform it SENT, and this hashes the waveform the encoder
+    RECEIVED. Two things sit between them -- vllm zero-pads to 30 s
+    (480,000 samples) and casts to bfloat16 -- so both sides must strip the
+    padding and quantise to bf16 or nothing matches. An earlier float32
+    fingerprint matched 0 of 24 clips for exactly this reason (PM-004).
+    """
+    import hashlib
+    import math
+
+    pending = getattr(model, _ATTR + "_pending", None)
+    if not pending:
         return {}
-    out = dict(store)
-    store.clear()
+
+    errors = getattr(model, _ATTR + "_errors", [])
+    out: Dict[str, "np.ndarray"] = {}
+
+    for wav, enc in pending:
+        try:
+            # bf16 is what the encoder actually received. bf16 -> float32 does
+            # NOT recover the original bits, so fingerprinting in float32 would
+            # never match the driver side.
+            t = wav.to(torch.bfloat16).cpu()
+            nz = torch.nonzero(t).flatten()
+            t = (torch.zeros(1, dtype=torch.bfloat16) if nz.numel() == 0
+                 else t[: int(nz[-1]) + 1].contiguous())
+
+            fp = hashlib.blake2b(
+                t.view(torch.int16).numpy().tobytes(), digest_size=16
+            ).hexdigest()
+
+            # Truncate to the frames the real audio occupies. Keeping vllm's
+            # padding would reintroduce the exact defect ADR-003 removes, and
+            # inflate the cache ~8x (measured: 92 MB for 24 clips before this).
+            n_true = max(1, int(math.ceil(t.numel() / 320)))
+            out[fp] = enc[: min(n_true, enc.shape[0])].to(
+                torch.float16).cpu().numpy()
+        except Exception as exc:                              # noqa: BLE001
+            errors.append(f"drain {type(exc).__name__}: {exc}")
+
+    pending.clear()
     return out
 
 

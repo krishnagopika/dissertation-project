@@ -34,7 +34,10 @@ training:
   warmup_steps: 100
   weight_decay: 0.01
   max_grad_norm: 1.0
-  checkpoint_dir: "/dcs/large/u5734759/checkpoints/fusion_asr"
+  # One root for every fusion run. The phase/condition separation lives in
+  # the --tag the grid passes, so all 25 runs land in one readable tree
+  # instead of three sibling directories that hide the phase structure.
+  checkpoint_dir: "/dcs/large/u5734759/checkpoints/fusion"
   log_dir: "logs/fusion/asr"
   unfreeze_last_n_layers: 2  # for phase 3
   # Imbalance handling — Phase 1 only
@@ -92,7 +95,10 @@ data:
   meld_root: "/dcs/large/u5734759/data/meld_raw"
   transcripts_path: "/dcs/large/u5734759/data/meld_extracted/mini/transcripts"
   embeddings_path: "/dcs/large/u5734759/data/meld_extracted/mini/acoustic"
-  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_embeddings_asr"
+  # v2 caches: one per condition, each from THAT condition's own
+  # xlmr_*_plain checkpoint (Aug 26 grid). The previous paths pointed at
+  # Jun 18 / Jul 30 caches produced by pre-fix encoders.
+  text_embeddings_path: "/dcs/large/u5734759/data/meld_text_emb_v2/asr"
   max_audio_duration: 40
   max_text_length: 128
   num_workers: 4

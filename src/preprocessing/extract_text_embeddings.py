@@ -151,6 +151,16 @@ def main() -> None:
             "<checkpoint_dir>/best_model.pt from the config."
         ),
     )
+    parser.add_argument(
+        "--out_dir",
+        type=str,
+        default=None,
+        help=(
+            "Output directory. Defaults to config data.text_embeddings_path. "
+            "Present so one config can produce a cache per XLM-R checkpoint "
+            "without editing the config -- mirrors the ASR extractor."
+        ),
+    )
     args = parser.parse_args()
 
     config = load_config(args.config)
@@ -186,7 +196,8 @@ def main() -> None:
         param.requires_grad = False
     logger.info("Loaded Phase 1 checkpoint: %s", ckpt_path)
 
-    output_dir = Path(config["data"]["text_embeddings_path"])
+    output_dir = Path(args.out_dir) if args.out_dir else Path(
+        config["data"]["text_embeddings_path"])
     output_dir.mkdir(parents=True, exist_ok=True)
 
     batch_size  = config["training"]["batch_size"]

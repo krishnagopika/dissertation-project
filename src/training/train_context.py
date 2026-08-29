@@ -50,6 +50,11 @@ EMOTION2IDX: Dict[str, int] = {n: i for i, n in enumerate(EMOTION_NAMES)}
 SENTIMENT2IDX: Dict[str, int] = {n: i for i, n in enumerate(SENTIMENT_NAMES)}
 PAD_LABEL = -100
 
+#: Refuse to build a dataset if more than this fraction of utterances lacks an
+#: embedding. Matches src/training/fusion_data.py so the two models are held to
+#: the same data-integrity standard.
+_MAX_MISS_RATE = 0.02
+
 _SPLIT_CSV = {"train": "train_sent_emo.csv", "dev": "dev_sent_emo.csv", "test": "test_sent_emo.csv"}
 
 
@@ -71,13 +76,50 @@ class DialogueDataset(Dataset):
 
     def __init__(self, meld_root, text_embeddings_path, embeddings_path, split,
                  text_dim=768, acoustic_dim=1280,
-                 filtered_keys_path: Optional[str] = None) -> None:
+                 filtered_keys_path: Optional[str] = None,
+                 fused_path: Optional[str] = None) -> None:
+        """
+        fused_path: If given, load ``{split}_fused.pt`` from here and use that
+            single learned vector per utterance INSTEAD of concatenating the
+            text and acoustic caches. This is the stacked model: fusion learns
+            the representation, bc-LSTM adds dialogue context, and context
+            becomes the only difference between the two models.
+        """
         self.text_dim, self.acoustic_dim = text_dim, acoustic_dim
+        self.fused_path = fused_path
 
-        text_emb: Dict[str, Tensor] = torch.load(
-            str(Path(text_embeddings_path) / f"{split}_text_embeddings.pt"), map_location="cpu")
-        acou_emb: Dict[str, Tensor] = torch.load(
-            str(Path(embeddings_path) / f"{split}_embeddings.pt"), map_location="cpu")
+        # weights_only=True: these caches are plain tensor dicts, and the
+        # default flipped in torch >= 2.6 -- pin it so a cluster upgrade
+        # cannot silently change load behaviour.
+        if fused_path is not None:
+            fused_file = Path(fused_path) / f"{split}_fused.pt"
+            if not fused_file.exists():
+                raise FileNotFoundError(
+                    f"{fused_file} not found. Run "
+                    "src/preprocessing/extract_fused_features.py first.")
+            fused_emb: Dict[str, Tensor] = torch.load(
+                str(fused_file), map_location="cpu", weights_only=True)
+            self.feature_dim = int(next(iter(fused_emb.values())).shape[-1])
+            text_emb, acou_emb = None, None
+        else:
+            fused_emb = None
+            self.feature_dim = text_dim + acoustic_dim
+
+        text_file = Path(text_embeddings_path) / f"{split}_text_embeddings.pt"
+        acou_file = Path(embeddings_path) / f"{split}_embeddings_maskedmean.pt"
+        if fused_emb is None:
+            for f, hint in ((text_file, "extract_text_embeddings*.py"),
+                            (acou_file, "transcribe_all.py")):
+                if not f.exists():
+                    raise FileNotFoundError(f"{f} not found. Run {hint} first.")
+        if fused_emb is None:
+            text_emb = torch.load(
+                str(text_file), map_location="cpu", weights_only=True)
+        # Masked mean over REAL frames, not the legacy {split}_embeddings.pt,
+        # which averaged over vllm's 30 s zero-padding and so diluted a short
+        # utterance by up to ~15x.
+            acou_emb = torch.load(
+                str(acou_file), map_location="cpu", weights_only=True)
 
         # Optional keep-list from VAD+WER filter. Filtered utterances stay in
         # the dialogue (so the BiLSTM keeps its context) but their labels are
@@ -93,6 +135,8 @@ class DialogueDataset(Dataset):
                 keep_set = set(json.load(f)["keys"])
         self.num_total_utts = 0
         self.num_kept_utts = 0
+        missing_text: List[str] = []
+        missing_acoustic: List[str] = []
 
         df = pd.read_csv(Path(meld_root) / _SPLIT_CSV[split])
         df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_", regex=False)
@@ -103,28 +147,123 @@ class DialogueDataset(Dataset):
         df["utterance_id"] = df["utterance_id"].astype(int)
 
         self.dialogues: List[Dict] = []
-        for dia_id, grp in df.groupby("dialogue_id"):
+        for dia_id, grp in df.groupby("dialogue_id", sort=True):
             grp = grp.sort_values("utterance_id")
-            feats, emos, sents = [], [], []
+            feats, emos, sents, keys = [], [], [], []
             for _, row in grp.iterrows():
                 key = f"dia{dia_id}_utt{int(row['utterance_id'])}"
-                t = text_emb.get(key, torch.zeros(text_dim))
-                a = acou_emb.get(key, torch.zeros(acoustic_dim))
-                feats.append(torch.cat([t.float(), a.float()]))
+                keys.append(key)
                 self.num_total_utts += 1
+                if fused_emb is not None:
+                    v = fused_emb.get(key)
+                    if v is None:
+                        missing_text.append(key)
+                        feats.append(torch.zeros(self.feature_dim))
+                        emos.append(PAD_LABEL); sents.append(PAD_LABEL)
+                        continue
+                    if v.shape[-1] != self.feature_dim:
+                        raise ValueError(
+                            f"{key}: fused vector is {v.shape[-1]}-d, expected "
+                            f"{self.feature_dim}.")
+                    feats.append(v.float())
+                    if keep_set is not None and key not in keep_set:
+                        emos.append(PAD_LABEL); sents.append(PAD_LABEL)
+                    else:
+                        emo, sen = row["emotion"], row["sentiment"]
+                        if emo not in EMOTION2IDX:
+                            raise ValueError(f"{key}: unrecognised emotion {emo!r}.")
+                        if sen not in SENTIMENT2IDX:
+                            raise ValueError(f"{key}: unrecognised sentiment {sen!r}.")
+                        emos.append(EMOTION2IDX[emo]); sents.append(SENTIMENT2IDX[sen])
+                        self.num_kept_utts += 1
+                    continue
+
+                t = text_emb.get(key)
+                a = acou_emb.get(key)
+
+                # A missing embedding used to become torch.zeros(...), which is
+                # indistinguishable from a real vector and was counted nowhere.
+                # Worse in a dialogue model than in a per-utterance one: a zero
+                # utterance sits INSIDE the sequence, so the BiLSTM propagates
+                # it into its neighbours' hidden states and one failed
+                # extraction degrades context for the whole conversation.
+                #
+                # The utterance cannot simply be dropped -- that would break the
+                # sequence the model exists to read -- so it is kept as context
+                # but its labels are masked, and counted SEPARATELY from
+                # filtering so the two never get confused.
+                if t is None or a is None:
+                    (missing_text if t is None else missing_acoustic).append(key)
+                    feats.append(torch.zeros(text_dim + acoustic_dim))
+                    emos.append(PAD_LABEL)
+                    sents.append(PAD_LABEL)
+                    continue
+
+                if t.shape[-1] != text_dim:
+                    raise ValueError(
+                        f"{key}: text embedding is {t.shape[-1]}-d, expected "
+                        f"{text_dim}. Wrong cache, or the config disagrees.")
+                if a.shape[-1] != acoustic_dim:
+                    raise ValueError(
+                        f"{key}: acoustic embedding is {a.shape[-1]}-d, "
+                        f"expected {acoustic_dim}.")
+
+                feats.append(torch.cat([t.float(), a.float()]))
+
                 if keep_set is not None and key not in keep_set:
                     # Filtered-out — keep in dialogue for context, mask labels.
                     emos.append(PAD_LABEL)
                     sents.append(PAD_LABEL)
                 else:
-                    emos.append(EMOTION2IDX.get(row["emotion"], 0))
-                    sents.append(SENTIMENT2IDX.get(row["sentiment"], 1))
+                    # Unknown labels raise. Mapping them to a default silently
+                    # converts a data error into a majority-class example.
+                    emo, sen = row["emotion"], row["sentiment"]
+                    if emo not in EMOTION2IDX:
+                        raise ValueError(
+                            f"{key}: unrecognised emotion {emo!r}. "
+                            f"Expected one of {sorted(EMOTION2IDX)}.")
+                    if sen not in SENTIMENT2IDX:
+                        raise ValueError(
+                            f"{key}: unrecognised sentiment {sen!r}. "
+                            f"Expected one of {sorted(SENTIMENT2IDX)}.")
+                    emos.append(EMOTION2IDX[emo])
+                    sents.append(SENTIMENT2IDX[sen])
                     self.num_kept_utts += 1
             self.dialogues.append({
                 "features": torch.stack(feats),                       # (T, 2048)
                 "emotions": torch.tensor(emos, dtype=torch.long),     # (T,)
                 "sentiments": torch.tensor(sents, dtype=torch.long),  # (T,)
+                # Utterance keys, so the dev key SET can be hashed for the
+                # comparability check. Not consumed by collate.
+                "keys": keys,
             })
+
+        self.missing_text = missing_text
+        self.missing_acoustic = missing_acoustic
+        n_missing = len(missing_text) + len(missing_acoustic)
+        self.miss_rate = n_missing / max(1, self.num_total_utts)
+        if n_missing:
+            print(f"  {split}: {n_missing} utterance(s) lack an embedding "
+                  f"({100 * self.miss_rate:.2f}%) -- kept as context, labels "
+                  f"masked. text={len(missing_text)} acoustic="
+                  f"{len(missing_acoustic)}; first: "
+                  f"{(missing_text + missing_acoustic)[:3]}")
+        # A handful is a data defect to report; a large fraction means the
+        # wrong cache directory is configured, which should stop the run.
+        if self.miss_rate > _MAX_MISS_RATE:
+            raise ValueError(
+                f"{split}: {100 * self.miss_rate:.1f}% of utterances lack an "
+                f"embedding (limit {100 * _MAX_MISS_RATE:.0f}%). This usually "
+                "means the wrong cache directory is configured, or extraction "
+                "did not complete. Refusing to train on a partial dataset.")
+
+    def utterance_keys(self) -> List[str]:
+        """Every utterance key this dataset serves, dialogue order.
+
+        Uniform with WindowedDialogueDataset so the comparability hash does not
+        need to know which of the two it was handed.
+        """
+        return [k for d in self.dialogues for k in d["keys"]]
 
     def __len__(self) -> int:
         return len(self.dialogues)
@@ -169,10 +308,21 @@ class WindowedDialogueDataset(Dataset):
                     "features": feats[start:end],
                     "emotions": w_e,
                     "sentiments": w_s,
+                    # Only the CENTRE utterance is scored, so the centre key is
+                    # what identifies this example for the comparability hash.
+                    "keys": [dia["keys"][i]] if dia.get("keys") else [],
                 })
-        # Reuse the count trackers so main() log lines still make sense
+        # These describe the BASE dataset, not the windowed one. They coincide
+        # with the scored-utterance count only because each window scores
+        # exactly one centre -- record the dialogue count separately so
+        # n_*_dialogues in the results JSON is not silently a window count.
         self.num_total_utts = base.num_total_utts
         self.num_kept_utts = base.num_kept_utts
+        self.num_base_dialogues = len(base.dialogues)
+
+    def utterance_keys(self) -> List[str]:
+        """Centre keys of every window -- one per scored utterance."""
+        return [k for s_ in self.samples for k in s_["keys"]]
 
     def __len__(self) -> int:
         return len(self.samples)
@@ -209,6 +359,10 @@ def masked_loss(logits: Tensor, labels: Tensor, criterion: nn.Module) -> Tensor:
     flat_labels = labels.reshape(-1)
     valid = flat_labels != PAD_LABEL
     if valid.sum() == 0:
+        # Every utterance in this batch is padding or filtered out. Return a
+        # zero that is still CONNECTED TO THE GRAPH -- a bare 0.0 would detach
+        # the batch and break backward(). This is not a no-op despite looking
+        # like one.
         return logits.sum() * 0.0
     return criterion(flat_logits[valid], flat_labels[valid])
 
@@ -231,20 +385,28 @@ def train_one_epoch(model, loader, optimizer, device, e_crit, s_crit, max_grad_n
 @torch.no_grad()
 def evaluate(model, loader, device, e_crit, s_crit) -> Tuple[float, Dict, Dict]:
     model.eval()
-    total = 0.0
+    total = torch.zeros((), device=device)
     ep, el, spr, sl = [], [], [], []
     for feats, emos, sents, lengths in loader:
         feats, emos_d, sents_d = feats.to(device), emos.to(device), sents.to(device)
         s_logits, e_logits = model(feats, lengths)
-        total += (masked_loss(e_logits, emos_d, e_crit)
-                  + masked_loss(s_logits, sents_d, s_crit)).item()
+        # Accumulate on device; .item() here forces a host sync per batch.
+        total = total + (masked_loss(e_logits, emos_d, e_crit)
+                         + masked_loss(s_logits, sents_d, s_crit)).detach()
         e_flat = e_logits.argmax(-1).reshape(-1).cpu()
         s_flat = s_logits.argmax(-1).reshape(-1).cpu()
         emo_flat = emos.reshape(-1); sen_flat = sents.reshape(-1)
+        # Each task is masked by ITS OWN labels. Using the emotion mask for
+        # sentiment happens to work only while the two are always masked
+        # together; the moment anything masks them independently (a
+        # sentiment-specific filter, a missing sentiment label) the sentiment
+        # predictions and labels misalign and sentiment F1 becomes meaningless
+        # with no error raised.
         ve = emo_flat != PAD_LABEL
+        vs = sen_flat != PAD_LABEL
         ep.extend(e_flat[ve].tolist()); el.extend(emo_flat[ve].tolist())
-        spr.extend(s_flat[ve].tolist()); sl.extend(sen_flat[ve].tolist())
-    return (total / max(len(loader), 1),
+        spr.extend(s_flat[vs].tolist()); sl.extend(sen_flat[vs].tolist())
+    return (float(total) / max(len(loader), 1),
             compute_emotion_metrics(ep, el),
             compute_sentiment_metrics(spr, sl))
 
@@ -303,14 +465,25 @@ def main() -> None:
     tag = args.tag
     if args.context_window >= 0:
         K = args.context_window
-        tag = f"{tag}_win{K}" if tag else f"_win{K}"
+        # A tag containing "/" is an explicit path the caller chose (e.g.
+        # "gold/k1"); appending _win{K} to it would bury the window twice and
+        # break the directory tree. Only auto-name when the caller did not.
+        if "/" not in tag:
+            tag = f"{tag}_win{K}" if tag else f"_win{K}"
         logger.info("Context window K=%d (window size %d) — using WindowedDialogueDataset", K, 2 * K + 1)
         train_ds = WindowedDialogueDataset(train_ds, K)
         dev_ds   = WindowedDialogueDataset(dev_ds, K)
         logger.info("Windowed | train examples: %d | dev examples: %d",
                     len(train_ds), len(dev_ds))
     args.tag = tag
-    train_loader = DataLoader(train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collate)
+    train_loader = DataLoader(
+        train_ds, batch_size=args.batch_size, shuffle=True, collate_fn=collate,
+        # Pinned shuffle order, independent of however much global RNG anything
+        # else consumes, so two runs shuffle identically.
+        generator=torch.Generator().manual_seed(config["data"]["seed"]),
+        # num_workers left at 0 deliberately: features are already resident in
+        # RAM, so workers would fork a copy of the whole cache for no gain.
+    )
     dev_loader = DataLoader(dev_ds, batch_size=args.batch_size, shuffle=False, collate_fn=collate)
 
     model = BiLSTMContext(
@@ -334,9 +507,37 @@ def main() -> None:
     # every run silently overwrote the previous run's weights -- the unfiltered
     # and wer25 models never coexisted on disk, making them impossible to compare
     # or re-evaluate afterwards. Distinct tag => distinct directory.
-    ckpt_dir = Path(config["training"]["checkpoint_dir"]) / f"context_bclstm{tag}"
+    # An explicit path tag nests directly; otherwise keep the historical
+    # "context_bclstm<tag>" name so old invocations still land where they did.
+    ckpt_dir = (Path(config["training"]["checkpoint_dir"]) / tag.lstrip("/")
+                if "/" in tag
+                else Path(config["training"]["checkpoint_dir"]) / f"context_bclstm{tag}")
     ckpt_dir.mkdir(parents=True, exist_ok=True)
-    best_wf1, no_improve = 0.0, 0
+
+    # Scheduler patience must sit below early-stopping patience with room for
+    # the reduced LR to demonstrate an effect, or the reduction fires one epoch
+    # before the run dies and is purely decorative.
+    sched_patience = max(0, args.patience - 3)
+    sched = torch.optim.lr_scheduler.ReduceLROnPlateau(
+        optimizer, mode="max", factor=0.5, patience=sched_patience)
+    logger.info("LR scheduler patience=%d vs early-stop patience=%d",
+                sched_patience, args.patience)
+
+    # Hash the dev key SET (sorted -- we are hashing membership, not order) so
+    # runs launched at different times are verifiably comparable. A differing
+    # hash means the runs were early-stopped against different dev sets.
+    import hashlib
+    dev_keys = sorted(dev_ds.utterance_keys())
+    dev_hash = (hashlib.sha1("".join(dev_keys).encode()).hexdigest()[:12]
+                if dev_keys else "n/a")
+    logger.info("dev dialogues: %d | dev key hash: %s", len(dev_ds), dev_hash)
+
+    # best_epoch stays None until a checkpoint is actually written. best_wf1
+    # starting at 0.0 cannot distinguish "never improved" from "improved to
+    # exactly 0.0", and the test block below LOADS best_context.pt -- without
+    # this guard a degenerate run raises FileNotFoundError after training
+    # fully, with no explanation.
+    best_wf1, no_improve, best_epoch = 0.0, 0, None
 
     for epoch in range(args.epochs):
         tr = train_one_epoch(model, train_loader, optimizer, device, e_crit, s_crit, max_grad_norm)
@@ -346,8 +547,9 @@ def main() -> None:
                     epoch + 1, args.epochs, tr, vl, wf1, em["macro_f1"])
         log_metrics(em, "dev", "emotion", logger)
         log_metrics(sm, "dev", "sentiment", logger)
+        sched.step(wf1)
         if wf1 > best_wf1:
-            best_wf1, no_improve = wf1, 0
+            best_wf1, no_improve, best_epoch = wf1, 0, epoch
             torch.save({"epoch": epoch, "model_state_dict": model.state_dict(),
                         "emotion_weighted_f1": wf1, "emotion_macro_f1": em["macro_f1"],
                         "config": config}, ckpt_dir / "best_context.pt")
@@ -360,8 +562,15 @@ def main() -> None:
 
     logger.info("bc-LSTM complete. Best dev emotion WF1: %.4f", best_wf1)
 
+    if best_epoch is None:
+        raise RuntimeError(
+            "No checkpoint was ever written: dev weighted F1 never exceeded "
+            f"{best_wf1:.4f} in {args.epochs} epoch(s). There is nothing to "
+            "evaluate on test. This is a failed run, not a completed one.")
+
     # ---- Final TEST evaluation of the best checkpoint (comparable to other test numbers) ----
-    best = torch.load(ckpt_dir / "best_context.pt", map_location=device)
+    best = torch.load(ckpt_dir / "best_context.pt", map_location=device,
+                      weights_only=False)
     model.load_state_dict(best["model_state_dict"])
     test_ds = make_ds("test")
     if filter_on:
@@ -389,17 +598,63 @@ def main() -> None:
         "checkpoint": str(ckpt_dir / "best_context.pt"),
         "best_epoch": best["epoch"] + 1,
         "filter_enabled": filter_on,
-        "n_train_dialogues": len(train_ds),
-        "n_dev_dialogues": len(dev_ds),
-        "n_test_dialogues": len(test_ds),
+        # In windowed mode len(ds) is a WINDOW count, not a dialogue count --
+        # report both under honest names rather than one under a wrong one.
+        "n_train_examples": len(train_ds),
+        "n_dev_examples": len(dev_ds),
+        "n_test_examples": len(test_ds),
+        "n_test_dialogues": getattr(test_ds, "num_base_dialogues",
+                                    len(test_ds)),
+        "windowed": args.context_window >= 0,
+        "context_window": args.context_window if args.context_window >= 0 else None,
         "n_test_utterances_scored": test_ds.num_kept_utts if filter_on else test_ds.num_total_utts,
+        "dev_key_hash": dev_hash,
+        "seed": config["data"]["seed"],
+        "best_dev_weighted_f1": best_wf1,
+        "hidden_dim": args.hidden_dim,
+        "num_layers": args.num_layers,
+        "batch_size": args.batch_size,
+        "trainable_parameters": model.trainable_parameters(),
+        # bc-LSTM uses FocalLoss WITHOUT class alpha, while train_fusion_seq.py
+        # offers weighted/focal that both carry inverse-frequency alpha. That is
+        # an uncontrolled difference between two models compared in the same
+        # results table -- recorded here so it is visible rather than assumed.
+        "loss": f"focal(gamma={gamma}, alpha=None)",
         "emotion":   _drop_report(em_t),
         "sentiment": _drop_report(sm_t),
     }
-    results_path = output_dir / f"test_results_bclstm{args.tag}.json"
+    flat = args.tag.strip("/").replace("/", "_") or "default"
+    results_path = output_dir / f"test_results_bclstm_{flat}.json"
     with open(results_path, "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2)
     logger.info("Results saved to %s", results_path)
+
+    # The sklearn text report is stripped from the JSON (it is long and not
+    # machine-readable) but is genuinely useful for the writeup, so keep it.
+    for name, mt in (("emotion", em_t), ("sentiment", sm_t)):
+        rep = mt.get("report")
+        if rep:
+            (output_dir / f"test_report_bclstm_{flat}_{name}.txt").write_text(
+                str(rep), encoding="utf-8")
+
+    # Completion marker. best_model.pt existing does NOT mean a run finished --
+    # the same reason train_fusion_seq.py writes one.
+    with open(ckpt_dir / "TRAINING_COMPLETE.json", "w", encoding="utf-8") as f:
+        json.dump({"model": "bclstm", "tag": args.tag,
+                   "best_dev_weighted_f1": best_wf1,
+                   "best_epoch": best_epoch,
+                   "checkpoint_written": best_epoch is not None,
+                   "epochs_run": epoch + 1,
+                   "epochs_configured": args.epochs,
+                   "early_stopped": no_improve >= args.patience,
+                   "dev_key_hash": dev_hash,
+                   "seed": config["data"]["seed"],
+                   "filter_enabled": filter_on,
+                   "context_window": args.context_window,
+                   "test_emotion_weighted_f1": em_t.get("weighted_f1"),
+                   "trainable_parameters": model.trainable_parameters()},
+                  f, indent=2)
+    logger.info("Wrote %s", ckpt_dir / "TRAINING_COMPLETE.json")
 
 
 if __name__ == "__main__":
