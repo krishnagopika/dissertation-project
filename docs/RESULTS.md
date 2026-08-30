@@ -634,6 +634,79 @@ the four mechanisms are equivalent.
 
 ---
 
+## 4b. Out-of-domain: what survives an accent shift
+
+The only evaluation in this project on data the models never trained on, and
+the only one scored against labels this project produced itself. 100 clips of
+UK/Irish accented read speech, 6 accents, 23 speakers, hand-annotated by ear.
+Full detail in `EXPERIMENTS.md` §11 and `ENGLISH_DIALECT_DATA.md`.
+
+### The pipeline justifies itself
+
+| system | weighted F1 |
+|---|---|
+| **best trained model** (asr_cleaned ctxfusion k0) | **0.635** |
+| worst trained model (asr_cleaned fusion gated) | 0.505 |
+| Voxtral zero-shot | 0.478 |
+
+**All 18 trained models beat the zero-shot LLM; the best by +0.157.** This is
+the clearest justification the pipeline has anywhere in the project: on unseen
+data, scored against labels produced independently of it, the trained stack is
+worth substantially more than prompting the same audio model directly.
+
+Worth contrasting with the MELD finding recorded in `project_context.md`,
+where zero-shot Voxtral BEAT the fine-tuned text model (0.5043 vs ~0.44). The
+full multimodal pipeline reverses that, and reverses it out of domain.
+
+### In-domain model selection is misleading
+
+| model | MELD asr_cleaned | dialect | |
+|---|---|---|---|
+| ctxfusion | 0.4927 (**worst**) | **0.635 (1st)** | last -> first |
+| bclstm attn | **0.5334 (best)** | 0.604 (4th) | first -> fourth |
+
+Both ctxfusion variants take 1st and 2nd of 18. Selecting on MELD would have
+shipped the 4th-best model. This is a methodological result, not just an
+architectural one: **rank order does not survive the domain shift**, so a
+single in-domain test set is a poor basis for choosing what to deploy.
+
+Note ctxfusion runs at K=0 here -- it sees no neighbouring utterances, because
+these are isolated sentences. What generalises is its architecture, a separate
+BiLSTM per modality before fusing, NOT dialogue context.
+
+### Accuracy and accent-robustness pull apart
+
+| | mean accent spread |
+|---|---|
+| 18 trained models | **0.403** |
+| Voxtral zero-shot | **0.252** |
+
+Welsh is the worst accent for **17 of 18 models**, and only 2 of 18 beat
+Voxtral on Welsh. The trained pipeline is more accurate overall and *less
+accent-robust* than the zero-shot baseline it beats. Southern English --
+closest to MELD's American TV speech -- is where it does best (0.789).
+
+**Fine-tuning buys accuracy at the cost of accent robustness.** That is the
+thesis result.
+
+### And it is not an ASR effect
+
+Per-accent WER against the corpus gold text correlates with emotion F1 at
+**Pearson r = +0.32 (p = 0.54)**. Welsh has the second-LOWEST WER (0.0143) and
+the worst emotion F1 (0.333). Corpus WER here is 0.044 with zero defects at
+MELD's thresholds, against MELD's 0.38 -- so unlike MELD, this corpus can
+separate transcription quality from representation quality, and the accent gap
+sits entirely in the latter.
+
+### What this cannot support
+
+n=100, one annotator, no inter-annotator agreement. Read speech, so 45% of
+clips are genuinely neutral and fear has n=2. Accent is confounded with
+speaker. 1st to 3rd place spans 0.016 -- only the +0.157 gap to Voxtral and
+the accent spread are comfortably outside what 100 clips support.
+
+---
+
 ## 5. Caveats binding every number here
 
 **Single seed.** Each cell is one run. Differences below ~0.02 are not

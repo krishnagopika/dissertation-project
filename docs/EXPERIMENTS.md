@@ -714,7 +714,84 @@ TV speech) is where it does best.
 This is the thesis result: **fine-tuning buys accuracy at the cost of accent
 robustness.**
 
-### Finding 4 — fear/disgust collapse survives the domain change
+### Finding 4 — the accent gap is NOT an ASR effect
+
+The corpus ships gold transcripts, so ASR quality is measurable per accent
+without any annotation. Full analysis in `ENGLISH_DIALECT_DATA.md`; the
+decisive table:
+
+| accent | ASR WER | emotion F1 (best model) |
+|---|---|---|
+| Scottish | 0.0128 | 0.593 |
+| **Welsh** | **0.0143** | **0.333** |
+| Midlands | 0.0333 | 0.727 |
+| Irish | 0.0455 | 0.590 |
+| Southern | 0.0481 | 0.789 |
+| Northern | 0.0848 | 0.576 |
+
+Across the six accents: **Pearson r = +0.32 (p = 0.54), Spearman rho = +0.09
+(p = 0.87)** -- no relationship, and the sign is backwards if anything.
+
+**Welsh has the second-lowest WER and the worst emotion F1 by a wide margin.**
+Its transcripts are near-perfect and the emotion models still fail on it. So
+the accent degradation lives in the acoustic and semantic REPRESENTATIONS, not
+in the transcription front-end.
+
+This separation is impossible on MELD, where corpus WER is 0.38 and dominates
+every other effect. Here it is 0.044 on the probe (0.060 on the full 17,879
+clips) with **zero defects at MELD's thresholds** -- 100 of 100 clips clean,
+median per-utterance WER 0.0000 in every accent.
+
+A corollary: with nothing for a keep-list to remove, the `asr` vs
+`asr_cleaned` comparison on this data is purely a difference between two sets
+of WEIGHTS, on byte-identical defect-free input.
+
+*(n = 6 accents, so this rules out a strong WER-to-F1 relationship, not a
+modest one.)*
+
+### Finding 5 — per-class F1, and where the gain actually comes from
+
+Best model (asr_cleaned ctxfusion k0) against Voxtral zero-shot:
+
+| class | n | F1 | prec | rec | vox F1 | vox prec | vox rec |
+|---|---|---|---|---|---|---|---|
+| neutral | 45 | **0.756** | 0.838 | 0.689 | 0.492 | **0.938** | 0.333 |
+| joy | 8 | **0.842** | 0.727 | 1.000 | 0.636 | 0.500 | 0.875 |
+| disgust | 8 | **0.667** | 0.714 | 0.625 | 0.571 | 0.462 | 0.750 |
+| surprise | 13 | **0.600** | 0.857 | 0.462 | 0.444 | 0.429 | 0.462 |
+| sadness | 12 | 0.400 | 0.385 | 0.417 | 0.385 | 0.357 | 0.417 |
+| anger | 12 | 0.400 | 0.333 | 0.500 | **0.444** | 0.400 | 0.500 |
+| fear | **2** | 0.000 | 0.000 | 0.000 | 0.125 | 0.071 | 0.500 |
+
+Per-class F1 across all 18 models (mean / best / worst):
+
+| class | n | mean | best | worst |
+|---|---|---|---|---|
+| neutral | 45 | 0.735 | 0.775 | 0.676 |
+| joy | 8 | 0.720 | 0.842 | 0.588 |
+| surprise | 13 | 0.491 | 0.609 | 0.333 |
+| anger | 12 | 0.458 | 0.571 | 0.333 |
+| sadness | 12 | 0.361 | 0.500 | 0.273 |
+| disgust | 8 | 0.350 | **0.800** | **0.000** |
+| fear | 2 | 0.019 | 0.333 | 0.000 |
+
+Three readings:
+
+**The +0.157 gain is restraint, not better emotion detection.** Voxtral's
+neutral PRECISION is 0.938 -- it almost never calls something neutral
+wrongly -- but its RECALL is 0.333. The trained pipeline trades a little
+precision (0.838) for double the recall (0.689). It is better at knowing when
+NOT to predict an emotion, which on read speech is most of the time.
+
+**Fear's 0.000 is uninterpretable at n=2**, and it is the one class where
+Voxtral "wins" (0.125) purely by predicting fear 14 times and catching one.
+That is not a Voxtral advantage and should not be reported as one.
+
+**Disgust ranges 0.000 to 0.800 across the 18 models** on n=8. That spread is
+the clearest single illustration that per-class numbers here are unstable, and
+the strongest concrete argument for a larger annotated set.
+
+### Finding 6 — fear/disgust collapse survives the domain change
 
 Per-emotion recall, best model:
 
