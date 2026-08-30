@@ -15,16 +15,26 @@ Almost all published MELD work uses the **gold transcripts** — the
 human-annotated `Utterance` column of the CSV. No deployed system has those. A
 real system transcribes the audio first, and every error propagates.
 
-This project reports both, and treats the ASR condition as primary:
+This project reports both, and treats the ASR condition as primary.
 
-| condition | text source | our best dev WF1 |
+**All numbers below are TEST**, scored on the full 2,610-utterance test split
+through `evaluate_all.py`. Published work reports test, so quoting dev against
+it would compare two different things; earlier drafts of this document did
+exactly that and understated our own results by ~0.013.
+
+| condition | text source | our best test WF1 |
 |---|---|---|
-| gold | MELD `Utterance` column | **0.6149** |
-| **asr** | **Voxtral-Mini transcripts, WER 0.42** | **0.5339** |
-| asr_cleaned | ASR + WER-based keep-list | **0.5370** |
+| gold | MELD `Utterance` column | **0.6283** |
+| **asr** | **Voxtral-Mini transcripts** | **0.5145** |
+| asr_cleaned | ASR + WER-based keep-list *(training only)* | **0.5334** |
 
-The **0.081 gold→ASR drop** is the single largest effect measured anywhere in
-this project. Every architectural choice we tested is worth ≤0.05 by comparison.
+The **0.114 gold→ASR drop** is the single largest effect measured anywhere in
+this project. Every architectural choice tested is worth ≤0.06 by comparison,
+and WER-based cleaning of the TRAINING set recovers 0.019 of it.
+
+Note "cleaned" describes the training subset, never the input: the test set is
+never filtered in either condition, so both are scored on identical
+utterances.
 
 ---
 
@@ -49,12 +59,18 @@ RoBERTa-base. The audio is **discarded** after conversion.
 | DWFormer | speech | 48.5 |
 | DST | speech | 48.8 |
 | **Modality-Conversion** (Vosk ASR → RoBERTa) | speech → text | **43.1** |
-| **ours, ASR condition** | speech → text **+ audio + context** | **53.4** |
+| **ours, ASR condition** | speech → text **+ audio + context** | **51.5** |
+| *ours, asr_cleaned* | *+ WER-filtered training set* | *53.3* |
 | Modality-Conversion++ (*ideal* ASR, i.e. gold) | gold text | 60.4 |
-| **ours, gold condition** | gold text + audio + context | **61.5** |
+| **ours, gold condition** | gold text + audio + context | **62.8** |
 
-**On the ASR condition we lead by +10.3 points**, and our 53.4 also exceeds
+**On the ASR condition we lead by +8.4 points**, and our 51.5 also exceeds
 every speech-only method in their comparison table (best: DST at 48.8).
+
+The matched row is `asr` (51.5), not `asr_cleaned`: Taghavi et al. apply no
+transcript filtering, so comparing our filtered-training variant against their
+unfiltered one would flatter us. `asr_cleaned` is shown for completeness and
+would put the lead at +10.2.
 
 This is the ONE benchmark in this document where an ASR-condition comparison is
 legitimate, because Taghavi et al. actually ran that condition and report it.
@@ -66,10 +82,11 @@ ASR numbers stand alone rather than against a published counterpart.
 | | ideal/gold | real ASR | drop |
 |---|---|---|---|
 | Taghavi et al. | 60.4 | 43.1 | **−17.3** |
-| **this work** | 61.5 | 53.4 | **−8.1** |
+| **this work** | 62.8 | 51.5 | **−11.4** |
 
-Both start from a similar gold-condition score. **Ours loses less than half as
-much when the transcripts become real.**
+Both start from a similar gold-condition score. **Ours loses roughly two-thirds
+as much when the transcripts become real** -- a smaller advantage than the
+earlier dev-based figure suggested, but the same direction and mechanism.
 
 ### Why, mechanistically
 
@@ -121,12 +138,12 @@ MELD, MUStARD and FirstImpr, with text-only, audio-only and multimodal models.
 | model | text source | their WF1 | ours |
 |---|---|---|---|
 | Audio only | — | 37.38 | 48.93 |
-| Text (Gold) | gold | 57.32 | **61.5** |
+| Text (Gold) | gold | 57.32 | **62.8** |
 | Text (Google) | **ASR** | 37.60 | — |
-| **MM (Google)** | **ASR + audio** | **40.94** | **53.4** |
-| MM (Gold) | gold + audio | 56.28 | 61.5 |
+| **MM (Google)** | **ASR + audio** | **40.94** | **51.5** |
+| MM (Gold) | gold + audio | 56.28 | 62.8 |
 
-**On the ASR multimodal condition we lead by +12.5 points.**
+**On the ASR multimodal condition we lead by +10.6 points.**
 
 ### They independently confirm the central mechanism
 
@@ -202,7 +219,7 @@ evaluated.
 | **COSMIC** | text only | **65.21** |
 | RoBERTa DialogueRNN | text only | 63.61 |
 | RoBERTa | text only | 62.02 |
-| **ours, gold** | **text + audio** | **61.5** |
+| **ours, gold** | **text + audio** | **62.8** |
 | DialogueRNN (GloVe) | text only | 57.03 |
 | CNN (GloVe) | text only | 55.02 |
 
@@ -212,7 +229,7 @@ for all four datasets", and the baselines it compares against are the
 text-feature versions. So a single-modality model beats our two-modality
 pipeline here -- the gap is a stronger TEXT branch, not a modality advantage.
 
-COSMIC beats our gold-condition result by **3.7 points**. Our 61.5 sits just
+COSMIC beats our gold-condition result by **2.4 points**. Our 62.8 sits just
 below plain RoBERTa (62.02) and comfortably above the GloVe-era
 DialogueRNN (57.03) and CNN (55.02).
 
@@ -373,7 +390,7 @@ They degrade transcripts from 5% to 50% WER and measure SER accuracy at each
 step. Accuracy falls throughout, with a **steep drop between 15% and 25% WER**.
 Both this project (42.4%) and Culnan et al. (82.6%+) operate well beyond that
 knee, in the regime where transcription quality dominates -- which is consistent
-with the ~0.081 gold→ASR gap measured here being the largest single effect in
+with the 0.114 gold→ASR gap measured here being the largest single effect in
 the project.
 
 ---
@@ -555,14 +572,14 @@ sabotaged — "intentionally truncated to ensure they are not overly effective"
 | M2FNet (2022) | ✓ | ✓ | **✓** | 66.71 |
 | COSMIC (2020) | ✓ | — | — | 65.21 |
 | MELD baseline, bc-LSTM (2019) | ✓ | ✓ | ✓ | ~57–59 |
-| **ours** | ✓ | ✓ | **—** | **61.5** |
+| **ours** | ✓ | ✓ | **—** | **62.8** |
 
 All gold transcripts.
 
 Two differences make a direct ranking misleading:
 
 **Video.** M2FNet and AM²-EmoJE use visual features from the Friends frames.
-This project uses two modalities, not three. Our 61.5 sitting above the 2019
+This project uses two modalities, not three. Our 62.8 sitting above the 2019
 tri-modal baseline and below the modern tri-modal systems is the expected
 position.
 
@@ -593,7 +610,12 @@ width and ordering combined.
 | **attention** | **0.4623** | **0.0779** — 5.6× |
 
 Re-running both context families on the attention-pooled vector, **43 of 45
-cells improved**, with the largest gains on the noisy conditions:
+cells improved** — a sign test at **p ≈ 5.9 × 10⁻¹¹**, the only architectural
+result in this project with statistical support beyond a single seed. Largest
+gains on the noisy conditions:
+
+*(dev numbers — this is a dev-to-dev comparison of two pooling choices, not
+comparable to the test figures in §1.)*
 
 | condition | masked mean | attention | gain |
 |---|---|---|---|
@@ -601,20 +623,43 @@ cells improved**, with the largest gains on the noisy conditions:
 | **asr** | 0.5066 | **0.5339** | **+0.027** |
 | **asr_cleaned** | 0.5054 | **0.5370** | **+0.032** |
 
-### Dialogue context helps, and its ordering does not matter
+### The recurrent LAYER helps; the dialogue context inside it does not
 
-| condition | fusion alone | + dialogue context | gain |
+An earlier version of this section reported a "+0.050 gain from dialogue
+context". That was mislabelled, and the correction is a more interesting
+result than the claim it replaces. Decomposed on TEST:
+
+| condition | fusion alone (no BiLSTM) | + BiLSTM at K=0 (no neighbours) | + neighbours (best K) |
 |---|---|---|---|
-| gold | 0.5652 | **0.6149** | +0.050 |
-| asr | 0.5021 | **0.5339** | +0.032 |
-| asr_cleaned | 0.4935 | **0.5370** | +0.044 |
+| gold | 0.5957 | 0.6259 (**+0.030**) | 0.6283 (+0.002) |
+| asr | 0.4952 | 0.5145 (**+0.019**) | 0.5145 (+0.000) |
+| asr_cleaned | 0.4754 | 0.5334 (**+0.058**) | 0.5334 (+0.000) |
 
-Two orderings were tested — context after fusion (bc-LSTM on concatenated
-features) and context before fusion (per-modality BiLSTM, then fuse). They are
-**equivalent**: 0.6149 vs 0.6147 on gold, 0.5339 vs 0.5273 on asr. The gain is
-from having context at all, not from where it sits.
+At K=0 the model sees a length-1 sequence: the BiLSTM runs with all its
+parameters but has NO neighbouring utterance to look at. That separates the
+layer from the context, and the answer is unambiguous -- **adding the
+recurrent layer is worth +0.019 to +0.058; adding dialogue context on top of
+it is worth ~0.000.**
+
+The window sweep confirms it independently: across K ∈ {0, 1, 2, 4, full} the
+spread is under 0.01 in every family, and K=0 is the best cell in two of three
+conditions. Full detail in `BILSTM.md` §4.
+
+Ordering does not matter either. Context-after-fusion and context-before-fusion
+are equivalent in-domain (0.6259 vs 0.6247 on gold). **They are NOT equivalent
+out of domain** -- context-before-fusion is last on MELD and first on the
+dialect probe (§4b), which is the strongest evidence in this project that
+in-domain rank order is a poor guide to deployment.
+
+Independent support for the null: Zhang & Poellabauer (§2e) find that even an
+LLM reading context as natural language gains only ~0.02 UA on MELD and
+saturates by 10 utterances. Context is not where the headroom is on this corpus
+-- most likely because MELD is multi-party and no speaker identity is modelled
+here, which is exactly where COSMIC's advantage comes from.
 
 ### WER filtering helps, but only once pooling is fixed
+
+*(dev numbers, as above.)*
 
 | | masked mean | attention |
 |---|---|---|
