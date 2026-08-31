@@ -109,7 +109,7 @@ is robust to the errors it is most vulnerable to.**
 ### Caveats on this comparison
 
 - **Different ASR systems.** They use the Vosk API; we use Voxtral-Mini at
-  corpus WER 0.42. Part of the +10.3 gap is a better front-end rather than a
+  corpus WER 0.38. Part of the +8.4 gap is a better front-end rather than a
   better classifier. Their paper does not report WER, so the two effects cannot
   be separated from published numbers alone.
 - **Different classifiers.** RoBERTa-base vs XLM-RoBERTa-base plus an acoustic
@@ -179,7 +179,7 @@ move WER consistently has no basis for expecting downstream gains.
 ### Caveats on this comparison
 
 - **Their ASR is far worse.** MELD WERs of 82.6–114.9% against our Voxtral-Mini
-  at 42%. A WER above 100% is possible when insertions exceed the reference
+  at 38%. A WER above 100% is possible when insertions exceed the reference
   length -- their transcripts are severely degraded. A substantial part of the
   +12.5 gap is the front-end, not the classifier.
 - **Their models are deliberately simple.** GloVe + a two-layer LSTM for text,
@@ -300,14 +300,14 @@ is achievable on MELD**, which is the missing piece in the Culnan comparison.
 | Kaldi Librispeech | 58.5 |
 | wav2vec2-base-960h | 57.8 |
 | Conformer (ESPnet) | 52.1 |
-| **Voxtral-Mini (ours)** | **42.4** |
+| **Voxtral-Mini (ours)** | **38.2** |
 | Whisper-medium | 34.8 |
 
-Voxtral-Mini at 42.4% sits between Conformer and Whisper-medium. This settles a
+Voxtral-Mini at 38.2% sits between Conformer and Whisper-medium. This settles a
 caveat raised in §2a: Culnan et al. report MELD WERs of 82.6-114.9%, so it was
 unclear how much of our +12.5 advantage came from a better front-end rather
 than better modelling. Li et al. show independently that **34.8-58.5% is a
-normal range on MELD**, so our 42.4% is a reasonable front-end and not an
+normal range on MELD**, so our 38.2% is a reasonable front-end and not an
 outlier -- while Culnan's 82.6-114.9% is unusually poor.
 
 Note the hedge: *a* normal range, not *the* normal range. Published MELD WER
@@ -316,7 +316,7 @@ in ASR quality alone explains. Reference normalisation, scoring of empty
 hypotheses, and whether the full 7-class set or a 4-class subset is scored all
 move this number substantially. **Cross-paper WER comparison on MELD is
 therefore weak evidence**, and this section should be read as establishing that
-42.4% is unremarkable, not that it is good.
+38.2% is unremarkable, not that it is good.
 
 ### Why MELD is the hardest emotion corpus
 
@@ -388,7 +388,7 @@ transcription quality, and should be reported as such.
 
 They degrade transcripts from 5% to 50% WER and measure SER accuracy at each
 step. Accuracy falls throughout, with a **steep drop between 15% and 25% WER**.
-Both this project (42.4%) and Culnan et al. (82.6%+) operate well beyond that
+Both this project (38.2%) and Culnan et al. (82.6%+) operate well beyond that
 knee, in the regime where transcription quality dominates -- which is consistent
 with the 0.114 gold→ASR gap measured here being the largest single effect in
 the project.
