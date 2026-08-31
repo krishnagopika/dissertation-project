@@ -43,9 +43,9 @@ Voxtral-Mini transcripts scored against MELD's gold text.
 
 | split | corpus WER | corpus CER | mean utterance WER | n |
 |---|---|---|---|---|
-| train | 0.3828 | 0.2957 | 0.6850 (sd 2.75) | 9,989 |
-| dev | 0.3402 | 0.2498 | 0.6338 (sd 1.78) | 1,109 |
-| test | **0.4244** | 0.3357 | 0.9120 (sd 4.88) | 2,610 |
+| train | 0.3461 | 0.2957 | 0.6785 | 9,988 |
+| dev | 0.3124 | 0.2498 | 0.5898 | 1,109 |
+| test | **0.3823** | 0.3357 | 0.9093 | 2,610 |
 
 Two things this establishes:
 
@@ -54,7 +54,7 @@ utterances produce enormous per-utterance ratios — a one-word reference agains
 a runaway hallucination scores WER 169. The corpus figure is the honest
 aggregate; the mean is dominated by a tail.
 
-**Test is the hardest split** (0.4244 vs 0.3402 dev), which matters when reading
+**Test is the hardest split** (0.3823 vs 0.3124 dev), which matters when reading
 every test number below: the ASR conditions are working from worse transcripts
 at test than the dev numbers implied.
 
