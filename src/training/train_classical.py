@@ -1,29 +1,48 @@
-"""
-train_classical.py — Variant A: Classical Classifiers on Raw Fused Features
-============================================================================
-Trains SVM and XGBoost classifiers directly on the concatenation of:
-  - Pre-cached acoustic embeddings from Voxtral Whisper encoder (1280-dim)
-  - XLM-RoBERTa [CLS] text representations (768-dim)
+"""Classical baselines on the same cached features the neural models use.
 
-No neural fusion layer is used. This serves as a strong classical baseline
-to compare against the neural fusion models (Phase 2).
+Why this matters
+----------------
+Every neural result in this project sits on frozen caches: XLM-R ``[CLS]``
+768-d and Voxtral masked-mean 1280-d. If logistic regression on those same
+vectors reaches a comparable weighted F1, then the fusion head, the pooling
+ablation and the context models are not earning their complexity, and the
+representation is doing the work.
 
-Inputs (all pre-cached):
-  data/meld_embeddings/{split}_embeddings.pt
-  data/meld_transcripts/{split}_transcripts.json
-  checkpoints/mini/best_model.pt  (Phase 1 XLM-R checkpoint — encoder frozen)
+That is a real possibility here, not a rhetorical one. The measured effects so
+far are small: fusion beat text-only by 0.003, and the context-then-fusion 2x2
+showed no reliable benefit on test. A strong classical baseline would put those
+numbers in proportion.
 
-Output:
-  results/mini/classical_{model}_{task}.json  — WF1 + per-class F1
+Three models, chosen for what each rules out
+--------------------------------------------
+**Logistic regression** -- the linear baseline. Identical in form to the probe
+used in the representation analysis, so its score IS the linear separability of
+the feature set. Anything a neural model gains over this is nonlinearity or
+context, nothing else.
 
-Usage
------
-  python3.12 src/training/train_classical.py --config src/configs/mini.yaml
-  python3.12 src/training/train_classical.py --config src/configs/mini.yaml \\
-      --model svm        # svm | xgboost | both (default: both)
-      --phase1_checkpoint checkpoints/mini/best_model.pt
+**Linear SVM** -- a different loss (hinge, max-margin) on the same hypothesis
+class. Distinguishes "the features are linearly separable" from "logistic
+regression's particular objective found it".
 
-Slurm: see src/scripts/train_classical.sbatch
+**XGBoost** -- nonlinear, axis-aligned splits, no notion of distance. If it
+beats the linear models the structure is nonlinear; if it does not, the
+representation is essentially linear and depth buys nothing.
+
+Feature sets mirror the neural ablation exactly
+-----------------------------------------------
+    text      768   XLM-R [CLS] only
+    acoustic  1280  masked-mean Voxtral only
+    both      2048  concatenated -- the same input the bc-LSTM receives
+
+so "classical vs fusion" and "classical vs bc-LSTM" are like-for-like on
+inputs, differing only in the model.
+
+Class imbalance
+---------------
+MELD is 47% neutral. ``class_weight="balanced"`` for the linear models and
+per-sample weights for XGBoost, so a baseline is not simply the majority class
+wearing a hat. Weighted F1 is still the headline, with macro F1 alongside
+because it is far more sensitive to the minority classes collapsing.
 """
 
 from __future__ import annotations
@@ -31,385 +50,206 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 import pandas as pd
 import torch
-from transformers import AutoTokenizer
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from src.evaluation.metrics import (
-    EMOTION_NAMES,
-    SENTIMENT_NAMES,
-    compute_emotion_metrics,
-    compute_sentiment_metrics,
-    log_metrics,
-)
-from src.models.xlmr import XLMRobertaClassifier
-from src.utils import get_device, load_config, set_seed, setup_logging
+from src.evaluation.metrics import (EMOTION_NAMES, SENTIMENT_NAMES,
+                                    compute_emotion_metrics,
+                                    compute_sentiment_metrics)
+from src.utils import load_config, set_seed, setup_logging
+
+EMOTION2IDX = {n: i for i, n in enumerate(EMOTION_NAMES)}
+SENTIMENT2IDX = {"negative": 0, "neutral": 1, "positive": 2}
+_SPLIT_CSV = {"train": "train_sent_emo.csv", "dev": "dev_sent_emo.csv",
+              "test": "test_sent_emo.csv"}
+_SEED = 42
 
 
-# ---------------------------------------------------------------------------
-# Label mappings
-# ---------------------------------------------------------------------------
+def load_split(config: Dict, split: str, features: str,
+               keep: Optional[str] = None
+               ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Assemble (X, emotion, sentiment) for one split.
 
-EMOTION2IDX: Dict[str, int] = {name: i for i, name in enumerate(EMOTION_NAMES)}
-SENTIMENT2IDX: Dict[str, int] = {"negative": 0, "neutral": 1, "positive": 2}
-
-_SPLIT_CSV: Dict[str, str] = {
-    "train": "train_sent_emo.csv",
-    "dev":   "dev_sent_emo.csv",
-    "test":  "test_sent_emo.csv",
-}
-
-
-# ---------------------------------------------------------------------------
-# Feature extraction
-# ---------------------------------------------------------------------------
-
-def extract_features(
-    split: str,
-    config: dict,
-    tokenizer,
-    xlmr: XLMRobertaClassifier,
-    device: torch.device,
-    logger,
-) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Extract concatenated acoustic + text features for a split.
-
-    Args:
-        split: One of 'train', 'dev', 'test'.
-        config: Loaded config dictionary.
-        tokenizer: XLM-RoBERTa tokenizer.
-        xlmr: Frozen XLM-RoBERTa classifier (encoder only used).
-        device: Target device.
-        logger: Logger instance.
-
-    Returns:
-        Tuple of (features, emotion_labels, sentiment_labels) as numpy arrays.
-        features shape: (N, acoustic_dim + text_dim)
+    Utterances missing either cached vector are DROPPED and counted, never
+    zero-filled: a zero vector is indistinguishable from a real embedding to
+    any of these models, so a failed extraction would become a training example
+    with a valid label.
     """
-    meld_root       = Path(config["data"]["meld_root"])
-    transcripts_dir = Path(config["data"]["transcripts_path"])
-    embeddings_dir  = Path(config["data"]["embeddings_path"])
-    acoustic_dim    = config["model"]["acoustic_dim"]
-    text_dim        = config["model"]["text_dim"]
-    max_length      = config["data"]["max_text_length"]
-    batch_size      = config["training"]["batch_size"]
+    df = pd.read_csv(Path(config["data"]["meld_root"]) / _SPLIT_CSV[split])
+    df.columns = (df.columns.str.strip().str.lower()
+                  .str.replace(" ", "_", regex=False))
+    df = df.dropna(subset=["emotion", "sentiment"])
 
-    # ---- Load CSV ----
-    csv_path = meld_root / _SPLIT_CSV[split]
-    df = pd.read_csv(csv_path)
-    df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_", regex=False)
-    df = df.dropna(subset=["emotion", "sentiment"]).reset_index(drop=True)
-    df["emotion"]   = df["emotion"].str.strip().str.lower()
-    df["sentiment"] = df["sentiment"].str.strip().str.lower()
+    keep_set = None
+    if keep:
+        with open(keep, encoding="utf-8") as f:
+            keep_set = set(json.load(f)["keys"])
 
-    # ---- Load transcripts ----
-    transcript_file = transcripts_dir / f"{split}_transcripts.json"
-    if not transcript_file.exists():
-        raise FileNotFoundError(f"Transcripts not found: {transcript_file}")
-    with open(transcript_file, "r", encoding="utf-8") as f:
-        transcripts: Dict[str, str] = json.load(f)
+    text = torch.load(
+        str(Path(config["data"]["text_embeddings_path"]) /
+            f"{split}_text_embeddings.pt"), map_location="cpu", weights_only=True)
+    acou = torch.load(
+        str(Path(config["data"]["embeddings_path"]) /
+            f"{split}_embeddings_maskedmean.pt"), map_location="cpu",
+        weights_only=True)
 
-    # ---- Load acoustic embeddings ----
-    embedding_file = embeddings_dir / f"{split}_embeddings.pt"
-    if not embedding_file.exists():
-        raise FileNotFoundError(f"Embeddings not found: {embedding_file}")
-    acoustic_embeddings: Dict[str, torch.Tensor] = torch.load(
-        str(embedding_file), map_location="cpu"
-    )
+    X, E, S, missing = [], [], [], 0
+    for _, r in df.iterrows():
+        key = f"dia{int(r['dialogue_id'])}_utt{int(r['utterance_id'])}"
+        if keep_set is not None and key not in keep_set:
+            continue
+        e, s = str(r["emotion"]).strip().lower(), str(r["sentiment"]).strip().lower()
+        if e not in EMOTION2IDX or s not in SENTIMENT2IDX:
+            raise ValueError(f"{key}: unrecognised label {e!r}/{s!r}")
+        t, a = text.get(key), acou.get(key)
+        if (features in ("text", "both") and t is None) or \
+           (features in ("acoustic", "both") and a is None):
+            missing += 1
+            continue
+        if features == "text":
+            v = t.float().numpy()
+        elif features == "acoustic":
+            v = a.float().numpy()
+        else:
+            v = np.concatenate([t.float().numpy(), a.float().numpy()])
+        X.append(v); E.append(EMOTION2IDX[e]); S.append(SENTIMENT2IDX[s])
 
-    # ---- Build sample lists ----
-    texts:           List[str]   = []
-    acoustics:       List[torch.Tensor] = []
-    emotion_labels:  List[int]   = []
-    sentiment_labels: List[int]  = []
-
-    for _, row in df.iterrows():
-        key = f"dia{int(row['dialogue_id'])}_utt{int(row['utterance_id'])}"
-        texts.append(transcripts.get(key, ""))
-        acoustics.append(
-            acoustic_embeddings.get(key, torch.zeros(acoustic_dim))
-        )
-        emotion_labels.append(EMOTION2IDX.get(row["emotion"], 0))
-        sentiment_labels.append(SENTIMENT2IDX.get(row["sentiment"], 1))
-
-    # ---- Extract XLM-R text representations in batches ----
-    logger.info("Extracting XLM-R text representations for '%s' (%d samples)...", split, len(texts))
-    xlmr.eval()
-    text_reprs: List[np.ndarray] = []
-
-    for i in range(0, len(texts), batch_size):
-        batch_texts = texts[i: i + batch_size]
-        encoding = tokenizer(
-            batch_texts,
-            max_length=max_length,
-            padding="max_length",
-            truncation=True,
-            return_tensors="pt",
-        )
-        input_ids      = encoding["input_ids"].to(device)
-        attention_mask = encoding["attention_mask"].to(device)
-
-        with torch.no_grad():
-            text_repr = xlmr.get_text_representation(input_ids, attention_mask)
-        text_reprs.append(text_repr.cpu().numpy())
-
-        if (i // batch_size + 1) % 10 == 0:
-            logger.info("  %d / %d batches done", i // batch_size + 1, (len(texts) + batch_size - 1) // batch_size)
-
-    text_matrix     = np.vstack(text_reprs)                          # (N, text_dim)
-    acoustic_matrix = torch.stack(acoustics).numpy().astype(np.float32)  # (N, acoustic_dim)
-
-    # ---- Concatenate ----
-    features = np.concatenate([text_matrix, acoustic_matrix], axis=1)  # (N, text_dim + acoustic_dim)
-    logger.info(
-        "Feature matrix for '%s': shape=%s, dtype=%s",
-        split, features.shape, features.dtype,
-    )
-
-    return (
-        features,
-        np.array(emotion_labels,   dtype=np.int32),
-        np.array(sentiment_labels, dtype=np.int32),
-    )
+    if missing:
+        print(f"    {split}: dropped {missing} utterance(s) missing a cached vector")
+    return np.stack(X), np.array(E), np.array(S)
 
 
-# ---------------------------------------------------------------------------
-# Train + evaluate one classifier
-# ---------------------------------------------------------------------------
+def fit_score(model_name: str, Xtr, ytr, Xte, yte, names: List[str],
+              n_jobs: int = 8) -> Dict:
+    """Fit one classical model and score it. Returns metrics + timing."""
+    from sklearn.linear_model import LogisticRegression
+    from sklearn.preprocessing import StandardScaler
+    from sklearn.pipeline import make_pipeline
+    from sklearn.svm import LinearSVC
 
-def train_and_evaluate(
-    clf,
-    clf_name: str,
-    task: str,
-    X_train: np.ndarray,
-    y_train: np.ndarray,
-    X_dev: np.ndarray,
-    y_dev: np.ndarray,
-    output_dir: Path,
-    logger,
-    tag: str = "",
-) -> Dict:
-    """Fit classifier and evaluate on dev set.
-
-    Args:
-        clf: Sklearn-compatible classifier instance.
-        clf_name: Name string for logging/saving (e.g. 'svm', 'xgboost').
-        task: 'emotion' or 'sentiment'.
-        X_train: Training features.
-        y_train: Training labels.
-        X_dev: Dev features.
-        y_dev: Dev labels.
-        output_dir: Directory to save results JSON.
-        logger: Logger instance.
-
-    Returns:
-        Metrics dictionary.
-    """
-    logger.info("Training %s for %s (%d samples)...", clf_name, task, len(X_train))
-    clf.fit(X_train, y_train)
-
-    preds = clf.predict(X_dev)
-
-    if task == "emotion":
-        metrics = compute_emotion_metrics(preds.tolist(), y_dev.tolist())
+    t0 = time.time()
+    if model_name == "logreg":
+        # Standardised: these features are unnormalised network activations
+        # with very different per-dimension scales, and a regularised linear
+        # model without scaling silently weights the high-variance dimensions.
+        clf = make_pipeline(
+            StandardScaler(),
+            LogisticRegression(max_iter=2000, class_weight="balanced",
+                               random_state=_SEED))
+    elif model_name == "svm":
+        clf = make_pipeline(
+            StandardScaler(),
+            LinearSVC(class_weight="balanced", random_state=_SEED,
+                      max_iter=5000))
+    elif model_name == "xgboost":
+        from xgboost import XGBClassifier
+        # Trees are scale-invariant, so no StandardScaler -- adding one would
+        # only cost time.
+        counts = np.bincount(ytr, minlength=len(names)).astype(float)
+        w = len(ytr) / (len(names) * np.maximum(counts, 1))
+        clf = XGBClassifier(
+            n_estimators=400, max_depth=6, learning_rate=0.1,
+            subsample=0.8, colsample_bytree=0.8, random_state=_SEED,
+            n_jobs=n_jobs, tree_method="hist",
+            num_class=len(names), objective="multi:softprob")
+        clf.fit(Xtr, ytr, sample_weight=w[ytr])
+        pred = clf.predict(Xte)
+        fn = (compute_emotion_metrics if len(names) == 7
+              else compute_sentiment_metrics)
+        m = fn(pred.tolist(), yte.tolist(), names)
+        return {"weighted_f1": m["weighted_f1"], "macro_f1": m.get("macro_f1"),
+                "per_class_f1": m.get("per_class_f1"),
+                "fit_seconds": round(time.time() - t0, 1)}
     else:
-        metrics = compute_sentiment_metrics(preds.tolist(), y_dev.tolist())
+        raise ValueError(model_name)
 
-    log_metrics(metrics, "dev", task, logger)
-    logger.info(
-        "%s | %s | dev WF1: %.4f",
-        clf_name.upper(), task, metrics["weighted_f1"],
-    )
+    clf.fit(Xtr, ytr)
+    pred = clf.predict(Xte)
+    fn = compute_emotion_metrics if len(names) == 7 else compute_sentiment_metrics
+    m = fn(pred.tolist(), yte.tolist(), names)
+    return {"weighted_f1": m["weighted_f1"], "macro_f1": m.get("macro_f1"),
+            "per_class_f1": m.get("per_class_f1"),
+            "fit_seconds": round(time.time() - t0, 1)}
 
-    # Save results
-    output_dir.mkdir(parents=True, exist_ok=True)
-    out_path = output_dir / f"classical_{clf_name}_{task}{tag}.json"
-    with open(out_path, "w") as f:
-        json.dump(metrics, f, indent=2)
-    logger.info("Results saved to %s", out_path)
-
-    return metrics
-
-
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Train classical classifiers (SVM/XGBoost) on raw fused features."
-    )
-    parser.add_argument(
-        "--config",
-        type=str,
-        required=True,
-        help="Path to config yaml (mini.yaml or small.yaml)",
-    )
-    parser.add_argument(
-        "--model",
-        type=str,
-        default="both",
-        choices=["svm", "xgboost", "both"],
-        help="Which classifier(s) to train (default: both)",
-    )
-    parser.add_argument(
-        "--phase1_checkpoint",
-        type=str,
-        default=None,
-        help="Path to Phase 1 best_model.pt (defaults to config checkpoint_dir/best_model.pt)",
-    )
-    parser.add_argument(
-        "--tag",
-        type=str,
-        default="",
-        help=(
-            "Suffix added to output filenames "
-            "(classical_{model}_{task}<tag>.json). Use to keep ablation runs "
-            "distinct."
-        ),
-    )
-    args = parser.parse_args()
+    ap = argparse.ArgumentParser(
+        description="Classical baselines on the cached neural features.")
+    ap.add_argument("--config", required=True)
+    ap.add_argument("--condition", required=True,
+                    choices=["gold", "asr", "asr_cleaned"])
+    ap.add_argument("--features", nargs="+", default=["text", "acoustic", "both"],
+                    choices=["text", "acoustic", "both"])
+    ap.add_argument("--models", nargs="+",
+                    default=["logreg", "svm", "xgboost"],
+                    choices=["logreg", "svm", "xgboost"])
+    ap.add_argument("--test_split", default="test", choices=["dev", "test"])
+    ap.add_argument("--n_jobs", type=int, default=8)
+    ap.add_argument("--out_dir", default="results_new/classical")
+    args = ap.parse_args()
 
     config = load_config(args.config)
     set_seed(config["data"]["seed"])
-    device = get_device()
+    out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
+    logger = setup_logging(str(out), f"classical_{args.condition}")
 
-    log_dir = config["training"]["log_dir"]
-    logger  = setup_logging(log_dir, "train_classical")
-    logger.info("Config: %s | Model: %s | Device: %s", args.config, args.model, device)
+    filt = config.get("filtering", {})
+    keep = (filt.get("keys_paths", {}).get("train")
+            if bool(filt.get("enabled", False)) else None)
+    logger.info("condition=%s | train keep-list: %s", args.condition,
+                Path(keep).name if keep else "none (full train)")
 
-    output_dir = Path(config["evaluation"]["output_dir"])
+    results: List[Dict] = []
+    for feat in args.features:
+        # The test split is NEVER filtered -- every model is scored on the same
+        # utterances so the numbers are comparable across conditions.
+        Xtr, Etr, Str = load_split(config, "train", feat, keep)
+        Xte, Ete, Ste = load_split(config, args.test_split, feat, None)
+        logger.info("%s | train %s -> test %s", feat, Xtr.shape, Xte.shape)
 
-    # ---- Load XLM-RoBERTa (Phase 1 checkpoint, encoder frozen) ----
-    xlmr_id   = config["model"]["xlmr_id"]
-    tokenizer = AutoTokenizer.from_pretrained(xlmr_id)
+        for model in args.models:
+            for task, ytr, yte, names in (("emotion", Etr, Ete, EMOTION_NAMES),
+                                          ("sentiment", Str, Ste, SENTIMENT_NAMES)):
+                try:
+                    m = fit_score(model, Xtr, ytr, Xte, yte, names, args.n_jobs)
+                except Exception as exc:                       # noqa: BLE001
+                    logger.error("%s/%s/%s FAILED: %s: %s", feat, model, task,
+                                 type(exc).__name__, exc)
+                    continue
+                rec = {"condition": args.condition, "features": feat,
+                       "model": model, "task": task,
+                       "split": args.test_split, "n_train": len(ytr),
+                       "n_test": len(yte), "dim": int(Xtr.shape[1]), **m}
+                results.append(rec)
+                logger.info("%-9s %-8s %-9s | WF1 %.4f macro %.4f | %.1fs",
+                            feat, model, task, m["weighted_f1"],
+                            m["macro_f1"] or 0.0, m["fit_seconds"])
 
-    xlmr = XLMRobertaClassifier(
-        model_name_or_path    = xlmr_id,
-        num_sentiment_classes = config["model"]["num_sentiment_classes"],
-        num_emotion_classes   = config["model"]["num_classes"],
-        dropout_prob          = config["model"]["dropout"],
-    )
+    path = out / f"classical_{args.condition}_{args.test_split}.json"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
 
-    phase1_ckpt = args.phase1_checkpoint or (
-        Path(config["training"]["checkpoint_dir"]) / "best_model.pt"
-    )
-    if Path(str(phase1_ckpt)).exists():
-        state = torch.load(str(phase1_ckpt), map_location="cpu")
-        xlmr.load_state_dict(state["model_state_dict"])
-        logger.info("Loaded Phase 1 XLM-R checkpoint: %s", phase1_ckpt)
-    else:
-        logger.warning(
-            "Phase 1 checkpoint not found at %s — using pretrained weights.", phase1_ckpt
-        )
-
-    for param in xlmr.parameters():
-        param.requires_grad = False
-    xlmr = xlmr.to(device)
-
-    # ---- Extract features ----
-    X_train, y_train_emo, y_train_sent = extract_features(
-        "train", config, tokenizer, xlmr, device, logger
-    )
-    X_dev, y_dev_emo, y_dev_sent = extract_features(
-        "dev", config, tokenizer, xlmr, device, logger
-    )
-
-    logger.info(
-        "Features ready — train: %s, dev: %s",
-        X_train.shape, X_dev.shape,
-    )
-
-    # ---- Build classifiers ----
-    classifiers = {}
-
-    if args.model in ("svm", "both"):
-        from sklearn.svm import SVC
-        from sklearn.preprocessing import StandardScaler
-        from sklearn.pipeline import Pipeline
-
-        # SVM needs feature scaling — StandardScaler + RBF kernel SVC
-        classifiers["svm"] = Pipeline([
-            ("scaler", StandardScaler()),
-            ("svm",    SVC(
-                kernel="rbf",
-                C=10.0,
-                gamma="scale",
-                class_weight="balanced",  # handles MELD class imbalance
-                random_state=config["data"]["seed"],
-            )),
-        ])
-
-    if args.model in ("xgboost", "both"):
-        from xgboost import XGBClassifier
-
-        classifiers["xgboost"] = XGBClassifier(
-            n_estimators    = 500,
-            max_depth       = 6,
-            learning_rate   = 0.05,
-            subsample       = 0.8,
-            colsample_bytree= 0.8,
-            use_label_encoder=False,
-            eval_metric     = "mlogloss",
-            random_state    = config["data"]["seed"],
-            n_jobs          = -1,
-        )
-
-    # ---- Train and evaluate ----
-    all_results = {}
-
-    for clf_name, clf in classifiers.items():
-        # Emotion
-        import copy
-        emotion_results = train_and_evaluate(
-            clf        = copy.deepcopy(clf),
-            clf_name   = clf_name,
-            task       = "emotion",
-            X_train    = X_train,
-            y_train    = y_train_emo,
-            X_dev      = X_dev,
-            y_dev      = y_dev_emo,
-            output_dir = output_dir,
-            logger     = logger,
-            tag        = args.tag,
-        )
-
-        # Sentiment
-        sentiment_results = train_and_evaluate(
-            clf        = copy.deepcopy(clf),
-            clf_name   = clf_name,
-            task       = "sentiment",
-            X_train    = X_train,
-            y_train    = y_train_sent,
-            X_dev      = X_dev,
-            y_dev      = y_dev_sent,
-            output_dir = output_dir,
-            logger     = logger,
-            tag        = args.tag,
-        )
-
-        all_results[clf_name] = {
-            "emotion":   emotion_results,
-            "sentiment": sentiment_results,
-        }
-
-    # ---- Summary ----
-    logger.info("=" * 60)
-    logger.info("SUMMARY — Classical classifiers on raw fused features")
-    logger.info("=" * 60)
-    for clf_name, results in all_results.items():
-        logger.info(
-            "%s | Emotion WF1: %.4f | Sentiment WF1: %.4f",
-            clf_name.upper(),
-            results["emotion"]["weighted_f1"],
-            results["sentiment"]["weighted_f1"],
-        )
+    print(f"\n  {args.condition} — {args.test_split} weighted F1\n")
+    print(f"  {'features':<10s}{'model':<10s}{'emotion':>10s}{'sentiment':>11s}")
+    print("  " + "-" * 41)
+    for feat in args.features:
+        for model in args.models:
+            def _v(task):
+                return next((r["weighted_f1"] for r in results
+                             if r["features"] == feat and r["model"] == model
+                             and r["task"] == task), None)
+            e, sm = _v("emotion"), _v("sentiment")
+            es = f"{e:10.4f}" if e is not None else f"{'·':>10s}"
+            ss = f"{sm:11.4f}" if sm is not None else f"{'·':>11s}"
+            print(f"  {feat:<10s}{model:<10s}{es}{ss}")
+    print(f"\n  -> {path}")
 
 
 if __name__ == "__main__":

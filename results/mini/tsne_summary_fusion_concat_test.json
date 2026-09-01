@@ -1,0 +1,14 @@
+{
+  "modality": "fusion_concat",
+  "n_points": 2610,
+  "fusion_accuracy": 0.5800766283524904,
+  "per_class_recall": {
+    "neutral": 0.714968152866242,
+    "surprise": 0.5516014234875445,
+    "fear": 0.26,
+    "sadness": 0.3125,
+    "joy": 0.6218905472636815,
+    "disgust": 0.17647058823529413,
+    "anger": 0.3507246376811594
+  }
+}

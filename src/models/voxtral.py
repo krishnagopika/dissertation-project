@@ -3,39 +3,51 @@ Voxtral Wrapper
 ===============
 Wrapper around Mistral's Voxtral models for acoustic embedding extraction.
 
-Used exclusively for **Pass 2** of preprocessing: extract fixed-size acoustic
-embeddings from cached MELD audio files. Pass 1 (transcription) is handled
-separately by vllm — this module is never loaded during training.
+**Superseded for MELD preprocessing.** transcribe_all.py now captures acoustics
+during the vllm transcription pass via a forward hook (CR-003), so Voxtral is
+loaded once rather than twice. This module remains for RAVDESS extraction, for
+standalone use, and as the reference implementation the single-pass hook must
+agree with. It is never loaded during training.
 
 Architecture
 ------------
-VoxtralForConditionalGeneration pipeline::
+VoxtralForConditionalGeneration audio path::
 
-    Raw Audio  →  WhisperFeatureExtractor (mel spectrogram)
+    Raw Audio  →  WhisperFeatureExtractor (mel spectrogram, padded to 30 s)
                        ↓
-    [VoxtralEncoder / audio_tower]   Whisper Large-v3, 50 Hz, 1280-dim
+    [VoxtralEncoder / audio_tower]   Whisper large-v3, 50 Hz, 1280-dim
+                       ↓                       <-- WE STOP HERE
+    mean-pool over time   →   (batch, 1280)
                        ↓
-    [VoxtralMultiModalProjector]     linear_1 → act → linear_2
-                       ↓  (output dim = text_config.hidden_size)
-    mean-pool over time   →   fixed-size embedding (batch, hidden_size)
+    [projector: ×4 downsample → AudioLanguageAdapter]   (not used)
+                       ↓  (output dim = text_config.hidden_size, 3072 for Mini)
+    audio tokens the LLM attends over
 
-``model.get_audio_features(input_features)`` encapsulates the encoder +
-projector pass and is called directly — no forward hooks required.
+Extraction takes the **encoder** output, NOT the projector output. The projector
+is trained to make audio look like text tokens to the LLM, so it is free to
+discard the paralinguistic detail emotion recognition depends on; it also
+downsamples ×4, from 50 Hz to 12.5 Hz. See docs/DECISIONS.md ADR-001.
 
-Embedding dimensions
---------------------
-* ``mistralai/Voxtral-Mini-3B-2507``   → ``text_config.hidden_size`` ≈ 4096
-  Use ``acoustic_dim: 4096`` in config (or let the wrapper report the real dim).
-* ``mistralai/Voxtral-Small-24B-2507`` → larger; requires 2× L40S via
-  ``device_map="auto"``.
+Note ``model.get_audio_features()`` runs encoder **and** projector, so it is
+deliberately NOT used — ``self.model.audio_tower(...)`` is called directly.
+
+Embedding dimension
+-------------------
+1280 for both Mini and Small: they wrap the same Whisper large-v3 encoder, so
+there is no per-model value. Use ``acoustic_dim: 1280``.
+
+Caveat: the mean is taken over all 1500 padded encoder frames with no mask, so
+for a typical MELD utterance (~2.7 s) roughly 91% of the average is padding.
+That defect is inherent to pooling raw encoder output and is why pooling moved
+into the trainable head — see ADR-003 and src/models/pooling.py.
 
 Usage
 -----
 >>> wrapper = VoxtralWrapper("mistralai/Voxtral-Mini-3B-2507")
 >>> waveform  # float32 Tensor, shape (T,), 16 kHz
 >>> emb = wrapper.extract_acoustic_embeddings(waveform, sample_rate=16000)
->>> # emb: (1, hidden_size) float32 on CPU
->>> dim = wrapper.get_acoustic_hidden_dim()   # e.g. 4096
+>>> # emb: (1, 1280) float32 on CPU
+>>> dim = wrapper.get_acoustic_hidden_dim()   # 1280
 """
 
 from __future__ import annotations
@@ -50,9 +62,16 @@ from torch import Tensor
 
 logger = logging.getLogger(__name__)
 
-# Per-model fallback dims if config introspection fails.
-_MINI_FALLBACK_DIM: int = 4096   # Voxtral-Mini-3B text_config.hidden_size
-_SMALL_FALLBACK_DIM: int = 4096  # Voxtral-Small-24B (same LLM size)
+# Fallback if config introspection fails. This is the WHISPER ENCODER width
+# (audio_config.d_model), because extract_acoustic_embeddings returns encoder
+# output — see ADR-001. Both Mini and Small wrap Whisper large-v3, so both are
+# 1280; there is no per-model variant to keep.
+#
+# Previously this was 4096 with a second, never-referenced _SMALL_FALLBACK_DIM
+# beside it. Both were wrong twice over: they named the LLM width rather than
+# the encoder width, and Mini's LLM width is 3072, not 4096 (params.json:
+# "dim": 3072).
+_ENCODER_FALLBACK_DIM: int = 1280
 
 VOXTRAL_MINI = "mistralai/Voxtral-Mini-3B-2507"
 VOXTRAL_SMALL = "mistralai/Voxtral-Small-24B-2507"
@@ -280,30 +299,45 @@ class VoxtralWrapper(nn.Module):
         return transcript.strip()
 
     def get_acoustic_hidden_dim(self) -> int:
-        """Return the acoustic embedding dimension (MLP projector output dim).
+        """Return the dimension :meth:`extract_acoustic_embeddings` actually emits.
 
-        This equals ``text_config.hidden_size`` for both Mini and Small.
+        That is the **Whisper encoder** width (``audio_config.d_model``), 1280 for
+        both Mini and Small — not the LLM width. See ADR-001 for why extraction
+        happens at the encoder rather than after the projector.
+
+        This previously returned ``text_config.hidden_size`` — the LLM width, a
+        dimension this class never produces. That mattered because
+        transcribe_all.py treats this value as authoritative and overrides the
+        config with it::
+
+            actual_dim = wrapper.get_acoustic_hidden_dim()
+            if actual_dim != acoustic_dim:
+                acoustic_dim = actual_dim      # <- silently wrong
+
+        ``acoustic_dim`` is then the width used to zero-fill clips whose audio is
+        missing or whose extraction raised, so a failed clip could have landed in
+        the cache with a different shape from every successful one. Verified not
+        to have happened: all 13,708 legacy entries are (1280,), and the two
+        all-zero vectors match the two clips DATA_INVENTORY.md records as lost.
+        Latent, not manifested — fixed so it stays that way.
 
         Returns:
-            Integer dimension, e.g. 4096 for Voxtral-Mini-3B-2507.
+            Encoder hidden dimension, e.g. 1280 for Voxtral-Mini-3B-2507.
         """
-        try:
-            return int(self.model.config.text_config.hidden_size)
-        except AttributeError:
-            pass
-
-        # Fallback: try direct hidden_size on config
-        try:
-            return int(self.model.config.hidden_size)
-        except AttributeError:
-            pass
+        for obj, attr in (
+            (getattr(self.model.config, "audio_config", None), "d_model"),
+            (getattr(self.model.config, "audio_config", None), "hidden_size"),
+            (getattr(self.model.audio_tower, "config", None), "d_model"),
+        ):
+            if obj is not None and hasattr(obj, attr):
+                return int(getattr(obj, attr))
 
         logger.warning(
-            "Could not infer acoustic_dim from model config; "
-            "using fallback %d. Check config and update if wrong.",
-            _MINI_FALLBACK_DIM,
+            "Could not infer the encoder dimension from the model config; "
+            "using fallback %d. Verify against the model's audio_config.",
+            _ENCODER_FALLBACK_DIM,
         )
-        return _MINI_FALLBACK_DIM
+        return _ENCODER_FALLBACK_DIM
 
     # ------------------------------------------------------------------
     # Convenience classmethod

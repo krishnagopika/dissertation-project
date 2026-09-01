@@ -95,5 +95,35 @@ class BiLSTMContext(nn.Module):
         out = self.dropout(out)
         return self.sentiment_head(out), self.emotion_head(out)
 
+    def represent(self, features: Tensor, lengths: Tensor) -> Tensor:
+        """Contextualised per-utterance states, before the heads.
+
+        This is the vector the classification heads consume: the BiLSTM output
+        after dropout. Exposed so the representation analysis can measure what
+        dialogue context does to class structure, alongside the raw inputs and
+        the fusion model's own representation.
+
+        Note this is the CONTEXTUALISED state -- utterance i's vector already
+        contains information from its neighbours. That is the point: comparing
+        it against the pre-context input is what isolates the effect of
+        context on linear separability.
+
+        Args:
+            features: Padded utterance features, ``(B, T, input_dim)``.
+            lengths: Real (unpadded) dialogue lengths, ``(B,)``.
+
+        Returns:
+            ``(B, T, 2 * hidden_dim)``. Padded positions are present but
+            meaningless -- mask with ``lengths`` before use.
+        """
+        packed = pack_padded_sequence(
+            features, lengths.cpu(), batch_first=True, enforce_sorted=False
+        )
+        out_packed, _ = self.lstm(packed)
+        out, _ = pad_packed_sequence(
+            out_packed, batch_first=True, total_length=features.size(1)
+        )
+        return self.dropout(out)
+
     def trainable_parameters(self) -> int:
         return sum(p.numel() for p in self.parameters() if p.requires_grad)

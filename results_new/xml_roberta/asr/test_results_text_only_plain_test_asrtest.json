@@ -1,0 +1,37 @@
+{
+  "config": "src/configs/xlmr_asr_plain.yaml",
+  "model": "text_only",
+  "tag": "_plain_test_asrtest",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/xlmr_asr_plain/best_model.pt",
+  "test_samples": 2610,
+  "emotion": {
+    "accuracy": 0.5088122605363985,
+    "weighted_precision": 0.47036059054579427,
+    "weighted_recall": 0.5088122605363985,
+    "weighted_f1": 0.48628514986635857,
+    "macro_f1": 0.29908196184967345,
+    "auc": 0.7048936894715204,
+    "per_class_f1": {
+      "neutral": 0.6560463432295438,
+      "surprise": 0.4708029197080292,
+      "fear": 0.0,
+      "sadness": 0.30025445292620867,
+      "joy": 0.3601637107776262,
+      "disgust": 0.0,
+      "anger": 0.3063063063063063
+    }
+  },
+  "sentiment": {
+    "accuracy": 0.5712643678160919,
+    "weighted_precision": 0.5630036272760433,
+    "weighted_recall": 0.5712643678160919,
+    "weighted_f1": 0.5635555450689897,
+    "macro_f1": 0.5285721482990199,
+    "auc": 0.7005959938299219,
+    "per_class_f1": {
+      "negative": 0.5307644499689248,
+      "neutral": 0.6518682944876064,
+      "positive": 0.40308370044052866
+    }
+  }
+}

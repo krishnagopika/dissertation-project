@@ -1,5 +1,5 @@
 # Multimodal Fusion for Sentiment and Emotion Extraction
-### A Study of Robustness Across Australian and UK English Dialects
+### A Study of Robustness Across English Dialects
 **MSc Dissertation — Department of Computer Science, University of Warwick**
 
 ---
@@ -8,7 +8,7 @@
 
 This dissertation proposes a novel multimodal fusion pipeline for sentiment and emotion extraction from speech. The pipeline fuses **Voxtral-based transcription** and **internal acoustic feature extraction** with an **ASR-aware fine-tuned XLM-RoBERTa** text classifier via a learned fusion layer.
 
-The key contribution is an **ASR-aware fine-tuning strategy** — training the text classifier on Voxtral-transcribed text rather than clean gold-standard text, making it robust to transcription noise introduced by accented speech. The pipeline is evaluated on MELD, CMU-MOSI, RAVDESS, and GoEmotions, and stress-tested for dialect robustness across Australian and UK English regional dialects.
+The key contribution is an **ASR-aware fine-tuning strategy** — training the text classifier on Voxtral-transcribed text rather than clean gold-standard text, making it robust to transcription noise introduced by accented speech. The pipeline is trained and evaluated on MELD, uses RAVDESS for one transfer ablation, and is stress-tested for dialect robustness on held-out UK and Ireland regional English.
 
 ---
 
@@ -33,7 +33,7 @@ Raw Audio
 
 1. A novel multimodal fusion pipeline combining Voxtral acoustic embeddings with ASR-aware XLM-RoBERTa text classification
 2. An ASR-aware fine-tuning strategy that improves robustness to dialect transcription noise (extending [Taghavi et al., 2023])
-3. Systematic dialect robustness evaluation across Australian English and UK regional dialects
+3. Systematic dialect robustness evaluation across UK and Ireland regional English
 4. Benchmarking study comparing Voxtral Mini (3B) and Voxtral Small (24B) as the ASR backbone
 
 ---
@@ -43,16 +43,15 @@ Raw Audio
 ### Training & Evaluation
 | Dataset | Description |
 |---|---|
-| [MELD](https://aclanthology.org/P19-1050/) | ~13,000 utterances from Friends TV series; 7 emotion + 3 sentiment classes |
-| [CMU-MOSI](https://arxiv.org/abs/1606.06259) | Opinion video segments with continuous sentiment scores |
-| [RAVDESS](https://doi.org/10.1371/journal.pone.0196391) | Acted speech recordings with emotion labels |
-| [GoEmotions](https://aclanthology.org/2020.acl-main.372/) | 58,000 Reddit comments across 27 fine-grained emotion categories |
+| [MELD](https://aclanthology.org/P19-1050/) | 9,989 train / 1,109 dev / 2,610 test utterances from *Friends*; 7 emotion + 3 sentiment classes. The corpus everything is trained and evaluated on. |
+| [RAVDESS](https://doi.org/10.1371/journal.pone.0196391) | Acted, class-balanced speech. Used only for the acoustic transfer ablation. |
 
 ### Dialect Robustness Evaluation (inference only)
 | Dataset | Description |
 |---|---|
-| [Common Voice en-AU](https://arxiv.org/abs/1912.06670) | Australian English speech |
-| [English Dialects](https://aclanthology.org/2020.lrec-1.804) | Southern, Midlands, Northern, Welsh, and Scottish English |
+| [English Dialects](https://aclanthology.org/2020.lrec-1.804) | Southern, Midlands, Northern, Welsh, Scottish and Irish English. 100 utterances, 23 speakers, hand-annotated for this work; no component is trained on it. |
+
+> Australian English (Common Voice en-AU) was in the proposal and was **not** reached; it is deferred to future work. CMU-MOSI and GoEmotions were scoped out early and are not used.
 
 ---
 
@@ -483,11 +482,61 @@ Cached embeddings, checkpoints, HF model weights, and the venv are all too large
        /dcs/large/u5734759/checkpoints/mini_focal_sampler/best_model.pt
    ```
 
-5. **Late fusion + zero-shot** (auxiliary)
+5. **Zero-shot baseline** (auxiliary)
    ```bash
-   sbatch src/scripts/voxtral_zeroshot.sbatch    # Voxtral zero-shot ERC
-   python src/evaluation/late_fusion.py --config src/configs/mini.yaml   # after prob caches exist
+   sbatch src/scripts/voxtral_zeroshot.sbatch     # Voxtral-Mini, prompted directly
+   # Voxtral-Small runs on Modal (24B does not fit the 2-GPU cluster allocation):
+   modal run src/modal/voxtral_small_modal.py --detach
    ```
+
+6. **The grids the dissertation reports** (frozen caches, so each cell is minutes)
+   ```bash
+   sbatch src/scripts/bclstm_grid.sbatch          # dialogue context, 5 window widths
+   sbatch src/scripts/ctxfusion_grid.sbatch       # context-then-fusion orderings
+   sbatch src/scripts/attnpool_context_grid.sbatch  # attention pooling, projected 512-d
+   sbatch src/scripts/attnpool_raw_grid.sbatch      # attention pooling, raw 1280-d
+   sbatch src/scripts/hidden_sweep.sbatch         # capacity sweep
+   ```
+
+7. **Score every checkpoint on the test split**
+   ```bash
+   sbatch src/scripts/evaluate_all_windowed.sbatch
+   ```
+   Writes `results_new/test_all/test_all_v7_windowed_attnraw.json` — the table
+   behind every re-scored number in the write-up — then runs a validation gate:
+
+   ```bash
+   python3 src/evaluation/check_windowed_eval.py --table test_all_v7_windowed_attnraw.json
+   ```
+
+   The gate compares the pass against the test metrics `train_context.py` wrote
+   at training time. **bc-LSTM is the only family with those**, so it is the only
+   family that can be checked; `fusion` and `ctxfusion` record dev metrics only,
+   which makes a re-scoring pass their sole source of test numbers. If the gate
+   fails, that output must not be used. Two bugs it has already caught:
+
+   - the context window was not re-applied at scoring time, so every `k0`–`k4`
+     run was scored as if `K` were unbounded;
+   - `attnraw_*` runs were fed the masked-mean cache rather than
+     `meld_pooled_raw/attention` — same 1280 width, different vector, so the
+     checkpoint loaded silently and scored the wrong features.
+
+8. **Dialect evaluation** (out of domain, inference only)
+   ```bash
+   sbatch src/scripts/dialect_probe_full.sbatch   # transcribe + extract the 100 clips
+   sbatch src/scripts/dialect_end_to_end.sbatch   # apply every trained model
+   ```
+
+### A note on the `asr_cleaned` condition
+
+The defect filter is applied to the **evaluation** set as well as the training
+set, so that condition is scored on the 1,787 utterances that survive it rather
+than the full 2,610. This is deliberate: where a clip's audio is defective or
+identical audio carries contradictory labels, the reference is not trustworthy
+and scoring against it measures annotation noise. `evaluate_all.py` never
+filters test, so its `asr_cleaned` figures are on all 2,610 and are **not**
+comparable to the ones written at training time. Both appear in the write-up,
+each labelled with its evaluation set.
 
 ### Where to look for what
 
@@ -536,4 +585,6 @@ Next Steps:
 - Voxtral (training data)
 - utterance -> dialogue
 - visualisation of embeddings (audio association with emotions)
+
+- PCA and UMAP
 

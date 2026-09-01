@@ -213,3 +213,21 @@ CLAUDE.md
 data/
 
 logs/
+report/
+
+# ---------------------------------------------------------------------------
+# Dissertation write-up: built in Overleaf, not versioned here.
+report/
+
+# Large regenerable artefacts. Every metric JSON that backs a number in the
+# dissertation IS tracked; what is excluded below is either a plot that any of
+# the report scripts can redraw, or a per-utterance dump that can be recomputed
+# from the tracked metrics and the cached features.
+results*/**/*.png
+results*/**/*_probs.json
+results*/**/wer_pairs_*.csv
+results*/**/*_wer_vad*.csv
+
+# Local scratch
+checkpoints/
+*.bak
