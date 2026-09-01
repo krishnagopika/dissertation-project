@@ -12,11 +12,12 @@ from __future__ import annotations
 from typing import Dict, List, Optional
 
 import numpy as np
-from sklearn.metrics import (
-    classification_report,
-    confusion_matrix,
-    f1_score,
-)
+
+# sklearn is imported inside the functions that use it, not at module level.
+# The label-name constants below are needed by callers that never compute a
+# metric --- notably the Modal worker, which reuses this module's names and
+# the zero-shot prompt but has no sklearn in its image. A top-level import
+# would force every such consumer to carry the dependency.
 
 # Canonical label names
 EMOTION_NAMES: List[str] = [
@@ -64,6 +65,8 @@ def compute_emotion_metrics(
     # raises "Number of classes does not match size of target_names".
     label_ids = list(range(len(class_names)))
 
+    from sklearn.metrics import classification_report, f1_score
+
     weighted_f1 = f1_score(
         labels, preds, labels=label_ids, average="weighted", zero_division=0
     )
@@ -86,9 +89,18 @@ def compute_emotion_metrics(
         if name in report
     }
 
+    # accuracy and the weighted averages are already inside `report`; returning
+    # only F1 made the consolidated tables narrower than the evaluation had
+    # actually been, so a claim could not be checked against a second measure.
+    # No extra computation --- these are read from the report just built.
     return {
         "weighted_f1": weighted_f1,
         "macro_f1": macro_f1,
+        "accuracy": report.get("accuracy"),
+        "weighted_precision": report.get("weighted avg", {}).get("precision"),
+        "weighted_recall": report.get("weighted avg", {}).get("recall"),
+        "macro_precision": report.get("macro avg", {}).get("precision"),
+        "macro_recall": report.get("macro avg", {}).get("recall"),
         "per_class_f1": per_class_f1,
         "report": report,
     }
@@ -118,6 +130,8 @@ def compute_sentiment_metrics(
     # raises "Number of classes does not match size of target_names".
     label_ids = list(range(len(class_names)))
 
+    from sklearn.metrics import classification_report, f1_score
+
     weighted_f1 = f1_score(
         labels, preds, labels=label_ids, average="weighted", zero_division=0
     )
@@ -140,9 +154,18 @@ def compute_sentiment_metrics(
         if name in report
     }
 
+    # accuracy and the weighted averages are already inside `report`; returning
+    # only F1 made the consolidated tables narrower than the evaluation had
+    # actually been, so a claim could not be checked against a second measure.
+    # No extra computation --- these are read from the report just built.
     return {
         "weighted_f1": weighted_f1,
         "macro_f1": macro_f1,
+        "accuracy": report.get("accuracy"),
+        "weighted_precision": report.get("weighted avg", {}).get("precision"),
+        "weighted_recall": report.get("weighted avg", {}).get("recall"),
+        "macro_precision": report.get("macro avg", {}).get("precision"),
+        "macro_recall": report.get("macro avg", {}).get("recall"),
         "per_class_f1": per_class_f1,
         "report": report,
     }
@@ -164,6 +187,8 @@ def compute_confusion_matrix(
         Confusion matrix where entry [i, j] is the count of samples with
         true label i predicted as j.
     """
+    from sklearn.metrics import confusion_matrix
+
     return confusion_matrix(labels, preds, labels=list(range(num_classes)))
 
 

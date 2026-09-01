@@ -1,0 +1,75 @@
+{
+  "policy": "corpus WER = sum(S+D+I)/sum(S+D+H); NORMALISED and EXACT per text_normalisation.py",
+  "note": "Mini and Small scored by identical code on identical references.",
+  "splits": {
+    "train": {
+      "mini": {
+        "n_scored": 9989,
+        "corpus_wer_normalised": 0.3461,
+        "corpus_wer_exact": 0.4765,
+        "substitutions": 6456,
+        "deletions": 7559,
+        "insertions": 13915,
+        "hits": 66689,
+        "ref_words": 80704
+      },
+      "small": {
+        "n_scored": 9988,
+        "corpus_wer_normalised": 0.3747,
+        "corpus_wer_exact": 0.5065,
+        "substitutions": 6285,
+        "deletions": 6174,
+        "insertions": 17776,
+        "hits": 68229,
+        "ref_words": 80688
+      },
+      "small_minus_mini": 0.0286
+    },
+    "dev": {
+      "mini": {
+        "n_scored": 1109,
+        "corpus_wer_normalised": 0.3124,
+        "corpus_wer_exact": 0.4503,
+        "substitutions": 690,
+        "deletions": 670,
+        "insertions": 1427,
+        "hits": 7561,
+        "ref_words": 8921
+      },
+      "small": {
+        "n_scored": 1108,
+        "corpus_wer_normalised": 0.3294,
+        "corpus_wer_exact": 0.4628,
+        "substitutions": 650,
+        "deletions": 520,
+        "insertions": 1767,
+        "hits": 7746,
+        "ref_words": 8916
+      },
+      "small_minus_mini": 0.017
+    },
+    "test": {
+      "mini": {
+        "n_scored": 2610,
+        "corpus_wer_normalised": 0.3823,
+        "corpus_wer_exact": 0.514,
+        "substitutions": 1830,
+        "deletions": 1809,
+        "insertions": 4677,
+        "hits": 18115,
+        "ref_words": 21754
+      },
+      "small": {
+        "n_scored": 2610,
+        "corpus_wer_normalised": 0.3619,
+        "corpus_wer_exact": 0.4914,
+        "substitutions": 1726,
+        "deletions": 1524,
+        "insertions": 4623,
+        "hits": 18504,
+        "ref_words": 21754
+      },
+      "small_minus_mini": -0.0204
+    }
+  }
+}

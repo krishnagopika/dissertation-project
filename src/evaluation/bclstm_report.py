@@ -40,7 +40,12 @@ from typing import Dict, List
 CKPT_ROOT = Path("/dcs/large/u5734759/checkpoints/bclstm")
 OUT_DIR = Path("results_new/bclstm")
 
-CONDITIONS = ["gold", "asr", "asr_cleaned"]
+# Plain bc-LSTM reads the raw 768+1280 concatenation; "stacked_*" reads
+# fusion's learned 512-d vector. Both live under checkpoints/bclstm/, so the
+# report shows them as separate rows of the same matrix -- which is exactly the
+# comparison: same context widths, different input representation.
+CONDITIONS = ["gold", "asr", "asr_cleaned",
+              "stacked_gold", "stacked_asr", "stacked_asr_cleaned"]
 WIDTHS = ["k0", "k1", "k2", "k4", "full"]
 
 COLUMNS = [

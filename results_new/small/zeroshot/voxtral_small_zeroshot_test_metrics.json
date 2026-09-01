@@ -1,0 +1,11 @@
+{
+ "model": "Voxtral-Small-24B-2507",
+ "split": "test",
+ "n_scored": 2610,
+ "emotion_accuracy": 0.48007662835249043,
+ "emotion_weighted_f1": 0.4946829690749263,
+ "emotion_macro_f1": 0.377091589532481,
+ "sentiment_accuracy": 0.5172413793103449,
+ "sentiment_weighted_f1": 0.5205805841304244,
+ "sentiment_macro_f1": 0.5158091018245413
+}

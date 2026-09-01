@@ -77,7 +77,8 @@ class DialogueDataset(Dataset):
     def __init__(self, meld_root, text_embeddings_path, embeddings_path, split,
                  text_dim=768, acoustic_dim=1280,
                  filtered_keys_path: Optional[str] = None,
-                 fused_path: Optional[str] = None) -> None:
+                 fused_path: Optional[str] = None,
+                 fused_mode: str = "replace") -> None:
         """
         fused_path: If given, load ``{split}_fused.pt`` from here and use that
             single learned vector per utterance INSTEAD of concatenating the
@@ -87,6 +88,7 @@ class DialogueDataset(Dataset):
         """
         self.text_dim, self.acoustic_dim = text_dim, acoustic_dim
         self.fused_path = fused_path
+        self.fused_mode = fused_mode
 
         # weights_only=True: these caches are plain tensor dicts, and the
         # default flipped in torch >= 2.6 -- pin it so a cluster upgrade
@@ -99,20 +101,33 @@ class DialogueDataset(Dataset):
                     "src/preprocessing/extract_fused_features.py first.")
             fused_emb: Dict[str, Tensor] = torch.load(
                 str(fused_file), map_location="cpu", weights_only=True)
-            self.feature_dim = int(next(iter(fused_emb.values())).shape[-1])
-            text_emb, acou_emb = None, None
+            fused_dim = int(next(iter(fused_emb.values())).shape[-1])
+            if fused_mode == "acoustic":
+                # Text stays real; only the ACOUSTIC half is swapped for the
+                # pooled vector. The context models otherwise read the masked
+                # mean, whose acoustic cosine gap is 0.0138 against attention
+                # pooling's 0.0779 -- a 5.6x difference in class separation
+                # that every context result to date was handicapped by.
+                self.feature_dim = text_dim + fused_dim
+            elif fused_mode == "concat":
+                # Keep the raw caches too: the learned vector is APPENDED, not
+                # substituted, so no information is thrown away.
+                self.feature_dim = fused_dim + text_dim + acoustic_dim
+            else:
+                self.feature_dim = fused_dim
+                text_emb, acou_emb = None, None
         else:
             fused_emb = None
             self.feature_dim = text_dim + acoustic_dim
 
         text_file = Path(text_embeddings_path) / f"{split}_text_embeddings.pt"
         acou_file = Path(embeddings_path) / f"{split}_embeddings_maskedmean.pt"
-        if fused_emb is None:
+        if fused_emb is None or fused_mode in ("concat", "acoustic"):
             for f, hint in ((text_file, "extract_text_embeddings*.py"),
                             (acou_file, "transcribe_all.py")):
                 if not f.exists():
                     raise FileNotFoundError(f"{f} not found. Run {hint} first.")
-        if fused_emb is None:
+        if fused_emb is None or fused_mode in ("concat", "acoustic"):
             text_emb = torch.load(
                 str(text_file), map_location="cpu", weights_only=True)
         # Masked mean over REAL frames, not the legacy {split}_embeddings.pt,
@@ -161,11 +176,28 @@ class DialogueDataset(Dataset):
                         feats.append(torch.zeros(self.feature_dim))
                         emos.append(PAD_LABEL); sents.append(PAD_LABEL)
                         continue
-                    if v.shape[-1] != self.feature_dim:
+                    if fused_mode == "replace" and v.shape[-1] != self.feature_dim:
                         raise ValueError(
                             f"{key}: fused vector is {v.shape[-1]}-d, expected "
                             f"{self.feature_dim}.")
-                    feats.append(v.float())
+                    if fused_mode == "acoustic":
+                        t2 = text_emb.get(key)
+                        if t2 is None:
+                            missing_text.append(key)
+                            feats.append(torch.zeros(self.feature_dim))
+                            emos.append(PAD_LABEL); sents.append(PAD_LABEL)
+                            continue
+                        feats.append(torch.cat([t2.float(), v.float()]))
+                    elif fused_mode == "concat":
+                        t2, a2 = text_emb.get(key), acou_emb.get(key)
+                        if t2 is None or a2 is None:
+                            (missing_text if t2 is None else missing_acoustic).append(key)
+                            feats.append(torch.zeros(self.feature_dim))
+                            emos.append(PAD_LABEL); sents.append(PAD_LABEL)
+                            continue
+                        feats.append(torch.cat([v.float(), t2.float(), a2.float()]))
+                    else:
+                        feats.append(v.float())
                     if keep_set is not None and key not in keep_set:
                         emos.append(PAD_LABEL); sents.append(PAD_LABEL)
                     else:
@@ -319,6 +351,7 @@ class WindowedDialogueDataset(Dataset):
         self.num_total_utts = base.num_total_utts
         self.num_kept_utts = base.num_kept_utts
         self.num_base_dialogues = len(base.dialogues)
+        self.feature_dim = base.feature_dim
 
     def utterance_keys(self) -> List[str]:
         """Centre keys of every window -- one per scored utterance."""
@@ -421,6 +454,27 @@ def main() -> None:
     parser.add_argument("--batch_size", type=int, default=16, help="dialogues per batch")
     parser.add_argument("--tag", type=str, default="",
                         help="Suffix for the results JSON, e.g. '_wer25_filter'.")
+    parser.add_argument(
+        "--fused_path", type=str, default=None,
+        help=("Directory with {split}_fused.pt from extract_fused_features.py. "
+              "When given, the BiLSTM consumes fusion's LEARNED 512-d vector "
+              "instead of the raw 768+1280 concatenation -- the stacked model, "
+              "in which context is the only difference from plain fusion."))
+    parser.add_argument(
+        "--fused_mode", choices=["replace", "concat", "acoustic"],
+        default="replace",
+        help=("acoustic: keep the real text embedding and swap ONLY the "
+              "acoustic half for the given pooled vector -- for feeding an "
+              "attention-pooled acoustic representation to the context models, "
+              "which otherwise read the masked mean (cosine gap 0.0138 vs "
+              "0.0779, a 5.6x difference in class separation). "
+              "replace: use ONLY fusion's learned vector (512-d). "
+              "concat: use [fused | text | acoustic] (2560-d) so the BiLSTM "
+              "keeps everything the raw features carry AND the learned "
+              "representation. `replace` lost to plain features on gold "
+              "(-0.019) and asr_cleaned (-0.009) -- compressing 2048 -> 512 "
+              "through a per-utterance objective discards information the "
+              "context model wanted. `concat` cannot lose that information."))
     parser.add_argument("--context_window", type=int, default=-1,
                         help=("If ≥ 0, restrict each utterance's context to ±K "
                               "neighbours (K=0 → no context, K=1 → ±1 utterance, "
@@ -449,7 +503,8 @@ def main() -> None:
         return DialogueDataset(
             config["data"]["meld_root"], config["data"]["text_embeddings_path"],
             config["data"]["embeddings_path"], split, text_dim, acoustic_dim,
-            filtered_keys_path=filter_keys.get(split))
+            filtered_keys_path=filter_keys.get(split),
+            fused_path=args.fused_path, fused_mode=args.fused_mode)
 
     train_ds, dev_ds = make_ds("train"), make_ds("dev")
     logger.info("Train dialogues: %d | Dev dialogues: %d", len(train_ds), len(dev_ds))
@@ -486,8 +541,14 @@ def main() -> None:
     )
     dev_loader = DataLoader(dev_ds, batch_size=args.batch_size, shuffle=False, collate_fn=collate)
 
+    # From the dataset, not text_dim + acoustic_dim: in fused mode the feature
+    # is a single learned vector whose width comes from the fusion model's
+    # hidden_dim, and hardcoding the sum would build a model of the wrong shape.
+    feat_dim = getattr(train_ds, "feature_dim", text_dim + acoustic_dim)
+    logger.info("BiLSTM input_dim=%d (%s)", feat_dim,
+                "fused" if args.fused_path else "text+acoustic concat")
     model = BiLSTMContext(
-        input_dim=text_dim + acoustic_dim, hidden_dim=args.hidden_dim,
+        input_dim=feat_dim, hidden_dim=args.hidden_dim,
         num_emotion_classes=config["model"]["num_classes"],
         num_sentiment_classes=config["model"]["num_sentiment_classes"],
         num_layers=args.num_layers, dropout=config["model"]["dropout"],
@@ -607,6 +668,10 @@ def main() -> None:
                                     len(test_ds)),
         "windowed": args.context_window >= 0,
         "context_window": args.context_window if args.context_window >= 0 else None,
+        "fused_path": args.fused_path,
+        "input_dim": feat_dim,
+        "stacked": args.fused_path is not None,
+        "fused_mode": args.fused_mode if args.fused_path else None,
         "n_test_utterances_scored": test_ds.num_kept_utts if filter_on else test_ds.num_total_utts,
         "dev_key_hash": dev_hash,
         "seed": config["data"]["seed"],
