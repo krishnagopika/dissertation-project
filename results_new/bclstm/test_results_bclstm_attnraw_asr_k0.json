@@ -1,0 +1,49 @@
+{
+  "config": "src/configs/ctx_asr.yaml",
+  "model": "bclstm",
+  "tag": "attnraw_asr/k0",
+  "checkpoint": "/dcs/large/u5734759/checkpoints/bclstm/attnraw_asr/k0/best_context.pt",
+  "best_epoch": 3,
+  "filter_enabled": false,
+  "n_train_examples": 9989,
+  "n_dev_examples": 1109,
+  "n_test_examples": 2610,
+  "n_test_dialogues": 280,
+  "windowed": true,
+  "context_window": 0,
+  "fused_path": "/dcs/large/u5734759/data/meld_pooled_raw/attention",
+  "input_dim": 2048,
+  "stacked": true,
+  "fused_mode": "acoustic",
+  "n_test_utterances_scored": 2610,
+  "dev_key_hash": "72c2797a81a4",
+  "seed": 42,
+  "best_dev_weighted_f1": 0.48968065812539735,
+  "hidden_dim": 256,
+  "num_layers": 1,
+  "batch_size": 16,
+  "trainable_parameters": 4727818,
+  "loss": "focal(gamma=2.0, alpha=None)",
+  "emotion": {
+    "weighted_f1": 0.4917919184775675,
+    "macro_f1": 0.32312336552583615,
+    "per_class_f1": {
+      "neutral": 0.6526237989652623,
+      "surprise": 0.4563106796116505,
+      "fear": 0.07017543859649122,
+      "sadness": 0.3020833333333333,
+      "joy": 0.35103244837758113,
+      "disgust": 0.07228915662650602,
+      "anger": 0.3573487031700288
+    }
+  },
+  "sentiment": {
+    "weighted_f1": 0.5669065447390117,
+    "macro_f1": 0.5320903408570768,
+    "per_class_f1": {
+      "negative": 0.5531914893617021,
+      "neutral": 0.6467661691542289,
+      "positive": 0.39631336405529954
+    }
+  }
+}

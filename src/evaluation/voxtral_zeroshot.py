@@ -44,7 +44,6 @@ import sys
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-import pandas as pd
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -176,6 +175,11 @@ def load_gold_labels(
     csv_path = meld_root / CSV_MAP[split]
     if not csv_path.exists():
         raise FileNotFoundError(f"MELD CSV not found: {csv_path}")
+
+    # Imported here rather than at module level: the Modal worker reuses this
+    # module for its prompt and parser only, and a top-level pandas import
+    # would force that image to carry a dependency it never calls.
+    import pandas as pd
 
     df = pd.read_csv(csv_path)
     df.columns = (

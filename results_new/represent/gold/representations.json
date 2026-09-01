@@ -1,0 +1,1290 @@
+{
+  "condition": "gold",
+  "stages": {
+    "text": {
+      "dim": 768,
+      "splits": {
+        "train": {
+          "n": 9989,
+          "probe_emotion": {
+            "weighted_f1": 0.7855,
+            "macro_f1": 0.7087,
+            "per_class_f1": {
+              "neutral": 0.8657,
+              "surprise": 0.7703,
+              "fear": 0.5986,
+              "sadness": 0.6448,
+              "joy": 0.773,
+              "disgust": 0.6667,
+              "anger": 0.642
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.8421,
+            "macro_f1": 0.8275,
+            "per_class_f1": {
+              "negative": 0.8045,
+              "neutral": 0.8946,
+              "positive": 0.7834
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "silhouette_emotion": {
+            "overall": 0.246,
+            "per_class": {
+              "neutral": 0.4728,
+              "surprise": 0.1137,
+              "fear": -0.1826,
+              "sadness": -0.1313,
+              "joy": 0.2032,
+              "disgust": -0.1531,
+              "anger": -0.0728
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.3276,
+            "per_class": {
+              "negative": 0.1143,
+              "neutral": 0.5539,
+              "positive": 0.1399
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 4710,
+                "within": 0.8518831133842468,
+                "between": 0.6123886704444885,
+                "gap": 0.2394944429397583
+              },
+              "surprise": {
+                "n": 1205,
+                "within": 0.7493797540664673,
+                "between": 0.5669509172439575,
+                "gap": 0.18242883682250977
+              },
+              "fear": {
+                "n": 268,
+                "within": 0.765741229057312,
+                "between": 0.6771116256713867,
+                "gap": 0.08862960338592529
+              },
+              "sadness": {
+                "n": 683,
+                "within": 0.7552050948143005,
+                "between": 0.6493593454360962,
+                "gap": 0.10584574937820435
+              },
+              "joy": {
+                "n": 1743,
+                "within": 0.7847567796707153,
+                "between": 0.6437603235244751,
+                "gap": 0.14099645614624023
+              },
+              "disgust": {
+                "n": 271,
+                "within": 0.7564902305603027,
+                "between": 0.6501936912536621,
+                "gap": 0.10629653930664062
+              },
+              "anger": {
+                "n": 1109,
+                "within": 0.7775005102157593,
+                "between": 0.6564433574676514,
+                "gap": 0.12105715274810791
+              }
+            },
+            "macro_within": 0.7772795302527291,
+            "macro_between": 0.6366011330059597,
+            "macro_gap": 0.14067839724676945
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 2945,
+                "within": 0.72560054063797,
+                "between": 0.6175958514213562,
+                "gap": 0.10800468921661377
+              },
+              "neutral": {
+                "n": 4710,
+                "within": 0.8518831133842468,
+                "between": 0.6123886704444885,
+                "gap": 0.2394944429397583
+              },
+              "positive": {
+                "n": 2334,
+                "within": 0.7338491082191467,
+                "between": 0.6218498945236206,
+                "gap": 0.11199921369552612
+              }
+            },
+            "macro_within": 0.7704442540804545,
+            "macro_between": 0.6172781387964884,
+            "macro_gap": 0.15316611528396606
+          },
+          "pca_explained_variance": 0.6285825371742249
+        },
+        "test": {
+          "n": 2610,
+          "probe_emotion": {
+            "weighted_f1": 0.5494,
+            "macro_f1": 0.3648,
+            "per_class_f1": {
+              "neutral": 0.7084,
+              "surprise": 0.504,
+              "fear": 0.0952,
+              "sadness": 0.2545,
+              "joy": 0.5565,
+              "disgust": 0.1043,
+              "anger": 0.3307
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.6734,
+            "macro_f1": 0.647,
+            "per_class_f1": {
+              "negative": 0.5985,
+              "neutral": 0.7616,
+              "positive": 0.5809
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "silhouette_emotion": {
+            "overall": 0.0991,
+            "per_class": {
+              "neutral": 0.2628,
+              "surprise": 0.0215,
+              "fear": -0.1903,
+              "sadness": -0.2254,
+              "joy": 0.098,
+              "disgust": -0.2761,
+              "anger": -0.1205
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.1802,
+            "per_class": {
+              "negative": -0.0427,
+              "neutral": 0.3768,
+              "positive": 0.0627
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 1256,
+                "within": 0.8084188103675842,
+                "between": 0.6540771126747131,
+                "gap": 0.1543416976928711
+              },
+              "surprise": {
+                "n": 281,
+                "within": 0.7195956707000732,
+                "between": 0.5922669172286987,
+                "gap": 0.1273287534713745
+              },
+              "fear": {
+                "n": 50,
+                "within": 0.7435744404792786,
+                "between": 0.6953948140144348,
+                "gap": 0.04817962646484375
+              },
+              "sadness": {
+                "n": 208,
+                "within": 0.7263450622558594,
+                "between": 0.6905471086502075,
+                "gap": 0.035797953605651855
+              },
+              "joy": {
+                "n": 402,
+                "within": 0.7656629681587219,
+                "between": 0.6685189008712769,
+                "gap": 0.09714406728744507
+              },
+              "disgust": {
+                "n": 68,
+                "within": 0.7042732834815979,
+                "between": 0.6774420142173767,
+                "gap": 0.02683126926422119
+              },
+              "anger": {
+                "n": 345,
+                "within": 0.7490079402923584,
+                "between": 0.6743242144584656,
+                "gap": 0.07468372583389282
+              }
+            },
+            "macro_within": 0.7452683108193534,
+            "macro_between": 0.6646530117307391,
+            "macro_gap": 0.08061529908861431
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 833,
+                "within": 0.7046606540679932,
+                "between": 0.6574892997741699,
+                "gap": 0.04717135429382324
+              },
+              "neutral": {
+                "n": 1256,
+                "within": 0.8084188103675842,
+                "between": 0.6540771126747131,
+                "gap": 0.1543416976928711
+              },
+              "positive": {
+                "n": 521,
+                "within": 0.7223779559135437,
+                "between": 0.6495693325996399,
+                "gap": 0.07280862331390381
+              }
+            },
+            "macro_within": 0.745152473449707,
+            "macro_between": 0.6537119150161743,
+            "macro_gap": 0.09144055843353271
+          },
+          "pca_explained_variance": 0.6285825371742249
+        }
+      }
+    },
+    "acoustic": {
+      "dim": 1280,
+      "splits": {
+        "train": {
+          "n": 9989,
+          "probe_emotion": {
+            "weighted_f1": 0.686,
+            "macro_f1": 0.7234,
+            "per_class_f1": {
+              "neutral": 0.6804,
+              "surprise": 0.7247,
+              "fear": 0.8454,
+              "sadness": 0.6699,
+              "joy": 0.6446,
+              "disgust": 0.83,
+              "anger": 0.6687
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.7003,
+            "macro_f1": 0.6906,
+            "per_class_f1": {
+              "negative": 0.6873,
+              "neutral": 0.7322,
+              "positive": 0.6524
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "silhouette_emotion": {
+            "overall": -0.0722,
+            "per_class": {
+              "neutral": -0.0805,
+              "surprise": -0.0535,
+              "fear": -0.0781,
+              "sadness": 0.0142,
+              "joy": -0.107,
+              "disgust": -0.0561,
+              "anger": -0.0579
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": -0.0123,
+            "per_class": {
+              "negative": 0.0237,
+              "neutral": -0.0179,
+              "positive": -0.0466
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 4710,
+                "within": 0.7356855869293213,
+                "between": 0.7332348227500916,
+                "gap": 0.0024507641792297363
+              },
+              "surprise": {
+                "n": 1205,
+                "within": 0.7296463251113892,
+                "between": 0.7277231812477112,
+                "gap": 0.0019231438636779785
+              },
+              "fear": {
+                "n": 268,
+                "within": 0.7376107573509216,
+                "between": 0.7343354821205139,
+                "gap": 0.003275275230407715
+              },
+              "sadness": {
+                "n": 683,
+                "within": 0.7666767239570618,
+                "between": 0.7441335916519165,
+                "gap": 0.022543132305145264
+              },
+              "joy": {
+                "n": 1743,
+                "within": 0.7230616211891174,
+                "between": 0.728839099407196,
+                "gap": -0.005777478218078613
+              },
+              "disgust": {
+                "n": 271,
+                "within": 0.749157726764679,
+                "between": 0.7374268174171448,
+                "gap": 0.01173090934753418
+              },
+              "anger": {
+                "n": 1109,
+                "within": 0.7465322017669678,
+                "between": 0.7367900609970093,
+                "gap": 0.009742140769958496
+              }
+            },
+            "macro_within": 0.7411958490099225,
+            "macro_between": 0.7346404365130833,
+            "macro_gap": 0.006555412496839219
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 2945,
+                "within": 0.7429077625274658,
+                "between": 0.7351595163345337,
+                "gap": 0.007748246192932129
+              },
+              "neutral": {
+                "n": 4710,
+                "within": 0.7356855869293213,
+                "between": 0.7332348227500916,
+                "gap": 0.0024507641792297363
+              },
+              "positive": {
+                "n": 2334,
+                "within": 0.7230538725852966,
+                "between": 0.7290723323822021,
+                "gap": -0.006018459796905518
+              }
+            },
+            "macro_within": 0.7338824073473612,
+            "macro_between": 0.7324888904889425,
+            "macro_gap": 0.0013935168584187085
+          },
+          "pca_explained_variance": 0.39348655939102173
+        },
+        "test": {
+          "n": 2610,
+          "probe_emotion": {
+            "weighted_f1": 0.3957,
+            "macro_f1": 0.2809,
+            "per_class_f1": {
+              "neutral": 0.495,
+              "surprise": 0.3573,
+              "fear": 0.1084,
+              "sadness": 0.2443,
+              "joy": 0.3507,
+              "disgust": 0.1013,
+              "anger": 0.3092
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.5366,
+            "macro_f1": 0.5112,
+            "per_class_f1": {
+              "negative": 0.533,
+              "neutral": 0.5922,
+              "positive": 0.4084
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "silhouette_emotion": {
+            "overall": -0.1168,
+            "per_class": {
+              "neutral": -0.1249,
+              "surprise": -0.0906,
+              "fear": 0.0254,
+              "sadness": -0.0833,
+              "joy": -0.1378,
+              "disgust": -0.0574,
+              "anger": -0.1363
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": -0.013,
+            "per_class": {
+              "negative": 0.023,
+              "neutral": -0.0227,
+              "positive": -0.047
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 1256,
+                "within": 0.7381985783576965,
+                "between": 0.7355119585990906,
+                "gap": 0.002686619758605957
+              },
+              "surprise": {
+                "n": 281,
+                "within": 0.7289266586303711,
+                "between": 0.7284324169158936,
+                "gap": 0.0004942417144775391
+              },
+              "fear": {
+                "n": 50,
+                "within": 0.7940424084663391,
+                "between": 0.7513799071311951,
+                "gap": 0.04266250133514404
+              },
+              "sadness": {
+                "n": 208,
+                "within": 0.7649683356285095,
+                "between": 0.7449371218681335,
+                "gap": 0.020031213760375977
+              },
+              "joy": {
+                "n": 402,
+                "within": 0.7278698682785034,
+                "between": 0.7312021851539612,
+                "gap": -0.0033323168754577637
+              },
+              "disgust": {
+                "n": 68,
+                "within": 0.7792598605155945,
+                "between": 0.7483214139938354,
+                "gap": 0.030938446521759033
+              },
+              "anger": {
+                "n": 345,
+                "within": 0.7369498610496521,
+                "between": 0.7335132956504822,
+                "gap": 0.003436565399169922
+              }
+            },
+            "macro_within": 0.7528879387038094,
+            "macro_between": 0.739042614187513,
+            "macro_gap": 0.013845324516296387
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 833,
+                "within": 0.7441180944442749,
+                "between": 0.7364510893821716,
+                "gap": 0.0076670050621032715
+              },
+              "neutral": {
+                "n": 1256,
+                "within": 0.7381985783576965,
+                "between": 0.7355119585990906,
+                "gap": 0.002686619758605957
+              },
+              "positive": {
+                "n": 521,
+                "within": 0.7252560257911682,
+                "between": 0.7303569316864014,
+                "gap": -0.005100905895233154
+              }
+            },
+            "macro_within": 0.7358575661977133,
+            "macro_between": 0.7341066598892212,
+            "macro_gap": 0.0017509063084920617
+          },
+          "pca_explained_variance": 0.39348655939102173
+        }
+      }
+    },
+    "fused": {
+      "dim": 512,
+      "splits": {
+        "train": {
+          "n": 9988,
+          "probe_emotion": {
+            "weighted_f1": 0.8213,
+            "macro_f1": 0.7595,
+            "per_class_f1": {
+              "neutral": 0.8914,
+              "surprise": 0.8056,
+              "fear": 0.7202,
+              "sadness": 0.6905,
+              "joy": 0.8007,
+              "disgust": 0.7,
+              "anger": 0.7079
+            },
+            "n_train": 9988,
+            "n_test": 9988
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.8624,
+            "macro_f1": 0.8502,
+            "per_class_f1": {
+              "negative": 0.8325,
+              "neutral": 0.9063,
+              "positive": 0.8118
+            },
+            "n_train": 9988,
+            "n_test": 9988
+          },
+          "silhouette_emotion": {
+            "overall": 0.2647,
+            "per_class": {
+              "neutral": 0.4245,
+              "surprise": 0.2221,
+              "fear": 0.078,
+              "sadness": -0.0754,
+              "joy": 0.2777,
+              "disgust": 0.1399,
+              "anger": -0.103
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.3412,
+            "per_class": {
+              "negative": 0.1219,
+              "neutral": 0.5125,
+              "positive": 0.2725
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 4709,
+                "within": 0.7369367480278015,
+                "between": 0.37210553884506226,
+                "gap": 0.36483120918273926
+              },
+              "surprise": {
+                "n": 1205,
+                "within": 0.6936280727386475,
+                "between": 0.38042861223220825,
+                "gap": 0.3131994605064392
+              },
+              "fear": {
+                "n": 268,
+                "within": 0.6771315336227417,
+                "between": 0.428547739982605,
+                "gap": 0.24858379364013672
+              },
+              "sadness": {
+                "n": 683,
+                "within": 0.6597595810890198,
+                "between": 0.4367527365684509,
+                "gap": 0.22300684452056885
+              },
+              "joy": {
+                "n": 1743,
+                "within": 0.7068511247634888,
+                "between": 0.42466697096824646,
+                "gap": 0.2821841537952423
+              },
+              "disgust": {
+                "n": 271,
+                "within": 0.7335442900657654,
+                "between": 0.4361758828163147,
+                "gap": 0.2973684072494507
+              },
+              "anger": {
+                "n": 1109,
+                "within": 0.6532844305038452,
+                "between": 0.4204234480857849,
+                "gap": 0.2328609824180603
+              }
+            },
+            "macro_within": 0.6944479686873299,
+            "macro_between": 0.4141572756426675,
+            "macro_gap": 0.2802906930446624
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 2945,
+                "within": 0.5635775923728943,
+                "between": 0.38714057207107544,
+                "gap": 0.17643702030181885
+              },
+              "neutral": {
+                "n": 4709,
+                "within": 0.7369367480278015,
+                "between": 0.37210553884506226,
+                "gap": 0.36483120918273926
+              },
+              "positive": {
+                "n": 2334,
+                "within": 0.6435850262641907,
+                "between": 0.40604206919670105,
+                "gap": 0.23754295706748962
+              }
+            },
+            "macro_within": 0.6480331222216288,
+            "macro_between": 0.38842939337094623,
+            "macro_gap": 0.25960372885068256
+          },
+          "pca_explained_variance": 0.6005702018737793
+        },
+        "test": {
+          "n": 2610,
+          "probe_emotion": {
+            "weighted_f1": 0.5705,
+            "macro_f1": 0.3888,
+            "per_class_f1": {
+              "neutral": 0.7269,
+              "surprise": 0.5152,
+              "fear": 0.1307,
+              "sadness": 0.2906,
+              "joy": 0.5444,
+              "disgust": 0.1152,
+              "anger": 0.3988
+            },
+            "n_train": 9988,
+            "n_test": 2610
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.6706,
+            "macro_f1": 0.6446,
+            "per_class_f1": {
+              "negative": 0.6149,
+              "neutral": 0.7497,
+              "positive": 0.5692
+            },
+            "n_train": 9988,
+            "n_test": 2610
+          },
+          "silhouette_emotion": {
+            "overall": 0.0855,
+            "per_class": {
+              "neutral": 0.2071,
+              "surprise": 0.1064,
+              "fear": -0.246,
+              "sadness": -0.1619,
+              "joy": 0.0875,
+              "disgust": -0.2561,
+              "anger": -0.1118
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.1595,
+            "per_class": {
+              "negative": -0.0449,
+              "neutral": 0.3167,
+              "positive": 0.1074
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 1256,
+                "within": 0.6592898964881897,
+                "between": 0.4456191062927246,
+                "gap": 0.2136707901954651
+              },
+              "surprise": {
+                "n": 281,
+                "within": 0.6228445768356323,
+                "between": 0.41670599579811096,
+                "gap": 0.20613858103752136
+              },
+              "fear": {
+                "n": 50,
+                "within": 0.5349582433700562,
+                "between": 0.48844507336616516,
+                "gap": 0.04651317000389099
+              },
+              "sadness": {
+                "n": 208,
+                "within": 0.5615688562393188,
+                "between": 0.4959493577480316,
+                "gap": 0.06561949849128723
+              },
+              "joy": {
+                "n": 402,
+                "within": 0.6250926852226257,
+                "between": 0.4676991403102875,
+                "gap": 0.15739354491233826
+              },
+              "disgust": {
+                "n": 68,
+                "within": 0.5447078943252563,
+                "between": 0.4861545264720917,
+                "gap": 0.05855336785316467
+              },
+              "anger": {
+                "n": 345,
+                "within": 0.5850127935409546,
+                "between": 0.46126019954681396,
+                "gap": 0.12375259399414062
+              }
+            },
+            "macro_within": 0.5904964208602905,
+            "macro_between": 0.4659761999334608,
+            "macro_gap": 0.12452022092682974
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 833,
+                "within": 0.5249821543693542,
+                "between": 0.4550454020500183,
+                "gap": 0.06993675231933594
+              },
+              "neutral": {
+                "n": 1256,
+                "within": 0.6592898964881897,
+                "between": 0.4456191062927246,
+                "gap": 0.2136707901954651
+              },
+              "positive": {
+                "n": 521,
+                "within": 0.5835102200508118,
+                "between": 0.4541648030281067,
+                "gap": 0.12934541702270508
+              }
+            },
+            "macro_within": 0.5892607569694519,
+            "macro_between": 0.4516097704569499,
+            "macro_gap": 0.13765098651250202
+          },
+          "pca_explained_variance": 0.6005702018737793
+        }
+      }
+    },
+    "context": {
+      "dim": 512,
+      "splits": {
+        "train": {
+          "n": 9989,
+          "probe_emotion": {
+            "weighted_f1": 0.944,
+            "macro_f1": 0.946,
+            "per_class_f1": {
+              "neutral": 0.9491,
+              "surprise": 0.9593,
+              "fear": 0.9504,
+              "sadness": 0.9377,
+              "joy": 0.927,
+              "disgust": 0.9696,
+              "anger": 0.9288
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.9279,
+            "macro_f1": 0.9226,
+            "per_class_f1": {
+              "negative": 0.9159,
+              "neutral": 0.9466,
+              "positive": 0.9054
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "silhouette_emotion": {
+            "overall": 0.1292,
+            "per_class": {
+              "neutral": 0.2153,
+              "surprise": 0.0812,
+              "fear": -0.0663,
+              "sadness": -0.0029,
+              "joy": 0.1216,
+              "disgust": -0.029,
+              "anger": -0.0057
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.166,
+            "per_class": {
+              "negative": 0.0561,
+              "neutral": 0.2549,
+              "positive": 0.1252
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 4710,
+                "within": 0.4141550660133362,
+                "between": 0.1547112613916397,
+                "gap": 0.25944380462169647
+              },
+              "surprise": {
+                "n": 1205,
+                "within": 0.33811473846435547,
+                "between": 0.14020445942878723,
+                "gap": 0.19791027903556824
+              },
+              "fear": {
+                "n": 268,
+                "within": 0.2789081931114197,
+                "between": 0.17257647216320038,
+                "gap": 0.1063317209482193
+              },
+              "sadness": {
+                "n": 683,
+                "within": 0.3138461410999298,
+                "between": 0.1617015302181244,
+                "gap": 0.15214461088180542
+              },
+              "joy": {
+                "n": 1743,
+                "within": 0.37949123978614807,
+                "between": 0.19382138550281525,
+                "gap": 0.18566985428333282
+              },
+              "disgust": {
+                "n": 271,
+                "within": 0.29543301463127136,
+                "between": 0.1448870152235031,
+                "gap": 0.15054599940776825
+              },
+              "anger": {
+                "n": 1109,
+                "within": 0.3157029449939728,
+                "between": 0.15605805814266205,
+                "gap": 0.15964488685131073
+              }
+            },
+            "macro_within": 0.3336644768714905,
+            "macro_between": 0.16056574029581888,
+            "macro_gap": 0.1730987365756716
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 2945,
+                "within": 0.24630217254161835,
+                "between": 0.1323242038488388,
+                "gap": 0.11397796869277954
+              },
+              "neutral": {
+                "n": 4710,
+                "within": 0.4141550660133362,
+                "between": 0.1547112613916397,
+                "gap": 0.25944380462169647
+              },
+              "positive": {
+                "n": 2334,
+                "within": 0.33702990412712097,
+                "between": 0.1773339956998825,
+                "gap": 0.15969590842723846
+              }
+            },
+            "macro_within": 0.3324957142273585,
+            "macro_between": 0.15478982031345367,
+            "macro_gap": 0.17770589391390484
+          },
+          "pca_explained_variance": 0.2817738652229309
+        },
+        "test": {
+          "n": 2610,
+          "probe_emotion": {
+            "weighted_f1": 0.5736,
+            "macro_f1": 0.3924,
+            "per_class_f1": {
+              "neutral": 0.7248,
+              "surprise": 0.5166,
+              "fear": 0.1216,
+              "sadness": 0.2879,
+              "joy": 0.5521,
+              "disgust": 0.1221,
+              "anger": 0.4214
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.6718,
+            "macro_f1": 0.6474,
+            "per_class_f1": {
+              "negative": 0.621,
+              "neutral": 0.7454,
+              "positive": 0.5757
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "silhouette_emotion": {
+            "overall": 0.0408,
+            "per_class": {
+              "neutral": 0.0935,
+              "surprise": 0.0322,
+              "fear": -0.114,
+              "sadness": -0.0804,
+              "joy": 0.0651,
+              "disgust": -0.1149,
+              "anger": -0.046
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.0802,
+            "per_class": {
+              "negative": -0.0225,
+              "neutral": 0.1533,
+              "positive": 0.0683
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 1256,
+                "within": 0.35518258810043335,
+                "between": 0.1977943480014801,
+                "gap": 0.15738824009895325
+              },
+              "surprise": {
+                "n": 281,
+                "within": 0.29717984795570374,
+                "between": 0.16280825436115265,
+                "gap": 0.1343715935945511
+              },
+              "fear": {
+                "n": 50,
+                "within": 0.24550628662109375,
+                "between": 0.21840442717075348,
+                "gap": 0.02710185945034027
+              },
+              "sadness": {
+                "n": 208,
+                "within": 0.26550978422164917,
+                "between": 0.22258742153644562,
+                "gap": 0.04292236268520355
+              },
+              "joy": {
+                "n": 402,
+                "within": 0.3410942554473877,
+                "between": 0.21711741387844086,
+                "gap": 0.12397684156894684
+              },
+              "disgust": {
+                "n": 68,
+                "within": 0.23719564080238342,
+                "between": 0.19758941233158112,
+                "gap": 0.03960622847080231
+              },
+              "anger": {
+                "n": 345,
+                "within": 0.2705421447753906,
+                "between": 0.18481029570102692,
+                "gap": 0.08573184907436371
+              }
+            },
+            "macro_within": 0.28745864970343454,
+            "macro_between": 0.20015879614012583,
+            "macro_gap": 0.08729985356330872
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 833,
+                "within": 0.22813084721565247,
+                "between": 0.18628686666488647,
+                "gap": 0.04184398055076599
+              },
+              "neutral": {
+                "n": 1256,
+                "within": 0.35518258810043335,
+                "between": 0.1977943480014801,
+                "gap": 0.15738824009895325
+              },
+              "positive": {
+                "n": 521,
+                "within": 0.30811789631843567,
+                "between": 0.20513010025024414,
+                "gap": 0.10298779606819153
+              }
+            },
+            "macro_within": 0.29714377721150714,
+            "macro_between": 0.19640377163887024,
+            "macro_gap": 0.1007400055726369
+          },
+          "pca_explained_variance": 0.2817738652229309
+        }
+      }
+    },
+    "ctxfusion": {
+      "dim": 512,
+      "splits": {
+        "train": {
+          "n": 9989,
+          "probe_emotion": {
+            "weighted_f1": 0.8713,
+            "macro_f1": 0.8396,
+            "per_class_f1": {
+              "neutral": 0.9079,
+              "surprise": 0.8731,
+              "fear": 0.7791,
+              "sadness": 0.8063,
+              "joy": 0.8502,
+              "disgust": 0.8442,
+              "anger": 0.8161
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.8923,
+            "macro_f1": 0.8834,
+            "per_class_f1": {
+              "negative": 0.8694,
+              "neutral": 0.9246,
+              "positive": 0.856
+            },
+            "n_train": 9989,
+            "n_test": 9989
+          },
+          "silhouette_emotion": {
+            "overall": 0.1661,
+            "per_class": {
+              "neutral": 0.2843,
+              "surprise": 0.1242,
+              "fear": -0.0833,
+              "sadness": -0.0025,
+              "joy": 0.141,
+              "disgust": -0.0591,
+              "anger": -0.0317
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.2143,
+            "per_class": {
+              "negative": 0.0439,
+              "neutral": 0.3422,
+              "positive": 0.1712
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 4710,
+                "within": 0.7055482864379883,
+                "between": 0.5118404626846313,
+                "gap": 0.19370782375335693
+              },
+              "surprise": {
+                "n": 1205,
+                "within": 0.6442856192588806,
+                "between": 0.49105343222618103,
+                "gap": 0.15323218703269958
+              },
+              "fear": {
+                "n": 268,
+                "within": 0.602508544921875,
+                "between": 0.5288544297218323,
+                "gap": 0.07365411520004272
+              },
+              "sadness": {
+                "n": 683,
+                "within": 0.6286362409591675,
+                "between": 0.5212822556495667,
+                "gap": 0.10735398530960083
+              },
+              "joy": {
+                "n": 1743,
+                "within": 0.6640705466270447,
+                "between": 0.5275053381919861,
+                "gap": 0.1365652084350586
+              },
+              "disgust": {
+                "n": 271,
+                "within": 0.5953861474990845,
+                "between": 0.49775248765945435,
+                "gap": 0.09763365983963013
+              },
+              "anger": {
+                "n": 1109,
+                "within": 0.6070519685745239,
+                "between": 0.5057091116905212,
+                "gap": 0.10134285688400269
+              }
+            },
+            "macro_within": 0.6353553363255092,
+            "macro_between": 0.5119996454034533,
+            "macro_gap": 0.1233556909220559
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 2945,
+                "within": 0.5664283037185669,
+                "between": 0.49496638774871826,
+                "gap": 0.07146191596984863
+              },
+              "neutral": {
+                "n": 4710,
+                "within": 0.7055482864379883,
+                "between": 0.5118404626846313,
+                "gap": 0.19370782375335693
+              },
+              "positive": {
+                "n": 2334,
+                "within": 0.6382079720497131,
+                "between": 0.5140252709388733,
+                "gap": 0.12418270111083984
+              }
+            },
+            "macro_within": 0.6367281874020895,
+            "macro_between": 0.5069440404574076,
+            "macro_gap": 0.12978414694468188
+          },
+          "pca_explained_variance": 0.3599168062210083
+        },
+        "test": {
+          "n": 2610,
+          "probe_emotion": {
+            "weighted_f1": 0.5576,
+            "macro_f1": 0.367,
+            "per_class_f1": {
+              "neutral": 0.7187,
+              "surprise": 0.5034,
+              "fear": 0.0732,
+              "sadness": 0.2685,
+              "joy": 0.5024,
+              "disgust": 0.0859,
+              "anger": 0.4172
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "probe_sentiment": {
+            "weighted_f1": 0.6702,
+            "macro_f1": 0.645,
+            "per_class_f1": {
+              "negative": 0.6276,
+              "neutral": 0.7418,
+              "positive": 0.5654
+            },
+            "n_train": 9989,
+            "n_test": 2610
+          },
+          "silhouette_emotion": {
+            "overall": 0.0474,
+            "per_class": {
+              "neutral": 0.1199,
+              "surprise": 0.0593,
+              "fear": -0.1282,
+              "sadness": -0.0829,
+              "joy": 0.049,
+              "disgust": -0.146,
+              "anger": -0.0864
+            },
+            "metric": "cosine"
+          },
+          "silhouette_sentiment": {
+            "overall": 0.1018,
+            "per_class": {
+              "negative": -0.0445,
+              "neutral": 0.2115,
+              "positive": 0.0714
+            },
+            "metric": "cosine"
+          },
+          "cosine_emotion": {
+            "per_class": {
+              "neutral": {
+                "n": 1256,
+                "within": 0.6673573851585388,
+                "between": 0.5504523515701294,
+                "gap": 0.11690503358840942
+              },
+              "surprise": {
+                "n": 281,
+                "within": 0.6148306727409363,
+                "between": 0.5158504247665405,
+                "gap": 0.09898024797439575
+              },
+              "fear": {
+                "n": 50,
+                "within": 0.5964414477348328,
+                "between": 0.570517361164093,
+                "gap": 0.025924086570739746
+              },
+              "sadness": {
+                "n": 208,
+                "within": 0.6090308427810669,
+                "between": 0.5704292058944702,
+                "gap": 0.03860163688659668
+              },
+              "joy": {
+                "n": 402,
+                "within": 0.6327248215675354,
+                "between": 0.5540500283241272,
+                "gap": 0.0786747932434082
+              },
+              "disgust": {
+                "n": 68,
+                "within": 0.5757491588592529,
+                "between": 0.5497312545776367,
+                "gap": 0.02601790428161621
+              },
+              "anger": {
+                "n": 345,
+                "within": 0.5792765617370605,
+                "between": 0.5320658087730408,
+                "gap": 0.047210752964019775
+              }
+            },
+            "macro_within": 0.6107729843684605,
+            "macro_between": 0.5490137764385769,
+            "macro_gap": 0.06175920792988365
+          },
+          "cosine_sentiment": {
+            "per_class": {
+              "negative": {
+                "n": 833,
+                "within": 0.5608370900154114,
+                "between": 0.5399466156959534,
+                "gap": 0.020890474319458008
+              },
+              "neutral": {
+                "n": 1256,
+                "within": 0.6673573851585388,
+                "between": 0.5504523515701294,
+                "gap": 0.11690503358840942
+              },
+              "positive": {
+                "n": 521,
+                "within": 0.6134380102157593,
+                "between": 0.5453009605407715,
+                "gap": 0.06813704967498779
+              }
+            },
+            "macro_within": 0.6138774951299032,
+            "macro_between": 0.5452333092689514,
+            "macro_gap": 0.06864418586095178
+          },
+          "pca_explained_variance": 0.3599168062210083
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,164 @@
+[
+  {
+    "condition": "gold",
+    "stage": "fused",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.6011843544156035,
+    "macro_f1": 0.398222403670225,
+    "seconds": 32.4
+  },
+  {
+    "condition": "gold",
+    "stage": "fused",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.6849532650811837,
+    "macro_f1": 0.6592727525331781,
+    "seconds": 15.3
+  },
+  {
+    "condition": "gold",
+    "stage": "context",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.619620304172351,
+    "macro_f1": 0.42232696408329656,
+    "seconds": 31.9
+  },
+  {
+    "condition": "gold",
+    "stage": "context",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.7009548359634394,
+    "macro_f1": 0.679212184553997,
+    "seconds": 15.8
+  },
+  {
+    "condition": "gold",
+    "stage": "ctxfusion",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.62020488293096,
+    "macro_f1": 0.4216861866439463,
+    "seconds": 34.0
+  },
+  {
+    "condition": "gold",
+    "stage": "ctxfusion",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.699813882617941,
+    "macro_f1": 0.6775567548505556,
+    "seconds": 16.5
+  },
+  {
+    "condition": "asr",
+    "stage": "fused",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.4994716757532215,
+    "macro_f1": 0.3396332444238035,
+    "seconds": 33.0
+  },
+  {
+    "condition": "asr",
+    "stage": "fused",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.5681336051213288,
+    "macro_f1": 0.539564963912007,
+    "seconds": 15.2
+  },
+  {
+    "condition": "asr",
+    "stage": "context",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.49817810425540815,
+    "macro_f1": 0.33258471659865396,
+    "seconds": 33.4
+  },
+  {
+    "condition": "asr",
+    "stage": "context",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.5702786691113221,
+    "macro_f1": 0.5429154039862466,
+    "seconds": 15.9
+  },
+  {
+    "condition": "asr",
+    "stage": "ctxfusion",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.492085639698307,
+    "macro_f1": 0.32630140912647543,
+    "seconds": 32.1
+  },
+  {
+    "condition": "asr",
+    "stage": "ctxfusion",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.5639006172344085,
+    "macro_f1": 0.5366131509518959,
+    "seconds": 15.5
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "fused",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.47812958256611576,
+    "macro_f1": 0.29836504060505886,
+    "seconds": 33.6
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "fused",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.5704182573306382,
+    "macro_f1": 0.5429646428224265,
+    "seconds": 16.1
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "context",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.49715589230058815,
+    "macro_f1": 0.31717729861237903,
+    "seconds": 36.5
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "context",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.5769667677077533,
+    "macro_f1": 0.5480483510332607,
+    "seconds": 16.7
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "ctxfusion",
+    "task": "emotion",
+    "dim": 512,
+    "weighted_f1": 0.500325368819504,
+    "macro_f1": 0.3244751178057344,
+    "seconds": 36.5
+  },
+  {
+    "condition": "asr_cleaned",
+    "stage": "ctxfusion",
+    "task": "sentiment",
+    "dim": 512,
+    "weighted_f1": 0.578455427593562,
+    "macro_f1": 0.5496605279532816,
+    "seconds": 17.2
+  }
+]

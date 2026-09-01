@@ -1,0 +1,126 @@
+# ctxfusion_asr.yaml — ContextThenFusion on the asr text condition.
+#
+# Identical data to ctx_asr.yaml and fusion_asr.yaml, so the three
+# architectures differ only in the model:
+#   fusion_asr.yaml    per-utterance fusion, no context
+#   ctx_asr.yaml       bc-LSTM over concatenated features
+#   ctxfusion_asr.yaml per-modality context, THEN fusion  <-- this file
+#
+# Separate checkpoint root so the new architecture never collides with the
+# bc-LSTM runs it is being compared against.
+model:
+  voxtral_id: mistralai/Voxtral-Mini-3B-2507
+  whisper_id: openai/whisper-large-v3
+  xlmr_id: FacebookAI/xlm-roberta-base
+  acoustic_dim: 1280
+  text_dim: 768
+  tensor_parallel_size: 1
+  fusion_hidden: 512
+  num_classes: 7
+  num_sentiment_classes: 3
+  dropout: 0.3
+training:
+  phase1_lr: 2.0e-05
+  phase2_lr: 0.0001
+  phase3_lr: 1.0e-05
+  batch_size: 16
+  epochs_phase1: 10
+  epochs_phase2: 10
+  epochs_phase3: 3
+  warmup_steps: 100
+  weight_decay: 0.01
+  max_grad_norm: 1.0
+  checkpoint_dir: /dcs/large/u5734759/checkpoints/ctxfusion
+  log_dir: logs/ctxfusion/asr
+  unfreeze_last_n_layers: 2
+  use_focal_loss: false
+  focal_gamma: 2.0
+  use_weighted_sampler: false
+  use_paraphrases: true
+use_ravdess_pretrain: true
+ravdess:
+  data_root: /dcs/large/u5734759/data/ravdess
+  embeddings_path: /dcs/large/u5734759/data/ravdess_embeddings/embeddings.pt
+  backbone_checkpoint: /dcs/large/u5734759/checkpoints/ravdess/best_acoustic_backbone.pt
+  num_classes: 8
+  hidden_dim: 512
+  train_ratio: 0.7
+  val_ratio: 0.15
+  max_duration_sec: 5.0
+  epochs: 30
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+combined:
+  backbone_checkpoint: /dcs/large/u5734759/checkpoints/combined/best_acoustic_backbone.pt
+  full_checkpoint: /dcs/large/u5734759/checkpoints/combined/best_full_model.pt
+  hidden_dim: 512
+  epochs: 20
+  lr: 0.0005
+  batch_size: 32
+  weight_decay: 0.01
+augmentation:
+  paraphrases_path: /dcs/large/u5734759/data/meld_transcripts/train_paraphrases.json
+  per_class_multiplier:
+    fear: 4
+    disgust: 4
+    sadness: 1
+    anger: 0
+    joy: 0
+    surprise: 0
+    neutral: 0
+  voxtral_temperature: 0.8
+  voxtral_max_tokens: 80
+  voxtral_batch_size: 32
+data:
+  meld_root: /dcs/large/u5734759/data/meld_raw
+  transcripts_path: /dcs/large/u5734759/data/meld_extracted/mini/transcripts
+  embeddings_path: /dcs/large/u5734759/data/meld_extracted/mini/acoustic
+  text_embeddings_path: /dcs/large/u5734759/data/meld_text_emb_v2/asr
+  max_audio_duration: 40
+  max_text_length: 128
+  num_workers: 4
+  seed: 42
+filtering:
+  enabled: false
+  metadata_dir: /dcs/large/u5734759/data/meld_filter_metadata
+  keys_dir: /dcs/large/u5734759/data/meld_filter_keys
+  audio_max_duration: 40
+  keys_paths:
+    train: /dcs/large/u5734759/data/meld_extracted/mini/filter_keys/train_keys_text_clean.json
+    dev: /dcs/large/u5734759/data/meld_extracted/mini/filter_keys/dev_keys_text_clean.json
+    test: /dcs/large/u5734759/data/meld_extracted/mini/filter_keys/test_keys_text_clean.json
+  policies:
+    wer10:
+      wer_source: vox
+      wer_max: 0.1
+      vad_min_speech_ratio: 0.2
+    wer15:
+      wer_source: vox
+      wer_max: 0.15
+      vad_min_speech_ratio: 0.2
+    wer20:
+      wer_source: vox
+      wer_max: 0.2
+      vad_min_speech_ratio: 0.2
+    wer25:
+      wer_source: vox
+      wer_max: 0.25
+      vad_min_speech_ratio: 0.2
+    wer25_eval_wer40_train:
+      per_split:
+        train:
+          wer_source: vox
+          wer_max: 0.4
+          vad_min_speech_ratio: 0.2
+        dev:
+          wer_source: vox
+          wer_max: 0.25
+          vad_min_speech_ratio: 0.2
+        test:
+          wer_source: vox
+          wer_max: 0.25
+          vad_min_speech_ratio: 0.2
+evaluation:
+  primary_metric: weighted_f1
+  output_dir: results_new/ctxfusion

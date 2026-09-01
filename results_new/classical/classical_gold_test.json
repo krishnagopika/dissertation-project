@@ -1,0 +1,362 @@
+[
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "logreg",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.5490646594109873,
+    "macro_f1": 0.3642851686748451,
+    "per_class_f1": {
+      "neutral": 0.7078701645175633,
+      "surprise": 0.5032258064516129,
+      "fear": 0.09523809523809523,
+      "sadness": 0.2505592841163311,
+      "joy": 0.5581395348837209,
+      "disgust": 0.10377358490566038,
+      "anger": 0.3311897106109325
+    },
+    "fit_seconds": 127.5
+  },
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "logreg",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.6734954698071645,
+    "macro_f1": 0.6469107993435167,
+    "per_class_f1": {
+      "negative": 0.5984943538268507,
+      "neutral": 0.7618657937806874,
+      "positive": 0.5803722504230119
+    },
+    "fit_seconds": 171.8
+  },
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "svm",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.5850494579463584,
+    "macro_f1": 0.3870268831451929,
+    "per_class_f1": {
+      "neutral": 0.7510407993338885,
+      "surprise": 0.5306799336650083,
+      "fear": 0.09782608695652174,
+      "sadness": 0.2814070351758794,
+      "joy": 0.5735115431348724,
+      "disgust": 0.08376963350785341,
+      "anger": 0.39095315024232635
+    },
+    "fit_seconds": 47.1
+  },
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "svm",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.6811694910641883,
+    "macro_f1": 0.654319018474672,
+    "per_class_f1": {
+      "negative": 0.6117353308364545,
+      "neutral": 0.7677419354838709,
+      "positive": 0.5834797891036907
+    },
+    "fit_seconds": 34.7
+  },
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "xgboost",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.5952928684303058,
+    "macro_f1": 0.39884645164113014,
+    "per_class_f1": {
+      "neutral": 0.7635933806146572,
+      "surprise": 0.5428109854604201,
+      "fear": 0.08108108108108109,
+      "sadness": 0.29120879120879123,
+      "joy": 0.5581947743467933,
+      "disgust": 0.13861386138613863,
+      "anger": 0.41642228739002934
+    },
+    "fit_seconds": 64.5
+  },
+  {
+    "condition": "gold",
+    "features": "text",
+    "model": "xgboost",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 768,
+    "weighted_f1": 0.6817885223038953,
+    "macro_f1": 0.656262611228822,
+    "per_class_f1": {
+      "negative": 0.614713216957606,
+      "neutral": 0.7645429362880887,
+      "positive": 0.5895316804407713
+    },
+    "fit_seconds": 28.2
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "logreg",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.39593830336374947,
+    "macro_f1": 0.28044535066419357,
+    "per_class_f1": {
+      "neutral": 0.4965034965034965,
+      "surprise": 0.3589001447178003,
+      "fear": 0.10784313725490197,
+      "sadness": 0.24427480916030533,
+      "joy": 0.35071090047393366,
+      "disgust": 0.10084033613445378,
+      "anger": 0.30404463040446306
+    },
+    "fit_seconds": 68.8
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "logreg",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.5379048850517394,
+    "macro_f1": 0.5122684443001225,
+    "per_class_f1": {
+      "negative": 0.5350929814037193,
+      "neutral": 0.5936151855047455,
+      "positive": 0.4080971659919028
+    },
+    "fit_seconds": 54.3
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "svm",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.4262152800447959,
+    "macro_f1": 0.2806476215148239,
+    "per_class_f1": {
+      "neutral": 0.5667722951561792,
+      "surprise": 0.36817472698907955,
+      "fear": 0.07179487179487179,
+      "sadness": 0.24081632653061225,
+      "joy": 0.33589743589743587,
+      "disgust": 0.08333333333333333,
+      "anger": 0.29774436090225564
+    },
+    "fit_seconds": 179.8
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "svm",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.5577809405439059,
+    "macro_f1": 0.5279775621479507,
+    "per_class_f1": {
+      "negative": 0.5399380804953561,
+      "neutral": 0.6287328490718321,
+      "positive": 0.4152617568766637
+    },
+    "fit_seconds": 31.4
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "xgboost",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.49857041979713085,
+    "macro_f1": 0.289658831300223,
+    "per_class_f1": {
+      "neutral": 0.6987012987012987,
+      "surprise": 0.40325865580448067,
+      "fear": 0.0,
+      "sadness": 0.21374045801526717,
+      "joy": 0.3564356435643564,
+      "disgust": 0.0,
+      "anger": 0.35547576301615796
+    },
+    "fit_seconds": 124.0
+  },
+  {
+    "condition": "gold",
+    "features": "acoustic",
+    "model": "xgboost",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 1280,
+    "weighted_f1": 0.6037861984290147,
+    "macro_f1": 0.5678747399075821,
+    "per_class_f1": {
+      "negative": 0.5741687979539642,
+      "neutral": 0.6927252985884907,
+      "positive": 0.43673012318029114
+    },
+    "fit_seconds": 59.7
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "logreg",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.5281569096022746,
+    "macro_f1": 0.3478016332549188,
+    "per_class_f1": {
+      "neutral": 0.705383637134379,
+      "surprise": 0.4426229508196721,
+      "fear": 0.1,
+      "sadness": 0.23201856148491878,
+      "joy": 0.46658851113716293,
+      "disgust": 0.14814814814814814,
+      "anger": 0.3398496240601504
+    },
+    "fit_seconds": 291.0
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "logreg",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.6265886612243796,
+    "macro_f1": 0.5962591813285486,
+    "per_class_f1": {
+      "negative": 0.5557632398753894,
+      "neutral": 0.7211498973305955,
+      "positive": 0.511864406779661
+    },
+    "fit_seconds": 97.6
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "svm",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.526331183301839,
+    "macro_f1": 0.3384340682062016,
+    "per_class_f1": {
+      "neutral": 0.7093802345058626,
+      "surprise": 0.4376012965964344,
+      "fear": 0.11510791366906475,
+      "sadness": 0.23696682464454977,
+      "joy": 0.4567307692307692,
+      "disgust": 0.07741935483870968,
+      "anger": 0.335832083958021
+    },
+    "fit_seconds": 1233.5
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "svm",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.6431822415053229,
+    "macro_f1": 0.6142065533230597,
+    "per_class_f1": {
+      "negative": 0.5726817042606517,
+      "neutral": 0.7347266881028939,
+      "positive": 0.5352112676056338
+    },
+    "fit_seconds": 292.3
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "xgboost",
+    "task": "emotion",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.6188915108406697,
+    "macro_f1": 0.4179582412782719,
+    "per_class_f1": {
+      "neutral": 0.7797917470111839,
+      "surprise": 0.5531914893617021,
+      "fear": 0.09090909090909091,
+      "sadness": 0.3045977011494253,
+      "joy": 0.5924170616113744,
+      "disgust": 0.12371134020618557,
+      "anger": 0.481089258698941
+    },
+    "fit_seconds": 204.7
+  },
+  {
+    "condition": "gold",
+    "features": "both",
+    "model": "xgboost",
+    "task": "sentiment",
+    "split": "test",
+    "n_train": 9989,
+    "n_test": 2610,
+    "dim": 2048,
+    "weighted_f1": 0.697980780408109,
+    "macro_f1": 0.6754664797171214,
+    "per_class_f1": {
+      "negative": 0.6322981366459627,
+      "neutral": 0.7737397420867527,
+      "positive": 0.6203615604186489
+    },
+    "fit_seconds": 97.5
+  }
+]
