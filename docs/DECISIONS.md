@@ -98,7 +98,7 @@ still read the legacy fixed-size cache.
 ### Context
 
 The pipeline caches one 1280-d vector per utterance and never loads Voxtral
-during training (CLAUDE.md §16). That constraint forces the pooling to be
+during training. That constraint forces the pooling to be
 parameter-free — a *learned* pooling cannot be baked into a cache written before
 training begins.
 

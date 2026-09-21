@@ -1,0 +1,16 @@
+# Dependencies and build output
+node_modules/
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Vercel project link (contains project/org ids)
+.vercel
+
+# Every real environment file. The negation matters: `vercel link` appends a
+# bare `.env*`, which also swallows .env.example -- and that file is the only
+# documentation of what this app needs to run, with no secrets in it.
+.env
+.env.*
+!.env.example

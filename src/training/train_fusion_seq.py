@@ -8,7 +8,7 @@ One script covers all three ablations via `--modality`:
     both       fusion                        -- the model under test
 
 Voxtral and XLM-R are never loaded: this trains ~2M new parameters on cached
-representations (CLAUDE.md §16). Everything inside SequenceFusion is
+representations . Everything inside SequenceFusion is
 Xavier-initialised and trained from scratch.
 
 Discipline carried over from finetune.py, each for a reason:

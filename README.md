@@ -174,7 +174,6 @@ For a full walkthrough of what each approach does and every result table, see **
 
 ```
 dissertation-project/
-├── CLAUDE.md                              # Coding constitution (device handling, config,
 │                                          #   checkpointing, Slurm rules, MELD label schema)
 ├── PROGRESS.md                            # Full ablation report — every approach + results
 ├── README.md                              # This file
@@ -543,7 +542,6 @@ each labelled with its evaluation set.
 | Question | File |
 |---|---|
 | What ablations were run and what did they achieve? | `PROGRESS.md` |
-| What are the coding rules I must follow? | `CLAUDE.md` |
 | Where's the primary hyperparameter config? | `src/configs/mini.yaml` |
 | How does focal loss / weighted sampler work in code? | `src/training/finetune.py` (see `FocalLoss` + `build_class_weighted_sampler`) |
 | How does Voxtral paraphrase augmentation work? | `src/preprocessing/augment_transcripts.py` + `TranscriptDataset` in `finetune.py` |

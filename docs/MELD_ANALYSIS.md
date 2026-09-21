@@ -60,7 +60,7 @@ which makes the constraint binding rather than cosmetic.
 **Imbalance is 17.6:1** (neutral : fear in train). Consequences:
 
 - Accuracy is uninformative — predicting neutral everywhere scores 47–48%.
-  Weighted F1 is the primary metric (CLAUDE.md §13), with per-class F1 alongside.
+  Weighted F1 is the primary metric , with per-class F1 alongside.
 - **dev has 22 disgust and 40 fear.** Model selection on dev is unreliable for
   those classes: one or two utterances moves per-class F1 by several points.
 - **test has 50 fear.** A per-class F1 for fear on test rests on 50 examples;

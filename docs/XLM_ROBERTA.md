@@ -43,7 +43,7 @@ XLM-R is the **text** branch. It never sees audio. Its input is a transcript,
 its output is a 768-d `[CLS]` representation plus emotion and sentiment logits.
 
 Phase 1 (this document) fine-tunes it standalone. Phase 2 freezes it and trains
-fusion on top (CLAUDE.md §16), consuming the cached `[CLS]` vectors.
+fusion on top , consuming the cached `[CLS]` vectors.
 
 ### Why XLM-RoBERTa rather than BERT or RoBERTa
 
@@ -242,7 +242,7 @@ amount of training. Early stopping on a shared criterion is the fairer control.
 Loss under 17.6:1 imbalance is dominated by the majority class. A model can
 reduce loss by becoming *more* confidently neutral while minority-class F1
 degrades. Weighted F1 is also the project's declared primary metric
-(CLAUDE.md §13), so selecting on it aligns the stopping criterion with the
+, so selecting on it aligns the stopping criterion with the
 reporting criterion.
 
 `best_model.pt` already holds the best epoch, so stopping early costs nothing —

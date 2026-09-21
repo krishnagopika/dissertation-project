@@ -136,6 +136,8 @@ celerybeat.pid
 
 # Environments
 .env
+.env.bak*
+.env.local
 .envrc
 .venv
 env/
@@ -208,8 +210,6 @@ __marimo__/
 
 .DS_Store
 
-CLAUDE.md
-
 data/
 
 logs/
@@ -231,3 +231,11 @@ results*/**/*_wer_vad*.csv
 # Local scratch
 checkpoints/
 *.bak
+
+# setup/configure_paths.sh backups
+.configure_paths_backup/
+*.orig
+
+# Submission bundle: contains the real .env, never commit it
+submission/
+submission.zip
