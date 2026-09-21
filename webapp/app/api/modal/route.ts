@@ -18,6 +18,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
 import { auth, isAdmin } from "@/auth";
+import { listRuns, recordRun, runLogEnabled } from "@/lib/runs";
 
 /** Cold start (~45 s) plus inference, with room to spare. Hobby caps at 300. */
 export const maxDuration = 300;
@@ -105,7 +106,8 @@ async function callModal(
  *
  * Body: `{ action, ...payload }` where action is one of
  * `clips` (list the corpus), `clip` (fetch one clip's audio),
- * `classify` (analyse audio), or `admin` (start/stop/status).
+ * `classify` (analyse audio), `runs` (read the shared run log), or
+ * `admin` (start/stop/status).
  *
  * @param request - The incoming Next.js request.
  * @returns Modal's JSON response, or `{ error }` with a 4xx/5xx status.
@@ -164,25 +166,52 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
             { status: 400 },
           );
         }
-        return NextResponse.json(
-          await callModal(env.classifyUrl, env, {
-            method: "POST",
-            body: JSON.stringify(payload),
-          }),
-        );
+
+        const started = Date.now();
+        const analysis = await callModal(env.classifyUrl, env, {
+          method: "POST",
+          body: JSON.stringify(payload),
+        });
+
+        // Log the run, but never let logging break the analysis: recordRun
+        // swallows its own failures and the await is guarded besides. The
+        // email comes from the session, not the body, so a caller cannot
+        // attribute a run to someone else.
+        const result = analysis as Record<string, unknown>;
+        if (!result.error) {
+          await recordRun({
+            email: session.user.email,
+            analysis: result as never,
+            wallMs: Date.now() - started,
+            sourceKind: payload.key
+              ? "corpus"
+              : ((body.sourceKind as "upload" | "recording") ?? "upload"),
+            source: String(payload.key ?? body.source ?? "audio"),
+          });
+        }
+
+        return NextResponse.json(analysis);
       }
+
+      case "runs":
+        return NextResponse.json({
+          enabled: runLogEnabled(),
+          runs: await listRuns(Number(body.limit ?? 50)),
+        });
 
       case "admin": {
         const adminAction = String(body.adminAction ?? "status");
 
-        // Status is read-only and costs nothing, so any signed-in user may
-        // poll it. Start and stop move money, so they need the allowlist.
-        if (adminAction !== "status" && !isAdmin(session.user.email)) {
+        // `status` and `warm` are safe for any signed-in user: neither can
+        // leave a GPU running, because the container expires on the scaledown
+        // window regardless. Only `unpin`, which touches the autoscaler, needs
+        // the admin list.
+        if (adminAction === "unpin" && !isAdmin(session.user.email)) {
           return NextResponse.json(
             {
               error:
-                "Your account cannot start or stop the GPU container. Ask " +
-                "the owner to add you to ADMIN_EMAILS.",
+                "Only an admin can change the autoscaler. Ask the owner " +
+                "to add you to ADMIN_EMAILS.",
             },
             { status: 403 },
           );

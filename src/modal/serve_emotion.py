@@ -59,7 +59,7 @@ Endpoints
     POST /classify    one clip -> prediction + VAD + WER + quality gate
     GET  /clips       manifest of the bundled MELD subset
     GET  /clip        one clip's audio as base64 wav
-    POST /admin       start / stop / status -- the warm-container controls
+    POST /admin       status / warm -- container state, no pinning
 
 All four require Modal proxy-auth headers (``Modal-Key`` / ``Modal-Secret``),
 so the Vercel backend holds the credentials and the browser never sees them.
@@ -110,12 +110,18 @@ XLMR_ID = "FacebookAI/xlm-roberta-base"
 # activation headroom uncomfortably thin.
 GPU = "L4"
 
-# Seconds a container stays alive after its last request. This is the single
-# knob that trades cold-start latency against idle spend, and the right value
-# depends on arrival pattern, not on the model: below the cold-start time it
-# guarantees paying for two loads instead of one whenever requests come in
-# pairs. 300 s keeps a browsing session on one container.
-SCALEDOWN_WINDOW = 300
+# Seconds a container stays alive after its last request.
+#
+# This is now the ONLY warmth control, and it replaced a pair of Start/Stop
+# buttons that pinned min_containers=1. The pin was the wrong shape: during an
+# active session requests arrive far more often than the window, so it bought
+# nothing, while forgetting to press Stop cost ~$1.12/hour indefinitely --
+# about $80 over a long weekend. A window cannot be forgotten.
+#
+# 900 s so a demo never goes cold between questions, at a worst case of
+# 15 minutes of idle tail: 0.25 h x $1.116 = $0.28 per session, which is
+# cheaper than one extra cold start is annoying.
+SCALEDOWN_WINDOW = 900
 
 # A hard ceiling on concurrent spend. Without it a burst of traffic (or a loop
 # in a client) fans out to as many containers as Modal will give, each one a
@@ -946,6 +952,12 @@ class EmotionPipeline:
             The analysis dictionary, or ``{"error": ...}`` with the reason.
         """
         import base64
+        import time
+
+        # Heartbeat here as well as in analyse(): a request that fails
+        # validation still means a container is up and billing, and a status
+        # panel that missed those would under-report what is running.
+        warm_state["last_seen"] = time.time()
 
         key = (item.get("key") or "").strip()
         payload = item.get("audio_b64")
@@ -967,42 +979,89 @@ class EmotionPipeline:
         except ValueError as exc:
             return {"error": str(exc)}
 
-    @modal.fastapi_endpoint(method="GET", docs=True, requires_proxy_auth=REQUIRES_PROXY_AUTH)
-    def clips(self) -> dict:
-        """The bundled MELD subset, for the corpus picker.
 
-        Returns:
-            ``{"clips": [...], "count": n}`` -- each entry carries the key,
-            split, gold emotion and sentiment, gold utterance, duration and
-            speaker. Audio is fetched separately via :meth:`clip`.
-        """
-        return {"count": len(self.manifest),
-                "clips": sorted(self.manifest.values(),
-                                key=lambda c: (c["emotion"], c["key"]))}
+# -----------------------------------------------------------------------------
+# Corpus browsing -- CPU only
+# -----------------------------------------------------------------------------
+#
+# These were originally methods on EmotionPipeline, which was a costly
+# mistake: the class carries the GPU, so listing the corpus or fetching a wav
+# for the audio player woke an L4. Simply OPENING the page did it, because the
+# picker loads on mount -- two containers were found idling on a deployment
+# nobody had run an analysis against.
+#
+# Neither endpoint needs a model. They read a manifest and a file off the
+# clips volume, so they belong on a CPU container at roughly 3% of the cost,
+# and the GPU now wakes only for an actual analysis.
 
-    @modal.fastapi_endpoint(method="GET", docs=True, requires_proxy_auth=REQUIRES_PROXY_AUTH)
-    def clip(self, key: str) -> dict:
-        """One corpus clip's audio, for browser playback.
+def _manifest() -> dict:
+    """Load the clip manifest keyed by clip id.
 
-        Args:
-            key: Corpus key, e.g. ``dia0_utt0``.
+    Returns:
+        ``{key: record}``, empty when the volume has no manifest yet.
+    """
+    import json
+    from pathlib import Path
 
-        Returns:
-            ``{"key":, "content_type": "audio/wav", "audio_b64": ...}``.
-        """
-        import base64
-        from pathlib import Path
+    path = Path(CLIPS_DIR) / "manifest.json"
+    if not path.exists():
+        return {}
+    with open(path, "r", encoding="utf-8") as fh:
+        return {c["key"]: c for c in json.load(fh)}
 
-        entry = self.manifest.get(key)
-        if entry is None:
-            return {"error": f"unknown clip key: {key}"}
 
-        path = Path(CLIPS_DIR) / entry["file"]
-        if not path.exists():
-            return {"error": f"clip file missing on the volume: {entry['file']}"}
+@app.function(
+    image=image,
+    volumes={CLIPS_DIR: clips_volume},
+    cpu=0.125,
+    memory=512,
+    timeout=60,
+)
+@modal.fastapi_endpoint(method="GET", docs=True, requires_proxy_auth=REQUIRES_PROXY_AUTH)
+def clips() -> dict:
+    """The bundled MELD subset, for the corpus picker.
 
-        return {"key": key, "content_type": "audio/wav",
-                "audio_b64": base64.b64encode(path.read_bytes()).decode()}
+    Returns:
+        ``{"count": n, "clips": [...]}`` -- each entry carries the key, split,
+        gold emotion and sentiment, gold utterance, duration and speaker.
+        Audio is fetched separately via :func:`clip`.
+    """
+    manifest = _manifest()
+    return {"count": len(manifest),
+            "clips": sorted(manifest.values(),
+                            key=lambda c: (c["emotion"], c["key"]))}
+
+
+@app.function(
+    image=image,
+    volumes={CLIPS_DIR: clips_volume},
+    cpu=0.125,
+    memory=512,
+    timeout=60,
+)
+@modal.fastapi_endpoint(method="GET", docs=True, requires_proxy_auth=REQUIRES_PROXY_AUTH)
+def clip(key: str) -> dict:
+    """One corpus clip's audio, for browser playback.
+
+    Args:
+        key: Corpus key, e.g. ``dia0_utt0``.
+
+    Returns:
+        ``{"key":, "content_type": "audio/wav", "audio_b64": ...}``.
+    """
+    import base64
+    from pathlib import Path
+
+    entry = _manifest().get(key)
+    if entry is None:
+        return {"error": f"unknown clip key: {key}"}
+
+    path = Path(CLIPS_DIR) / entry["file"]
+    if not path.exists():
+        return {"error": f"clip file missing on the volume: {entry['file']}"}
+
+    return {"key": key, "content_type": "audio/wav",
+            "audio_b64": base64.b64encode(path.read_bytes()).decode()}
 
 
 # -----------------------------------------------------------------------------
@@ -1021,86 +1080,82 @@ class EmotionPipeline:
 )
 @modal.fastapi_endpoint(method="POST", docs=True, requires_proxy_auth=REQUIRES_PROXY_AUTH)
 def admin(item: dict) -> dict:
-    """Start, stop, or inspect the warm inference container.
+    """Inspect the inference container, or start one early.
 
-    The mechanism is Modal's autoscaler floor, not a process:
+    Two actions, and neither can leave a GPU running indefinitely:
 
-        start   min_containers=1  -- one container is kept alive whatever
-                happens, so every request is warm and nobody waits out a cold
-                start. Billing runs continuously from this moment.
-        stop    min_containers=0  -- back to scale-to-zero. The container
-                lingers for `scaledown_window` and then costs nothing.
+        status  read-only, free, and served from a CPU container so asking
+                never wakes a GPU to answer.
+        warm    fire a warmup so the models load NOW rather than on whoever
+                arrives first. The container then scales down on the normal
+                window like any other -- this does not pin it.
 
-    ``start`` also kicks a warmup call so the models load immediately rather
-    than on whoever happens to arrive first.
+    There is deliberately no "keep warm forever". An earlier version set
+    min_containers=1 and offered a Stop button, which meant the cheapest
+    possible mistake -- forgetting to press Stop -- cost about $80 over a
+    long weekend. SCALEDOWN_WINDOW does the same job and cannot be forgotten.
+
+    ``unpin`` remains as a safety net for a deployment left pinned by that
+    older version; it is a no-op on a healthy one.
 
     Args:
-        item: ``{"action": "status" | "start" | "stop", "wait": bool}``.
-            ``wait`` (default false) makes ``start`` block until the models
-            are resident, which takes the cold start; leave it false to
-            return at once and let the UI poll ``status``.
+        item: ``{"action": "status" | "warm" | "unpin"}``.
 
     Returns:
-        The state after the action, including live-time and spend-so-far while
-        pinned, so the cost of leaving it warm is never invisible.
+        Container state, the cold-start estimate, and the live hourly rate.
     """
     import time
 
     action = (item.get("action") or "status").lower()
-    if action not in ("status", "start", "stop"):
+    if action not in ("status", "warm", "unpin"):
         return {"error": f"unknown action {action!r}; "
-                         f"expected status, start or stop"}
+                         f"expected status, warm or unpin"}
 
     pipeline = modal.Cls.from_name(APP_NAME, "EmotionPipeline")()
     now = time.time()
 
-    if action == "start":
-        pipeline.update_autoscaler(min_containers=1)
-        warm_state["pinned_at"] = now
-        if item.get("wait"):
-            pipeline.warmup.remote()
-        else:
-            # Fire and forget: the container starts loading now, the UI polls.
-            pipeline.warmup.spawn()
-
-    elif action == "stop":
+    if action == "warm":
+        # spawn, not remote: the caller gets an immediate answer and polls
+        # status, rather than holding an HTTP connection open for a minute.
+        pipeline.warmup.spawn()
+    elif action == "unpin":
         pipeline.update_autoscaler(min_containers=0)
         warm_state.pop("pinned_at", None)
 
-    # --- Report -------------------------------------------------------------
-    pinned_at = warm_state.get("pinned_at")
-    loaded_at = warm_state.get("loaded_at")
     last_seen = warm_state.get("last_seen")
 
-    # "Warm" means a container has loaded and has been heard from inside the
-    # scaledown window. A heartbeat older than that window is a container that
-    # has almost certainly gone away without getting to run its exit hook.
-    warm = bool(loaded_at) and bool(last_seen) and (now - last_seen) < SCALEDOWN_WINDOW
+    containers = None
+    stats_error = None
+    try:
+        # Through the CLASS handle, not Function.from_name. Modal bundles a
+        # class's methods into one service function named "EmotionPipeline.*",
+        # so looking up "EmotionPipeline.analyse" as a Function raises NotFound
+        # -- and swallowing that silently is how this once reported no
+        # containers while two were running.
+        containers = pipeline.analyse.get_current_stats().num_total_runners
+    except Exception as exc:                                     # noqa: BLE001
+        stats_error = f"{type(exc).__name__}: {exc}"[:200]
+        print("container stats unavailable:", stats_error, flush=True)
 
-    state = {
+    warm = containers > 0 if containers is not None else bool(
+        last_seen and (now - last_seen) < SCALEDOWN_WINDOW)
+
+    return {
         "action": action,
-        "pinned": pinned_at is not None,
         "warm": warm,
+        "containers": containers,
+        "containers_error": stats_error,
         "model": warm_state.get("model"),
-        "load_seconds": warm_state.get("load_seconds"),
+        # What the next request will actually wait, rather than a guess: the
+        # last measured load, or the observed ~60 s round trip if never run.
+        "cold_start_seconds": warm_state.get("load_seconds") or 60,
         "scaledown_window_sec": SCALEDOWN_WINDOW,
         "container_usd_per_hour": round(CONTAINER_USD_PER_SEC * 3600, 3),
         "seconds_since_last_request": (None if last_seen is None
                                        else round(now - last_seen)),
+        # Worst case left on the clock if nobody calls again.
+        "idle_tail_usd": round(SCALEDOWN_WINDOW * CONTAINER_USD_PER_SEC, 3),
     }
-
-    if pinned_at is not None:
-        pinned_seconds = now - pinned_at
-        state["pinned_seconds"] = round(pinned_seconds)
-        # Upper bound, not a bill: it assumes the container was up for the
-        # whole pinned period, which is true once warmup lands and pessimistic
-        # before that. Better to overstate a running meter than understate it.
-        state["estimated_spend_usd"] = round(
-            pinned_seconds * CONTAINER_USD_PER_SEC, 4)
-        state["estimated_spend_per_day_usd"] = round(
-            CONTAINER_USD_PER_SEC * 86400, 2)
-
-    return state
 
 
 # -----------------------------------------------------------------------------

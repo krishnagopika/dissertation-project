@@ -15,9 +15,13 @@ import AnalysisProgress from "@/components/analysis-progress";
 import AudioInput from "@/components/audio-input";
 import ClipPicker from "@/components/clip-picker";
 import GpuStatus from "@/components/gpu-status";
-import HistoryPanel from "@/components/history-panel";
+import HistoryPanel, {
+  fromLocal,
+  fromRunRow,
+  type DisplayRun,
+} from "@/components/history-panel";
 import Results from "@/components/results";
-import { analyseAudio, analyseClip } from "@/lib/api";
+import { analyseAudio, analyseClip, listRuns } from "@/lib/api";
 import { toBase64 } from "@/lib/audio";
 import { loadHistory, pushHistory, type HistoryEntry } from "@/lib/history";
 import type { Analysis, Clip } from "@/lib/types";
@@ -37,13 +41,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 /** Above this, the wait was a container start rather than the model. */
 const COLD_START_THRESHOLD_MS = 15_000;
 
-/**
- * Render the studio.
- *
- * @param props.isAdmin - Whether to offer the warm-container controls.
- */
-export default function Studio({ isAdmin }: { isAdmin: boolean }) {
-  const [tab, setTab] = useState("corpus");
+/** Render the studio. */
+export default function Studio() {
+  // Upload/record first: it is the claim the project makes -- this works on
+  // any speech, not only on the dataset it was tuned against. The corpus tab
+  // is the evidence behind that claim and sits one click away.
+  const [tab, setTab] = useState("upload");
   const [clip, setClip] = useState<Clip | null>(null);
   const [wav, setWav] = useState<Blob | null>(null);
   const [wavMeta, setWavMeta] = useState<{
@@ -53,14 +56,33 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
   const [reference, setReference] = useState("");
   const [result, setResult] = useState<Analysis | null>(null);
   const [wallMs, setWallMs] = useState(0);
+  const [selectedRun, setSelectedRun] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [warm, setWarm] = useState(false);
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [shared, setShared] = useState<DisplayRun[] | null>(null);
 
   // localStorage is unavailable during SSR, so the first paint must not read
   // it; hydrating from an effect keeps server and client markup identical.
   useEffect(() => setHistory(loadHistory()), []);
+
+  // The shared log is authoritative when it is configured and reachable.
+  // Local history stays as the fallback rather than being replaced, so a
+  // database outage degrades to "your own runs" instead of "no runs".
+  const refreshShared = async () => {
+    try {
+      const { enabled, runs } = await listRuns(50);
+      setShared(enabled ? runs.map(fromRunRow) : null);
+    } catch {
+      setShared(null);
+    }
+  };
+
+  useEffect(() => {
+    void refreshShared();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const canRun = tab === "corpus" ? clip !== null : wav !== null;
 
@@ -74,15 +96,22 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
       const analysis =
         tab === "corpus" && clip
           ? await analyseClip(clip.key)
-          : await analyseAudio(await toBase64(wav!), reference);
+          : await analyseAudio(
+              await toBase64(wav!),
+              reference,
+              wavMeta?.kind ?? "upload",
+              wavMeta?.label ?? "audio",
+            );
 
       const elapsed = Math.round(performance.now() - startedAt);
       setResult(analysis);
       setWallMs(elapsed);
 
+      const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      setSelectedRun(id);
       setHistory(
         pushHistory({
-          id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          id,
           at: Date.now(),
           source: tab === "corpus" ? (clip?.key ?? "?") : (wavMeta?.label ?? "audio"),
           kind: tab === "corpus" ? "corpus" : (wavMeta?.kind ?? "upload"),
@@ -98,8 +127,10 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
           serverMs: analysis.timings_ms.total_ms ?? 0,
           wallMs: elapsed,
           coldStart: elapsed > COLD_START_THRESHOLD_MS,
+          result: analysis,
         }),
       );
+      void refreshShared();
     } catch (caught) {
       setError((caught as Error).message);
     } finally {
@@ -109,7 +140,7 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
 
   return (
     <div className="space-y-4">
-      <GpuStatus isAdmin={isAdmin} onWarmChange={setWarm} />
+      <GpuStatus onWarmChange={setWarm} />
 
       <Card>
         <CardHeader>
@@ -126,29 +157,15 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
         <CardContent className="space-y-4">
           <Tabs value={tab} onValueChange={setTab}>
             <TabsList>
-              <TabsTrigger value="corpus">
-                <Library className="size-3.5" />
-                MELD corpus
-              </TabsTrigger>
               <TabsTrigger value="upload">
                 <Upload className="size-3.5" />
                 Upload or record
               </TabsTrigger>
+              <TabsTrigger value="corpus">
+                <Library className="size-3.5" />
+                MELD corpus
+              </TabsTrigger>
             </TabsList>
-
-            <TabsContent value="corpus" className="mt-4 space-y-3">
-              <p className="text-muted-foreground text-sm">
-                Seventy clips, ten per emotion, from the dev and test splits
-                only — never training data, or every number here would be
-                optimistic. Each carries MELD&apos;s gold transcript, so WER
-                and the quality gate are real rather than illustrative.
-              </p>
-              <ClipPicker
-                selected={clip?.key ?? null}
-                onSelect={setClip}
-                disabled={busy}
-              />
-            </TabsContent>
 
             <TabsContent value="upload" className="mt-4 space-y-4">
               <p className="text-muted-foreground text-sm">
@@ -180,6 +197,22 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
                 />
               </div>
             </TabsContent>
+            <TabsContent value="corpus" className="mt-4 space-y-3">
+              <p className="text-muted-foreground text-sm">
+                Seventy clips, ten per emotion, from the dev and test splits
+                only — never training data, or every number here would be
+                optimistic. These carry MELD&apos;s gold transcript and gold
+                label, so this is the only tab that can show WER and a
+                right/wrong verdict. Use it to see what the diagnostics look
+                like when there is something to check against.
+              </p>
+              <ClipPicker
+                selected={clip?.key ?? null}
+                onSelect={setClip}
+                disabled={busy}
+              />
+            </TabsContent>
+
           </Tabs>
 
           <div className="flex flex-wrap items-center gap-3 border-t pt-4">
@@ -218,7 +251,19 @@ export default function Studio({ isAdmin }: { isAdmin: boolean }) {
 
       {result && <Results result={result} wallMs={wallMs} />}
 
-      <HistoryPanel entries={history} onChange={setHistory} />
+      <HistoryPanel
+        entries={shared ?? history.map(fromLocal)}
+        shared={shared !== null}
+        selectedId={selectedRun}
+        onSelect={(entry) => {
+          // Reopen from what was stored rather than re-running: the point of
+          // the log is to look back at a result, not to pay for it twice.
+          setResult(entry.result);
+          setWallMs(entry.wallMs);
+          setSelectedRun(entry.id);
+          setError("");
+        }}
+      />
     </div>
   );
 }

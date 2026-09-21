@@ -28,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
 
 /** Tailwind text colour per emotion, matching the chart tokens. */
 export const EMOTION_TEXT: Record<Emotion, string> = {
@@ -108,12 +107,36 @@ export default function ClipPicker({
   };
 
   if (loading) {
+    // Content-shaped placeholders, not solid blocks. `bg-foreground/10`
+    // rather than `bg-accent` because accent is a near-solid dark panel in
+    // dark mode -- six of those read as black bars, which is what this
+    // replaced. A tenth of the text colour stays a faint tint in both themes.
+    const widths = ["w-4/5", "w-3/5", "w-11/12", "w-2/3", "w-3/4", "w-1/2"];
     return (
-      <div className="space-y-2">
-        <Skeleton className="h-9 w-full" />
-        {Array.from({ length: 6 }).map((_, index) => (
-          <Skeleton key={index} className="h-11 w-full" />
-        ))}
+      <div className="space-y-3" aria-busy="true" aria-live="polite">
+        <div className="flex gap-2">
+          <div className="bg-foreground/10 h-9 w-[190px] animate-pulse rounded-md" />
+          <div className="bg-foreground/10 h-9 flex-1 animate-pulse rounded-md" />
+        </div>
+
+        <div className="divide-y rounded-md border">
+          {widths.map((width, index) => (
+            <div
+              key={index}
+              className="flex animate-pulse items-center gap-3 px-3 py-2.5"
+              style={{ animationDelay: `${index * 90}ms` }}
+            >
+              <div className="bg-foreground/10 h-5 w-[74px] shrink-0 rounded-full" />
+              <div className={`bg-foreground/10 h-3.5 rounded ${width}`} />
+              <div className="bg-foreground/10 ml-auto h-3 w-16 shrink-0 rounded" />
+            </div>
+          ))}
+        </div>
+
+        <p className="text-muted-foreground flex items-center gap-2 text-xs">
+          <Loader2 className="size-3 animate-spin" />
+          Loading the MELD corpus
+        </p>
       </div>
     );
   }

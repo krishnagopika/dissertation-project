@@ -1,30 +1,25 @@
 "use client";
 
 /**
- * Warm-container controls and cost meter.
+ * Container status, and an optional early warm-up.
  *
- * The endpoint scales to zero, which is what makes it nearly free — and also
- * what makes the first request of a session wait out a cold start. Start pins
- * one container (`min_containers=1`); Stop releases it.
+ * There is no "keep warm" pin here, deliberately. An earlier version set
+ * `min_containers=1` behind a Start button with a Stop beside it, and that
+ * was the wrong shape twice over: during an active session requests arrive
+ * far more often than the scaledown window, so the pin bought nothing; and
+ * the cheapest possible mistake — forgetting Stop — cost about $1.12/hour
+ * indefinitely, roughly $80 over a long weekend.
  *
- * The running spend meter is not decoration. Pinning bills continuously
- * whether or not anyone uses the app, so the number that makes someone press
- * Stop has to be on screen.
+ * What replaced it is a 15-minute scaledown window, which does the same job
+ * and cannot be forgotten, plus a "Warm up" that starts a container early
+ * and then lets it expire on that same window. The worst case is one idle
+ * tail, about $0.28.
  *
- * Status polling is free: it is served by a CPU-only Modal function reading a
- * heartbeat Dict, so asking "is it warm?" never wakes a GPU to answer.
+ * Status is served by a CPU-only Modal function reading a heartbeat, so
+ * polling "is it warm?" never wakes a GPU to answer.
  */
 
-import {
-  Activity,
-  CircleDot,
-  Loader2,
-  Play,
-  RefreshCw,
-  Snowflake,
-  Square,
-  Zap,
-} from "lucide-react";
+import { Loader2, RefreshCw, Snowflake, Zap } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { admin } from "@/lib/api";
@@ -33,7 +28,6 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import {
   Tooltip,
   TooltipContent,
@@ -41,7 +35,7 @@ import {
 } from "@/components/ui/tooltip";
 
 /** Poll cadence for status. Cheap, but not free, so not every second. */
-const POLL_MS = 10_000;
+const POLL_MS = 15_000;
 
 /**
  * Format an elapsed duration compactly.
@@ -52,28 +46,24 @@ const POLL_MS = 10_000;
 function duration(seconds: number): string {
   if (seconds < 60) return `${Math.round(seconds)}s`;
   const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}m ${Math.round(seconds % 60)}s`;
+  if (minutes < 60) return `${minutes}m`;
   return `${Math.floor(minutes / 60)}h ${minutes % 60}m`;
 }
 
 /**
  * Render the container status strip.
  *
- * @param props.isAdmin - Whether to show the start/stop controls at all.
  * @param props.onWarmChange - Told whenever warmth changes, so the page can
- *   warn about a cold start before the user commits to one.
+ *   set expectations before someone commits to a cold start.
  */
 export default function GpuStatus({
-  isAdmin,
   onWarmChange,
 }: {
-  isAdmin: boolean;
   onWarmChange?: (warm: boolean) => void;
 }) {
   const [state, setState] = useState<AdminState | null>(null);
-  const [busy, setBusy] = useState<"start" | "stop" | null>(null);
+  const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const [tick, setTick] = useState(0);
   const pollRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const refresh = useCallback(async () => {
@@ -95,88 +85,91 @@ export default function GpuStatus({
     };
   }, [refresh]);
 
-  // Animates the meter between polls; the server remains authoritative.
-  useEffect(() => {
-    const id = setInterval(() => setTick((value) => value + 1), 1000);
-    return () => clearInterval(id);
-  }, []);
-
-  const act = async (action: "start" | "stop") => {
-    setBusy(action);
+  const warmUp = async () => {
+    setBusy(true);
     setError("");
     try {
-      const next = await admin(action);
-      setState(next);
-      onWarmChange?.(next.warm);
+      setState(await admin("warm"));
+      // The warmup is spawned, not awaited, so the container appears a beat
+      // later; nudge the poll rather than leaving the badge stale.
+      setTimeout(() => void refresh(), 3000);
     } catch (caught) {
       setError((caught as Error).message);
     } finally {
-      setBusy(null);
+      setBusy(false);
     }
   };
 
-  const liveSpend =
-    state?.pinned && state.estimated_spend_usd !== undefined
-      ? state.estimated_spend_usd +
-        (tick % (POLL_MS / 1000)) * (state.container_usd_per_hour / 3600)
-      : state?.estimated_spend_usd;
-
-  const status = !state
-    ? { icon: Loader2, label: "checking", tone: "text-muted-foreground", spin: true }
-    : state.pinned
-      ? { icon: CircleDot, label: "pinned — billing", tone: "text-bad", spin: false }
-      : state.warm
-        ? { icon: Zap, label: "warm", tone: "text-ok", spin: false }
-        : { icon: Snowflake, label: "cold — scaled to zero", tone: "text-muted-foreground", spin: false };
-
-  const StatusIcon = status.icon;
+  const coldSeconds = Math.round(state?.cold_start_seconds ?? 60);
 
   return (
     <Card className="py-0">
-      <CardContent className="flex flex-wrap items-center gap-x-4 gap-y-3 px-4 py-3">
-        <div className="flex items-center gap-2">
-          <StatusIcon
-            className={`size-4 ${status.tone} ${status.spin ? "animate-spin" : ""}`}
-          />
-          <span className="text-sm font-medium">{status.label}</span>
-        </div>
-
-        {state?.load_seconds ? (
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Badge variant="secondary" className="tabular gap-1 font-normal">
-                <Activity className="size-3" />
-                {state.load_seconds}s load
-              </Badge>
-            </TooltipTrigger>
-            <TooltipContent>
-              How long the models last took to reach the GPU
-            </TooltipContent>
-          </Tooltip>
-        ) : null}
-
-        {state && !state.pinned && !state.warm && (
-          <span className="text-muted-foreground text-xs">
-            The next analysis pays a cold start of roughly{" "}
-            {state.load_seconds ?? 60}s. Everything after is about a second.
+      <CardContent className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3">
+        {!state ? (
+          <span className="text-muted-foreground flex items-center gap-2 text-sm">
+            <Loader2 className="size-4 animate-spin" />
+            checking the GPU
           </span>
-        )}
-
-        {state?.pinned && (
-          <span className="text-muted-foreground tabular text-xs">
-            pinned {duration(state.pinned_seconds ?? 0)} ·{" "}
-            <span className="text-bad font-medium">
-              ${(liveSpend ?? 0).toFixed(4)}
-            </span>{" "}
-            spent · ${state.estimated_spend_per_day_usd?.toFixed(2)}/day if left on
-          </span>
+        ) : state.warm ? (
+          <>
+            <span className="text-ok flex items-center gap-2 text-sm font-medium">
+              <Zap className="size-4" />
+              GPU ready
+            </span>
+            <span className="text-muted-foreground text-xs">
+              Analyses take about 3 seconds. The container shuts itself down{" "}
+              {Math.round(state.scaledown_window_sec / 60)} minutes after the
+              last one.
+            </span>
+          </>
+        ) : (
+          <>
+            <span className="text-muted-foreground flex items-center gap-2 text-sm font-medium">
+              <Snowflake className="size-4" />
+              GPU asleep
+            </span>
+            <span className="text-muted-foreground text-xs">
+              Nothing is running, so nothing is being billed. The first
+              analysis waits about{" "}
+              <span className="text-foreground font-medium">
+                {coldSeconds} seconds
+              </span>{" "}
+              while the models load; after that each one takes ~3 seconds.
+            </span>
+          </>
         )}
 
         <div className="ml-auto flex items-center gap-2">
           {state && (
-            <span className="text-muted-foreground tabular hidden text-xs sm:inline">
-              ${state.container_usd_per_hour.toFixed(2)}/hr live
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge variant="secondary" className="tabular font-normal">
+                  {state.warm
+                    ? `$${state.container_usd_per_hour.toFixed(2)}/hr`
+                    : "$0.00/hr"}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[260px]">
+                {state.warm
+                  ? `Billed only while a container exists. If nobody runs
+                     anything, it expires and this drops to zero — at most
+                     $${state.idle_tail_usd?.toFixed(2)} of idle tail.`
+                  : "Scaled to zero. Idle costs nothing."}
+                {state.seconds_since_last_request !== null &&
+                  ` Last request ${duration(state.seconds_since_last_request)} ago.`}
+              </TooltipContent>
+            </Tooltip>
+          )}
+
+          {state && !state.warm && (
+            <Button size="sm" variant="outline" disabled={busy} onClick={() => void warmUp()}>
+              {busy ? (
+                <Loader2 className="size-3.5 animate-spin" />
+              ) : (
+                <Zap className="size-3.5" />
+              )}
+              Warm up now
+            </Button>
           )}
 
           <Button
@@ -187,37 +180,6 @@ export default function GpuStatus({
           >
             <RefreshCw className="size-3.5" />
           </Button>
-
-          {isAdmin && (
-            <>
-              <Separator orientation="vertical" className="h-5" />
-              <Button
-                size="sm"
-                disabled={busy !== null || state?.pinned}
-                onClick={() => void act("start")}
-              >
-                {busy === "start" ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Play className="size-3.5" />
-                )}
-                Keep warm
-              </Button>
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={busy !== null || !state?.pinned}
-                onClick={() => void act("stop")}
-              >
-                {busy === "stop" ? (
-                  <Loader2 className="size-3.5 animate-spin" />
-                ) : (
-                  <Square className="size-3.5" />
-                )}
-                Stop
-              </Button>
-            </>
-          )}
         </div>
 
         {error && (

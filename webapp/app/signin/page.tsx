@@ -1,7 +1,9 @@
 import { AudioLines, ShieldCheck } from "lucide-react";
 
 import { signIn } from "@/auth";
+import PasswordForm from "@/components/password-form";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import {
   Card,
   CardContent,
@@ -45,15 +47,23 @@ export default async function SignInPage({
       ),
     },
     {
-      // AuthKit unless a connection id is set, in which case enterprise SSO.
-      // Named for what the user will actually see on the hosted page.
+      // NOT "AuthKit". That is WorkOS's product name, and it means nothing to
+      // the person looking at the button -- they do not care which vendor
+      // hosts the page, they care what they are about to be asked for. The
+      // label names the action; the helper text below says where it goes.
       id: "workos",
-      name: process.env.AUTH_WORKOS_CONNECTION ? "single sign-on" : "AuthKit",
+      name: process.env.AUTH_WORKOS_CONNECTION
+        ? "your organisation"
+        : "email or Google",
       enabled: Boolean(
         process.env.AUTH_WORKOS_ID && process.env.AUTH_WORKOS_SECRET,
       ),
     },
   ].filter((provider) => provider.enabled);
+
+  const hasPassword = Boolean(
+    process.env.AUTH_PASSWORD || process.env.AUTH_DEMO_PASSWORD,
+  );
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
@@ -82,12 +92,25 @@ export default async function SignInPage({
             </p>
           )}
 
-          {providers.length === 0 ? (
+          {hasPassword && <PasswordForm />}
+
+          {hasPassword && providers.length > 0 && (
+            <div className="flex items-center gap-3 py-1">
+              <Separator className="flex-1" />
+              <span className="text-muted-foreground text-xs">or</span>
+              <Separator className="flex-1" />
+            </div>
+          )}
+
+          {providers.length === 0 && !hasPassword ? (
             <p className="text-muted-foreground text-sm">
-              No identity provider is configured. Set{" "}
-              <code className="font-mono text-xs">AUTH_GOOGLE_ID</code> and{" "}
-              <code className="font-mono text-xs">AUTH_GOOGLE_SECRET</code> (or
-              the GitHub equivalents) and redeploy.
+              No sign-in method is configured. Set{" "}
+              <code className="font-mono text-xs">AUTH_PASSWORD</code> for
+              email and password, or one of the OIDC credential pairs (
+              <code className="font-mono text-xs">AUTH_WORKOS_*</code>,{" "}
+              <code className="font-mono text-xs">AUTH_GOOGLE_*</code>,{" "}
+              <code className="font-mono text-xs">AUTH_GITHUB_*</code>), and
+              redeploy.
             </p>
           ) : (
             providers.map((provider) => (
@@ -106,7 +129,10 @@ export default async function SignInPage({
           )}
         </CardContent>
 
-        <CardFooter>
+        <CardFooter className="flex-col items-start gap-2">
+          <p className="text-muted-foreground text-xs">
+            Sign-in opens a secure hosted page, then returns you here.
+          </p>
           <p className="text-muted-foreground flex items-start gap-2 text-xs">
             <ShieldCheck className="mt-0.5 size-3.5 shrink-0" />
             Access is limited to an allowlist. Each analysis runs on a GPU that

@@ -27,7 +27,7 @@ export default async function Page() {
       />
 
       <main className="mx-auto max-w-6xl px-4 py-6 sm:px-6">
-        <Studio isAdmin={session.user.isAdmin} />
+        <Studio />
 
         <footer className="text-muted-foreground mt-8 space-y-2 border-t pt-6 text-xs">
           <p className="max-w-[80ch]">

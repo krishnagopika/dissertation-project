@@ -38,6 +38,7 @@
  */
 
 import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import WorkOS from "next-auth/providers/workos";
@@ -150,6 +151,62 @@ function workosAuthKit(): NextAuthConfig["providers"][number] {
 
 /** Providers, filtered to the ones actually configured. */
 const providers: NextAuthConfig["providers"] = [];
+
+if (process.env.AUTH_PASSWORD || process.env.AUTH_DEMO_PASSWORD) {
+  // Passwords over the allowlist. Not a user database: no accounts, no
+  // registration, no reset, because this app holds no per-user state worth
+  // any of that. It is a door key given to a handful of named people.
+  //
+  // TWO keys, and the distinction is the point. A single shared password
+  // would mean anyone holding the demo credentials could also type the
+  // admin address with that same password and gain the ability to pin a GPU
+  // that bills continuously -- the admin address is not a secret, so the
+  // password would be the only thing standing between a demo viewer and the
+  // billing controls. It is not enough on its own.
+  //
+  //   AUTH_PASSWORD        any allowlisted address, admin included
+  //   AUTH_DEMO_PASSWORD   allowlisted NON-admin addresses only
+  //
+  // So the demo key cannot escalate, whatever email is typed with it.
+  //
+  // Honest limitation: each key is still shared, so revoking one person means
+  // rotating it for everyone who holds it. Fine for a supervisor, an examiner
+  // and a demo address; not fine if this ever has real users. The OIDC
+  // providers below are the upgrade path, and nothing else in the app
+  // changes.
+  providers.push(
+    Credentials({
+      id: "password",
+      name: "email and password",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      authorize(credentials) {
+        const email = String(credentials?.email ?? "").trim().toLowerCase();
+        const password = String(credentials?.password ?? "");
+
+        if (!isAllowed(email) || !password) return null;
+
+        const full =
+          Boolean(process.env.AUTH_PASSWORD) &&
+          password === process.env.AUTH_PASSWORD;
+        const demo =
+          Boolean(process.env.AUTH_DEMO_PASSWORD) &&
+          password === process.env.AUTH_DEMO_PASSWORD &&
+          !isAdmin(email);
+
+        // One failure path for every reason. Distinguishing "unknown email"
+        // from "wrong password" would turn the allowlist into an
+        // email-enumeration oracle; distinguishing "demo key, admin address"
+        // would confirm which addresses are admin.
+        if (!full && !demo) return null;
+
+        return { id: email, email, name: email.split("@")[0] };
+      },
+    }),
+  );
+}
 
 if (process.env.AUTH_GOOGLE_ID && process.env.AUTH_GOOGLE_SECRET) {
   providers.push(Google);
